@@ -1,6 +1,6 @@
 {
-  "name": "Kinal Code Quest 65th",
-  "description": "An interactive odyssey to master Java and industrial technology, celebrating 65 years of Kinal's excellence.",
+  "name": "Kinal Code Quest 65th Edition",
+  "description": "Videojuego educativo tipo RPG técnico para aprender Java, inspirado en los 65 años de Kinal.",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
