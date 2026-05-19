@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme {
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --color-kinal-navy: #08080a;
+  --color-kinal-wine: #801A24;
+  --color-kinal-orange: #FF8A00;
+  --color-kinal-steel: #2D2E30;
+  --color-terminal-green: #33FF33;
+}
+
+/* Clases explícitas para colores dinámicos */
+.bg-kinal-orange { background-color: #FF8A00; }
+.text-kinal-orange { color: #FF8A00; }
+.border-kinal-orange { border-color: #FF8A00; }
+.shadow-kinal-orange { --tw-shadow-color: #FF8A00; }
+
+.bg-kinal-wine { background-color: #801A24; }
+.text-kinal-wine { color: #801A24; }
+.border-kinal-wine { border-color: #801A24; }
+
+.bg-cyan-400 { background-color: #22d3ee; }
+.text-cyan-400 { color: #22d3ee; }
+.border-cyan-400 { border-color: #22d3ee; }
+
+.bg-emerald-500 { background-color: #10b981; }
+.text-emerald-500 { color: #10b981; }
+.border-emerald-500 { border-color: #10b981; }
+
+.bg-yellow-500 { background-color: #eab308; }
+.text-yellow-500 { color: #eab308; }
+.border-yellow-500 { border-color: #eab308; }
+
+@layer base {
+  body {
+    @apply bg-kinal-navy text-white font-sans overflow-hidden antialiased;
+  }
+}
+
+.terminal-glow {
+  text-shadow: 0 0 10px rgba(255, 138, 0, 0.5), 0 0 20px rgba(255, 138, 0, 0.2);
+}
+
+.scanline {
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  animation: scanline 4s linear infinite;
+  z-index: 50;
+}
+
+@keyframes scanline {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
+
+.glass-panel {
+  @apply bg-kinal-navy/40 backdrop-blur-xl border border-white/10 shadow-2xl;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-white/5;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-kinal-wine/50 rounded-full hover:bg-kinal-wine;
+}
+
+/* Animaciones */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
