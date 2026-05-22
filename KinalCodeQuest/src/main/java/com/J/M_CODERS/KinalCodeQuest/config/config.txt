@@ -1,0 +1,1 @@
+Configuraciones (Ej: interceptores para verificar si el jugador inició sesión)

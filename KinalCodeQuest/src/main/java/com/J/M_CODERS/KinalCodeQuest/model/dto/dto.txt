@@ -1,0 +1,1 @@
+Objetos para transferir datos de formularios (Ej: RegistroJugadorDTO)
