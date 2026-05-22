@@ -1,1 +1,0 @@
-Clases mapeadas a MySQL (Jugador, Mision, Recompensa)
