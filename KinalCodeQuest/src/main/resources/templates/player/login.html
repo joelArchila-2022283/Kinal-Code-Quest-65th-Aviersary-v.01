@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KinalCodeQuest - Autenticación</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="auth-body">
+
+<div class="container d-flex justify-content-center">
+    <div class="auth-card login-theme p-4 p-sm-5 w-100" style="max-width: 440px;">
+
+        <div class="text-center mb-4">
+            <h2 class="fw-bold text-white tech-font d-flex align-items-center justify-content-center gap-2">
+                <i class="bi bi-terminal-fill text-info"></i> KINAL_QUEST
+            </h2>
+            <p class="text-info tech-font small mb-0">[ACCESO_AL_NÚCLEO]</p>
+        </div>
+
+        <div th:if="${error}" class="alert alert-cyber py-2.5 text-center small mb-4 tech-font">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> <span th:text="${error}"></span>
+        </div>
+
+        <form th:action="@{/auth/login}" method="post">
+            <div class="mb-3">
+                <label for="username" class="form-label text-muted small fw-bold tech-font">OPERATOR_USERNAME</label>
+                <div class="position-relative">
+                    <input type="text" id="username" name="username" class="form-control cyber-input" required autocomplete="off">
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="password" class="form-label text-muted small fw-bold tech-font">ACCESS_PASSWORD</label>
+                <input type="password" id="password" name="password" class="form-control cyber-input" required>
+            </div>
+
+            <button type="submit" class="btn btn-cyber-primary w-100 py-2.5 tech-font mb-3">
+                INICIAR_SESIÓN <i class="bi bi-box-arrow-in-right ms-1"></i>
+            </button>
+        </form>
+
+        <div class="text-center mt-4 pt-2 border-top border-secondary border-opacity-10">
+            <a th:href="@{/auth/registro}" class="text-muted small text-decoration-none tech-font">
+                ¿No tienes un avatar? <span class="text-info fw-bold">REGISTRAR_AQUÍ</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
