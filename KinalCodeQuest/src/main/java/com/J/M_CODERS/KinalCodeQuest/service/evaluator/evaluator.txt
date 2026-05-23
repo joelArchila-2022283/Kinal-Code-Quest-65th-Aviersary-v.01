@@ -1,0 +1,1 @@
+Lógica central: El motor que analiza y corrige el código del jugador
