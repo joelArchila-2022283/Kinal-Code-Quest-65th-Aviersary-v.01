@@ -1,7 +1,7 @@
 package com.J.M_CODERS.KinalCodeQuest.service.impl;
 
 import com.J.M_CODERS.KinalCodeQuest.model.entity.Mision;
-import com.J.M_CODERS.KinalCodeQuest.model.repository.MisionRepository;
+import com.J.M_CODERS.KinalCodeQuest.repository.MisionRepository;
 import com.J.M_CODERS.KinalCodeQuest.service.evaluator.MisionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

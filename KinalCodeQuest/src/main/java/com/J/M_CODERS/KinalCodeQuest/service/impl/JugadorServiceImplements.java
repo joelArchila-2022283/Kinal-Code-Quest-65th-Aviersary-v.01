@@ -1,7 +1,7 @@
 package com.J.M_CODERS.KinalCodeQuest.service.impl;
 
 import com.J.M_CODERS.KinalCodeQuest.model.entity.Jugador;
-import com.J.M_CODERS.KinalCodeQuest.model.repository.JugadorRepository;
+import com.J.M_CODERS.KinalCodeQuest.repository.JugadorRepository;
 import com.J.M_CODERS.KinalCodeQuest.service.evaluator.JugadorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
