@@ -1,0 +1,76 @@
+package com.J.M_CODERS.KinalCodeQuest.service.impl;
+
+import com.J.M_CODERS.KinalCodeQuest.model.entity.Jugador;
+import com.J.M_CODERS.KinalCodeQuest.model.entity.Mision;
+import com.J.M_CODERS.KinalCodeQuest.model.entity.ProgresoJugador;
+import com.J.M_CODERS.KinalCodeQuest.model.repository.ProgresoJugadorRepository;
+import com.J.M_CODERS.KinalCodeQuest.model.repository.JugadorRepository;
+import com.J.M_CODERS.KinalCodeQuest.service.evaluator.ProgresoJugadorService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Service
+public class ProgresoJugadorServiceImplements implements ProgresoJugadorService {
+
+    @Autowired
+    private ProgresoJugadorRepository progresoRepository;
+
+    @Autowired
+    private JugadorRepository jugadorRepository;
+
+    @Override
+    public ProgresoJugador obtenerORegistrarProgreso(Jugador jugador, Mision mision) {
+        return progresoRepository.findByJugadorAndMision(jugador, mision)
+                .orElseGet(() -> {
+                    ProgresoJugador nuevo = new ProgresoJugador();
+                    nuevo.setJugador(jugador);
+                    nuevo.setMision(mision);
+                    nuevo.setCompletada(false);
+                    nuevo.setIntentos(0);
+                    nuevo.setUltimoCodigoEnviado(mision.getCodigoBase());
+                    return progresoRepository.save(nuevo);
+                });
+    }
+
+    @Override
+    public ProgresoJugador registrarIntento(ProgresoJugador progreso, String codigo, boolean esCorrecto) {
+        progreso.setIntentos(progreso.getIntentos() + 1);
+        progreso.setUltimoCodigoEnviado(codigo);
+
+        Jugador jugador = progreso.getJugador();
+
+        if (esCorrecto && !progreso.getCompletada()) {
+            progreso.setCompletada(true);
+            progreso.setFechaCompletado(LocalDateTime.now());
+
+            Mision m = progreso.getMision();
+            jugador.setExperiencia(jugador.getExperiencia() + m.getExpRecompensa());
+
+            if (progreso.getIntentos() <= 2) {
+                jugador.setPtosResponsabilidad(jugador.getPtosResponsabilidad() + 10);
+            } else {
+                jugador.setPtosResponsabilidad(jugador.getPtosResponsabilidad() + 5);
+            }
+
+            if (progreso.getIntentos() >= 4) {
+                jugador.setPtosLaboriosidad(jugador.getPtosLaboriosidad() + 15);
+            } else {
+                jugador.setPtosLaboriosidad(jugador.getPtosLaboriosidad() + 5);
+            }
+
+            jugadorRepository.save(jugador);
+        } else if (!esCorrecto) {
+            jugador.setPtosLaboriosidad(jugador.getPtosLaboriosidad() + 1);
+            jugadorRepository.save(jugador);
+        }
+
+        return progresoRepository.save(progreso);
+    }
+
+    @Override
+    public List<ProgresoJugador> listarProgresoPorJugador(Jugador jugador) {
+        return progresoRepository.findByJugador(jugador);
+    }
+}
