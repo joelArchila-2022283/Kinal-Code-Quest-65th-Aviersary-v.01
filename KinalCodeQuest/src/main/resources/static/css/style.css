@@ -1,0 +1,289 @@
+/* ==========================================================================
+   KINAL CODE QUEST - CORE SYSTEM STYLES (CYBERPUNK NEON DARK)
+   ========================================================================== */
+
+:root {
+    --bg-main: #0a0e14;
+    --bg-card: #101622;
+    --bg-input: #070a0f;
+    --neon-blue: #00f0ff;
+    --neon-purple: #bd00ff;
+    --neon-green: #39ff14;
+    --neon-pink: #ff0055;
+    --text-main: #e2e8f0;
+    --text-muted: #6272a4;
+    --border-color: #1e293b;
+    --glow-strength: 0 0 12px;
+}
+
+/* Base Configuration & Responsiveness */
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: 'Ubuntu', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.tech-font {
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 1px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-blue);
+}
+
+/* Navbar Neon Design */
+.navbar-kinal {
+    background-color: rgba(16, 22, 34, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 2px solid var(--border-color);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.system-status {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.4; }
+    50% { opacity: 1; }
+    100% { opacity: 0.4; }
+}
+
+/* Profile Card Dashboard & Layouts */
+.profile-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.profile-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--neon-blue), var(--neon-purple));
+}
+
+.avatar-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.avatar-frame {
+    border: 2px dashed var(--neon-blue);
+    padding: 6px;
+    background-color: var(--bg-input);
+    animation: spin 30s linear infinite;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+.avatar-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    color: var(--neon-blue);
+    text-shadow: var(--glow-strength) rgba(0, 240, 255, 0.4);
+}
+
+/* Technical Stat Rows */
+.stat-row {
+    background-color: var(--bg-input);
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.stat-row:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    background-color: rgba(30, 41, 59, 0.3);
+}
+
+/* Modules Grid (Area Cards) */
+.area-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.area-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--neon-blue);
+    box-shadow: var(--glow-strength) rgba(0, 240, 255, 0.15), 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+.area-icon-box {
+    background-color: rgba(0, 240, 255, 0.05);
+    border: 1px solid rgba(0, 240, 255, 0.15);
+    color: var(--neon-blue);
+    text-shadow: var(--glow-strength) rgba(0, 240, 255, 0.3);
+}
+
+/* Buttons - Sci-Fi Cyber Styling */
+.btn-cyber-primary {
+    background: transparent;
+    color: var(--neon-blue);
+    border: 1px solid var(--neon-blue);
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 0 4px rgba(0, 240, 255, 0.2);
+}
+
+.btn-cyber-primary:hover {
+    background-color: var(--neon-blue);
+    color: var(--bg-main);
+    box-shadow: var(--glow-strength) rgba(0, 240, 255, 0.5);
+}
+
+.btn-cyber-danger {
+    background: transparent;
+    color: var(--neon-pink);
+    border: 1px solid var(--neon-pink);
+    transition: all 0.3s ease;
+}
+
+.btn-cyber-danger:hover {
+    background-color: var(--neon-pink);
+    color: white;
+    box-shadow: var(--glow-strength) rgba(255, 0, 85, 0.4);
+}
+
+/* Badge Tweaks */
+.badge-cyber {
+    background-color: rgba(189, 0, 255, 0.15);
+    color: var(--neon-purple);
+    border: 1px solid rgba(189, 0, 255, 0.3);
+    text-shadow: 0 0 5px rgba(189, 0, 255, 0.5);
+}
+
+/* ==========================================================================
+   FORMULARIOS DE AUTENTICACIÓN (LOGIN & REGISTRO) - OPTIMIZADO
+   ========================================================================== */
+
+.auth-body {
+    background-color: var(--bg-main);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.auth-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Forzar que los textos informativos superiores sean visibles en entornos oscuros */
+.auth-card .form-label,
+.auth-card label.tech-font {
+    color: #94a3b8 !important; /* Gris claro de alta visibilidad */
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+    display: inline-block;
+}
+
+/* Cambiar las clases secundarias/muted de Bootstrap dentro del Auth para que no se pierdan en negro */
+.auth-card .text-muted {
+    color: #a1a1aa !important;
+}
+
+/* Bordes neón superiores distintivos para diferenciar Login de Registro */
+.auth-card.login-theme { border-top: 3px solid var(--neon-blue); }
+.auth-card.register-theme { border-top: 3px solid var(--neon-green); }
+
+/* Inputs Estilo Terminal */
+.cyber-input {
+    background-color: var(--bg-input) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-main) !important;
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
+    transition: all 0.3s ease !important;
+}
+
+.cyber-input:focus {
+    border-color: var(--neon-blue) !important;
+    box-shadow: 0 0 8px rgba(0, 240, 255, 0.2) !important;
+    outline: none;
+}
+
+.register-theme .cyber-input:focus {
+    border-color: var(--neon-green) !important;
+    box-shadow: 0 0 8px rgba(57, 255, 20, 0.2) !important;
+}
+
+/* Radio Buttons de Avatares */
+.avatar-option {
+    cursor: pointer;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    transition: all 0.25s ease;
+}
+
+.avatar-option:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Cuando se selecciona el avatar */
+input[type="radio"]:checked + .avatar-option {
+    border-color: var(--neon-green);
+    background-color: rgba(57, 255, 20, 0.05);
+    box-shadow: inset 0 0 8px rgba(57, 255, 20, 0.1);
+}
+
+/* Botón de Registro */
+.btn-cyber-success {
+    background: transparent;
+    color: var(--neon-green);
+    border: 1px solid var(--neon-green);
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+}
+
+.btn-cyber-success:hover {
+    background-color: var(--neon-green);
+    color: var(--bg-main);
+    box-shadow: var(--glow-strength) rgba(57, 255, 20, 0.5);
+}
+
+.alert-cyber {
+    background-color: rgba(255, 0, 85, 0.1);
+    border: 1px solid rgba(255, 0, 85, 0.3);
+    color: #ff80a5;
+    border-radius: 8px;
+}
