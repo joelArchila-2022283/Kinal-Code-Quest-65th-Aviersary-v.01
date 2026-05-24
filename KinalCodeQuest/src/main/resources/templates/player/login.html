@@ -26,20 +26,26 @@
         </div>
 
         <form th:action="@{/auth/login}" method="post">
-            <div class="mb-3">
-                <label for="username" class="form-label text-muted small fw-bold tech-font">OPERATOR_USERNAME</label>
-                <div class="position-relative">
-                    <input type="text" id="username" name="username" class="form-control cyber-input" required autocomplete="off">
-                </div>
+            <div class="mb-4">
+                <label for="username" class="form-label text-muted small fw-bold tech-font">
+                    <i class="bi bi-person-badge text-info"></i> OPERATOR_ID
+                </label>
+                <input type="text" id="username" name="username"
+                       class="form-control cyber-input shadow-none" required autocomplete="off"
+                       placeholder="ej: user_kinal_01">
             </div>
 
             <div class="mb-4">
-                <label for="password" class="form-label text-muted small fw-bold tech-font">ACCESS_PASSWORD</label>
-                <input type="password" id="password" name="password" class="form-control cyber-input" required>
+                <label for="password" class="form-label text-muted small fw-bold tech-font">
+                    <i class="bi bi-key-fill text-info"></i> ACCESS_KEY
+                </label>
+                <input type="password" id="password" name="password"
+                       class="form-control cyber-input shadow-none" required
+                       placeholder="••••••••">
             </div>
 
-            <button type="submit" class="btn btn-cyber-primary w-100 py-2.5 tech-font mb-3">
-                INICIAR_SESIÓN <i class="bi bi-box-arrow-in-right ms-1"></i>
+            <button type="submit" class="btn btn-cyber-primary w-100 py-3 fw-bold tech-font neon-glow">
+                INICIAR_COMPILACIÓN <i class="bi bi-terminal ms-2"></i>
             </button>
         </form>
 
