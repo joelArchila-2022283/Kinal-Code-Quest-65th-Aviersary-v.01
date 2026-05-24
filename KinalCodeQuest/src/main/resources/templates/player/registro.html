@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KinalCodeQuest - Crear Jugador</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="auth-body">
+
+<div class="container d-flex justify-content-center">
+    <div class="auth-card register-theme p-4 p-sm-5 w-100" style="max-width: 520px;">
+
+        <div class="text-center mb-4">
+            <h3 class="fw-bold text-white tech-font">REGISTRO_DE_OPERADOR</h3>
+            <p class="text-success tech-font small mb-0">[ALTA_DE_NUEVO_AVATAR]</p>
+        </div>
+
+        <form th:action="@{/auth/registro}" th:object="${jugador}" method="post">
+            <div class="mb-3">
+                <label class="form-label text-muted small fw-bold tech-font">NUEVO_USERNAME</label>
+                <input type="text" th:field="*{username}" class="form-control cyber-input" required autocomplete="off">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-muted small fw-bold tech-font">CONTRASEÑA_DE_SEGURIDAD</label>
+                <input type="password" th:field="*{password}" class="form-control cyber-input" required>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label text-muted small fw-bold d-block mb-2 tech-font">SELECCIONA_PROTOCOLO_AVATAR</label>
+                <div class="row g-2 text-center">
+
+                    <div class="col-4">
+                        <input type="radio" id="av1" th:field="*{nombreAvatar}" value="Cyborg_Inft" class="btn-check" required>
+                        <label for="av1" class="avatar-option p-3 d-block h-100">
+                            <div class="fs-1 mb-1">🤖</div>
+                            <span class="d-block text-white small fw-bold tech-font">Informatix</span>
+                        </label>
+                    </div>
+
+                    <div class="col-4">
+                        <input type="radio" id="av2" th:field="*{nombreAvatar}" value="Tesla_Volt" class="btn-check">
+                        <label for="av2" class="avatar-option p-3 d-block h-100">
+                            <div class="fs-1 mb-1">⚡</div>
+                            <span class="d-block text-white small fw-bold tech-font">Voltio</span>
+                        </label>
+                    </div>
+
+                    <div class="col-4">
+                        <input type="radio" id="av3" th:field="*{nombreAvatar}" value="Gear_Mech" class="btn-check">
+                        <label for="av3" class="avatar-option p-3 d-block h-100">
+                            <div class="fs-1 mb-1">⚙️</div>
+                            <span class="d-block text-white small fw-bold tech-font">Mecánico</span>
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-cyber-success w-100 py-2.5 tech-font mb-2">
+                CREAR_E_INICIAR_ENTRENAMIENTO <i class="bi bi-database-add ms-1"></i>
+            </button>
+        </form>
+
+        <div class="text-center mt-3">
+            <a th:href="@{/auth/login}" class="text-muted small text-decoration-none tech-font">
+                ¿Ya tienes una cuenta? <span class="text-success fw-bold">VOLVER_AL_LOGIN</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

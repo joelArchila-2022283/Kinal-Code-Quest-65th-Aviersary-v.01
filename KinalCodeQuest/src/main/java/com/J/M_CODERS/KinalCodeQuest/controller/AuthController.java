@@ -17,7 +17,7 @@ public class AuthController {
 
     @GetMapping("/login")
     public String loginPage() {
-        return "login";
+        return "player/login";
     }
 
     @PostMapping("/login")
@@ -28,13 +28,13 @@ public class AuthController {
             return "redirect:/game/dashboard";
         }
         model.addAttribute("error", "Credenciales incorrectas en el núcleo del sistema.");
-        return "login";
+        return "player/login";
     }
 
     @GetMapping("/registro")
     public String registroPage(Model model) {
         model.addAttribute("jugador", new Jugador());
-        return "registro";
+        return "player/registro";
     }
 
     @PostMapping("/registro")

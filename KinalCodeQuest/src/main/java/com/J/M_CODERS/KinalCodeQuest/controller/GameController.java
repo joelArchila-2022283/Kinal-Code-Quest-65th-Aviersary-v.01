@@ -38,7 +38,8 @@ public class GameController {
 
         model.addAttribute("jugador", jugadorActualizado);
         model.addAttribute("areas", areaService.listarTodas());
-        return "dashboard";
+
+        return "game/dashboard";
     }
 
     @GetMapping("/area/{idArea}")
@@ -47,7 +48,8 @@ public class GameController {
 
         model.addAttribute("area", areaService.buscarPorId(idArea));
         model.addAttribute("misiones", misionesService.listarPorArea(idArea));
-        return "misiones";
+
+        return "game/misiones";
     }
 
     @GetMapping("/mision/{idMision}")
@@ -62,7 +64,8 @@ public class GameController {
 
         model.addAttribute("mision", mision);
         model.addAttribute("progreso", progreso);
-        return "consola";
+
+        return "game/consola";
     }
 
     @PostMapping("/mision/{idMision}/compilar")
@@ -94,6 +97,6 @@ public class GameController {
             model.addAttribute("compilacionError", "[Kinal Compiler v01.0.1] - Error de Sintaxis: La estructura lógica no cumple con los requerimientos técnicos.");
         }
 
-        return "consola";
+        return "game/consola";
     }
 }

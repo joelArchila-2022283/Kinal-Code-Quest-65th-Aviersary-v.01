@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>KinalCodeQuest - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/dist/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; }
+        .navbar-custom { background-color: #1e293b; border-bottom: 2px solid #2563eb; }
+        .stat-card { background-color: #1e293b; border-left: 4px solid #3b82f6; }
+        .area-card { background-color: #1e293b; transition: transform 0.2s, border-color 0.2s; border: 1px solid #334155; }
+        .area-card:hover { transform: translateY(-3px); border-color: #3b82f6; }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-custom py-3 mb-5">
+    <div class="container d-flex justify-content-between align-items-center">
+        <span class="navbar-brand mb-0 h1 fw-bold text-white">KinalCodeQuest</span>
+        <div class="d-flex align-items-center">
+            <span class="text-secondary me-3">Operador: <strong class="text-info" th:text="${session.usuarioLogueado.username}">User</strong></span>
+            <a th:href="@{/auth/logout}" class="btn btn-sm btn-outline-danger font-monospace">LOGOUT</a>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <div class="row g-3 mb-5">
+        <div class="col-md-3">
+            <div class="stat-card p-3 shadow-sm rounded">
+                <small class="text-secondary d-block text-uppercase fw-bold">Experiencia Total</small>
+                <span class="fs-3 fw-bold text-white" th:text="${jugador.experiencia} + ' EXP'">0 XP</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card p-3 shadow-sm rounded" style="border-left-color: #10b981;">
+                <small class="text-secondary d-block text-uppercase fw-bold">Responsabilidad</small>
+                <span class="fs-3 fw-bold text-success" th:text="${jugador.ptosResponsabilidad} + ' pts'">0 pts</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card p-3 shadow-sm rounded" style="border-left-color: #f59e0b;">
+                <small class="text-secondary d-block text-uppercase fw-bold">Laboriosidad</small>
+                <span class="fs-3 fw-bold text-warning" th:text="${jugador.ptosLaboriosidad} + ' pts'">0 pts</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card p-3 shadow-sm rounded" style="border-left-color: #a855f7;">
+                <small class="text-secondary d-block text-uppercase fw-bold">Solidaridad</small>
+                <span class="fs-3 fw-bold" style="color: #c084fc;" th:text="${jugador.ptosSolidaridad} + ' pts'">0 pts</span>
+            </div>
+        </div>
+    </div>
+    <h4 class="fw-bold mb-4 border-bottom border-secondary pb-2 text-white">Módulos de Especialización</h4>
+    <div class="row g-4">
+        <div class="col-md-4" th:each="area : ${areas}">
+            <div class="card area-card h-100 shadow-sm p-4 d-flex flex-column justify-content-between text-white">
+                <div>
+                    <h5 class="fw-bold text-primary mb-2" th:text="${area.nombre}">Área Técnica</h5>
+                    <p class="text-secondary small" th:text="${area.descripcionTematica}">Descripción breve.</p>
+                </div>
+                <a th:href="@{/game/area/{id}(id=${area.idArea})}" class="btn btn-outline-primary btn-sm w-100 fw-bold mt-3">INGRESAR AL MÓDULO</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
