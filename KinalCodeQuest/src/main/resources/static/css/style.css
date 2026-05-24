@@ -287,3 +287,40 @@ input[type="radio"]:checked + .avatar-option {
     color: #ff80a5;
     border-radius: 8px;
 }
+
+/* Efecto de resplandor Neón para los botones */
+.neon-glow {
+    transition: 0.3s;
+    text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+    border: 1px solid var(--neon-blue);
+}
+
+.neon-glow:hover {
+    box-shadow: 0 0 20px var(--neon-blue);
+}
+
+/* Inputs con estilo Terminal */
+.cyber-input {
+    background: rgba(10, 15, 25, 0.8) !important;
+    border: 1px solid #1e293b !important;
+    color: var(--neon-blue) !important;
+    padding: 12px 15px !important;
+    border-radius: 4px !important;
+}
+
+.cyber-input:focus {
+    border-color: var(--neon-blue) !important;
+    background: rgba(10, 15, 25, 1) !important;
+}
+
+/* Cards de Avatar con efecto hover */
+.avatar-card {
+    transition: all 0.3s;
+    background: rgba(30, 41, 59, 0.5);
+}
+
+.avatar-card:hover {
+    border-color: var(--neon-blue) !important;
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 240, 255, 0.2);
+}
