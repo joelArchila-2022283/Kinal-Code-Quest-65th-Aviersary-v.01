@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 import java.util.regex.Pattern;
 
 @Controller
@@ -40,6 +41,56 @@ public class GameController {
         model.addAttribute("areas", areaService.listarTodas());
 
         return "game/dashboard";
+    }
+
+    @GetMapping("/consola")
+    public String consolaGeneral(HttpSession session, Model model) {
+        Jugador jugador = (Jugador) session.getAttribute("usuarioLogueado");
+        if (jugador == null) return "redirect:/auth/login";
+
+        List<Mision> misiones = misionesService.listarTodas();
+        Mision misionBase = null;
+        ProgresoJugador progreso = null;
+
+        if (misiones != null && !misiones.isEmpty()) {
+            misionBase = misiones.get(0);
+            progreso = progresoService.obtenerORegistrarProgreso(jugador, misionBase);
+        } else {
+            misionBase = new Mision();
+            misionBase.setTitulo("Sin Misiones Disponibles");
+            misionBase.setDescripcionNarrativa("Por favor, registre misiones en la base de datos.");
+            misionBase.setCodigoBase("// No hay misiones cargadas en el sistema.");
+        }
+
+        model.addAttribute("jugador", jugador);
+        model.addAttribute("mision", misionBase);
+        model.addAttribute("progreso", progreso);
+
+        return "game/consola";
+    }
+
+    @GetMapping("/game")
+    public String gameCore(HttpSession session, Model model) {
+        Jugador jugadorSesion = (Jugador) session.getAttribute("usuarioLogueado");
+        if (jugadorSesion == null) return "redirect:/auth/login";
+
+        Jugador jugadorActualizado = jugadorService.buscarPorId(jugadorSesion.getIdJugador());
+        session.setAttribute("usuarioLogueado", jugadorActualizado);
+
+        model.addAttribute("jugador", jugadorActualizado);
+        model.addAttribute("areas", areaService.listarTodas());
+
+        return "game/game";
+    }
+
+    @GetMapping("/misiones")
+    public String misionesGenerales(HttpSession session, Model model) {
+        Jugador jugador = (Jugador) session.getAttribute("usuarioLogueado");
+        if (jugador == null) return "redirect:/auth/login";
+
+        model.addAttribute("jugador", jugador);
+        model.addAttribute("misiones", misionesService.listarPorArea(1));
+        return "game/misiones";
     }
 
     @GetMapping("/area/{idArea}")
