@@ -7,10 +7,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
 </head>
 <body class="auth-body py-4">
 
-<div class="container" style="max-width: 800px;">
+<div class="container" style="max-width: 900px;">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <a th:href="@{/game/dashboard}" class="text-decoration-none small text-muted tech-font">
@@ -19,35 +22,103 @@
             <h3 class="fw-bold text-white mt-1 tech-font" th:text="${mision.titulo}">TÍTULO_MISIÓN</h3>
         </div>
         <span class="badge border border-info text-info px-3 py-2 fs-6 tech-font neon-glow"
-              th:text="${mision.expRecompensa} + ' EXP'">0 EXP</span>
+              th:text="|${mision.expRecompensa} EXP|">0 EXP</span>
     </div>
 
-    <div class="terminal-chassis p-4 shadow">
-        <form th:action="@{/game/mision/{id}/compilar(id=${mision.idMision})}" method="post">
-            <div class="d-flex justify-content-between align-items-center mb-2 px-1">
-                <span class="text-secondary small tech-font">src/main/java/Solution.java</span>
-                <span class="text-secondary small tech-font">INTENTOS:
-                    <strong class="text-warning" th:text="${progreso.intentos}">0</strong>
-                </span>
+    <div class="terminal-chassis p-1 shadow border border-secondary border-opacity-25 rounded-3" style="background-color: #1e293b;">
+
+        <div class="d-flex justify-content-between align-items-center px-3 py-2 bg-dark rounded-top-3 border-bottom border-secondary border-opacity-25">
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-danger rounded-circle p-1" style="width: 10px; height: 10px;"></span>
+                <span class="badge bg-warning rounded-circle p-1" style="width: 10px; height: 10px;"></span>
+                <span class="badge bg-success rounded-circle p-1" style="width: 10px; height: 10px;"></span>
+                <span class="text-secondary small tech-font ms-2">src/main/java/KinalCodeQuestApplication.java</span>
             </div>
+            <span class="text-secondary small tech-font">INTENTOS:
+                <strong class="text-warning" th:text="${progreso?.intentos != null ? progreso.intentos : 0}">0</strong>
+            </span>
+        </div>
 
-            <textarea name="codigoEnviado" rows="12" class="form-control ide-textarea p-3 mb-3"
-                      th:text="${progreso.ultimoCodigoEnviado}"
-                      placeholder="// Escribe tu código aquí..." spellcheck="false"></textarea>
+        <form th:action="@{/game/mision/{id}/compilar(id=${mision.idMision})}" method="post" id="compilerForm">
 
-            <button type="submit" class="btn btn-cyber-primary w-100 fw-bold tech-font py-3 neon-glow">
-                EJECUTAR_KINAL_COMPILER <i class="bi bi-play-fill ms-2"></i>
-            </button>
+            <textarea id="editorCodigo" name="codigoEnviado" th:if="${progreso?.ultimoCodigoEnviado != null}" th:text="${progreso.ultimoCodigoEnviado}"></textarea>
+
+            <textarea id="editorCodigo" name="codigoEnviado" th:if="${progreso?.ultimoCodigoEnviado == null}">package com.J.M_CODERS.KinalCodeQuest;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class KinalCodeQuestApplication implements CommandLineRunner {
+
+    public static void main(String[] args) {
+       SpringApplication.run(KinalCodeQuestApplication.class, args);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+       System.out.println("----------------------------------------");
+       System.out.println(" KINAL CODE QUEST - SYSTEM ONLINE ");
+       System.out.println("----------------------------------------");
+    }
+}</textarea>
+
+            <div class="p-3 bg-dark bg-opacity-50 rounded-bottom-3">
+                <button type="submit" class="btn btn-cyber-primary w-100 fw-bold tech-font py-3 neon-glow">
+                    EJECUTAR_KINAL_COMPILER <i class="bi bi-play-fill ms-2"></i>
+                </button>
+            </div>
         </form>
+    </div>
 
-        <div th:if="${compilacionError}" class="terminal-output text-danger mt-3 border-start border-4 border-danger">
-            <i class="bi bi-exclamation-triangle-fill"></i> <span th:text="${compilacionError}">Error</span>
-        </div>
+    <div th:if="${compilacionError}" class="terminal-output text-danger mt-3 border-start border-4 border-danger p-3 rounded-end shadow-sm" style="background-color: #1e293b;">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> <span class="font-monospace" th:text="${compilacionError}">Error</span>
+    </div>
 
-        <div th:if="${compilacionSuccess}" class="terminal-output text-success mt-3 border-start border-4 border-success">
-            <i class="bi bi-check2-circle"></i> <span th:text="${compilacionSuccess}">Éxito</span>
-        </div>
+    <div th:if="${compilacionSuccess}" class="terminal-output text-success mt-3 border-start border-4 border-success p-3 rounded-end shadow-sm" style="background-color: #1e293b;">
+        <i class="bi bi-check2-circle me-2"></i> <span class="font-monospace" th:text="${compilacionSuccess}">Éxito</span>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+
+<script>
+    // Buscamos el elemento que Thymeleaf decidió renderizar en el DOM real
+    var textareaEditor = document.querySelector('textarea[name="codigoEnviado"]');
+
+    // Inicialización del editor inteligente
+    var editor = CodeMirror.fromTextArea(textareaEditor, {
+        lineNumbers: true,               // Muestra el número de línea
+        mode: "text/x-java",             // Activa el resaltado de sintaxis Java
+        theme: "dracula",                // Aplica paleta oscura elegante
+        lineWrapping: true,              // Salto de línea automático si es muy largo
+        matchBrackets: true,             // Ilumina llaves/paréntesis hermanos
+        indentUnit: 4,                   // Tamaño de indentación estándar
+        tabSize: 4
+    });
+
+    // Ajustamos la altura dinámica del IDE simulado
+    editor.setSize(null, "420px");
+
+    document.getElementById("compilerForm").addEventListener("submit", function() {
+        editor.save();
+    });
+</script>
+
+<style>
+    /* Ajustes estéticos para acoplar CodeMirror perfectamente a tu estilo visual */
+    .CodeMirror {
+        font-family: 'Share Tech Mono', monospace !important;
+        font-size: 15px !important;
+        padding: 10px 0;
+    }
+    .CodeMirror-gutters {
+        background-color: #1e293b !important;
+        border-right: 1px solid #334155 !important;
+    }
+</style>
+
 </body>
 </html>

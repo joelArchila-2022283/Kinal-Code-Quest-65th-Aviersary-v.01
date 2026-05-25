@@ -14,13 +14,14 @@
 <div class="container" style="max-width: 700px;">
     <div class="mb-4">
         <a th:href="@{/game/dashboard}" class="text-decoration-none small text-secondary">← Volver al Dashboard</a>
-        <h2 class="fw-bold text-white mt-2" th:text="'Misiones de ' + ${area.nombre}">Misiones del Área</h2>
+
+        <h2 class="fw-bold text-white mt-2" th:text="|Misiones de ${area?.nombre != null ? area.nombre : 'el Sistema'}|">Misiones del Área</h2>
     </div>
     <div class="list-group list-group-custom">
         <div th:each="mision : ${misiones}" class="list-group-item p-3 d-flex justify-content-between align-items-center">
             <div>
                 <h5 class="fw-bold mb-1 text-info" th:text="${mision.titulo}">Título</h5>
-                <small class="text-secondary font-monospace" th:text="${mision.expRecompensa} + ' EXP'"></small>
+                <small class="text-secondary font-monospace" th:text="|${mision.expRecompensa} EXP|">0 EXP</small>
             </div>
             <a th:href="@{/game/mision/{id}(id=${mision.idMision})}" class="btn btn-primary btn-sm fw-bold">ABRIR CONSOLA</a>
         </div>
