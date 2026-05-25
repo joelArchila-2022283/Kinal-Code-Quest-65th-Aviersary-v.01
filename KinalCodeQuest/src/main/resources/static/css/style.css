@@ -83,6 +83,19 @@ body {
     background: linear-gradient(to bottom, var(--neon-blue), var(--neon-purple));
 }
 
+/* FORZAR VISIBILIDAD EN DASHBOARD (Estadísticas y Nombres de Usuario) */
+.profile-card h2.text-white {
+    color: #ffffff !important;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* Títulos de los campos (LABORIOSIDAD, RESPONSABILIDAD, SOLIDARIDAD, Experiencia) */
+.stat-row span.text-muted,
+.stat-row .small {
+    color: #cbd5e1 !important; /* Gris platino de alta visibilidad */
+    font-weight: 500;
+}
+
 .avatar-container {
     position: relative;
     width: 120px;
@@ -175,6 +188,17 @@ body {
     box-shadow: var(--glow-strength) rgba(255, 0, 85, 0.4);
 }
 
+/* Efecto de resplandor Neón general para interacción */
+.neon-glow {
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+    border: 1px solid var(--neon-blue);
+}
+
+.neon-glow:hover {
+    box-shadow: 0 0 20px var(--neon-blue);
+}
+
 /* Badge Tweaks */
 .badge-cyber {
     background-color: rgba(189, 0, 255, 0.15);
@@ -184,7 +208,7 @@ body {
 }
 
 /* ==========================================================================
-   FORMULARIOS DE AUTENTICACIÓN (LOGIN & REGISTRO) - OPTIMIZADO
+   FORMULARIOS DE AUTENTICACIÓN (LOGIN & REGISTRO)
    ========================================================================== */
 
 .auth-body {
@@ -205,46 +229,50 @@ body {
     overflow: hidden;
 }
 
-/* Forzar que los textos informativos superiores sean visibles en entornos oscuros */
+/* Forzar que los labels del Login y Registro se vean claros */
 .auth-card .form-label,
-.auth-card label.tech-font {
-    color: #94a3b8 !important; /* Gris claro de alta visibilidad */
+.auth-card label.tech-font,
+.auth-card .text-muted {
+    color: #cbd5e1 !important; /* Cambiado a gris platino brillante */
     letter-spacing: 1.5px;
     margin-bottom: 6px;
     display: inline-block;
 }
 
-/* Cambiar las clases secundarias/muted de Bootstrap dentro del Auth para que no se pierdan en negro */
-.auth-card .text-muted {
-    color: #a1a1aa !important;
+/* Enlaces de redirección ("¿No tienes un avatar? Regístrate aquí") */
+.auth-card a.text-muted,
+.auth-card .text-center a {
+    color: #94a3b8 !important;
 }
 
-/* Bordes neón superiores distintivos para diferenciar Login de Registro */
+/* Bordes neón superiores según el contexto */
 .auth-card.login-theme { border-top: 3px solid var(--neon-blue); }
 .auth-card.register-theme { border-top: 3px solid var(--neon-green); }
 
-/* Inputs Estilo Terminal */
+/* Inputs Unificados Estilo Terminal */
 .cyber-input {
-    background-color: var(--bg-input) !important;
-    border: 1px solid var(--border-color) !important;
-    color: var(--text-main) !important;
-    border-radius: 8px !important;
-    padding: 10px 14px !important;
+    background: rgba(10, 15, 25, 0.8) !important;
+    border: 1px solid #1e293b !important;
+    color: var(--neon-blue) !important; /* El texto escrito brillará en cian */
+    padding: 12px 15px !important;
+    border-radius: 4px !important;
     transition: all 0.3s ease !important;
 }
 
 .cyber-input:focus {
     border-color: var(--neon-blue) !important;
-    box-shadow: 0 0 8px rgba(0, 240, 255, 0.2) !important;
+    background: rgba(10, 15, 25, 1) !important;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.25) !important;
     outline: none;
 }
 
+/* Ajuste de focus específico para pantallas con temática verde (Registro) */
 .register-theme .cyber-input:focus {
     border-color: var(--neon-green) !important;
-    box-shadow: 0 0 8px rgba(57, 255, 20, 0.2) !important;
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.25) !important;
 }
 
-/* Radio Buttons de Avatares */
+/* Radio Buttons y Cards de Selección de Avatares */
 .avatar-option {
     cursor: pointer;
     background-color: var(--bg-input);
@@ -258,14 +286,27 @@ body {
     transform: translateY(-2px);
 }
 
-/* Cuando se selecciona el avatar */
-input[type="radio"]:checked + .avatar-option {
-    border-color: var(--neon-green);
-    background-color: rgba(57, 255, 20, 0.05);
-    box-shadow: inset 0 0 8px rgba(57, 255, 20, 0.1);
+/* Tarjetas de Avatar Integradas con Efectos Hover */
+.avatar-card {
+    transition: all 0.3s ease;
+    background: rgba(30, 41, 59, 0.5);
 }
 
-/* Botón de Registro */
+.avatar-card:hover {
+    border-color: var(--neon-blue) !important;
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 240, 255, 0.2);
+}
+
+/* Manejo de estados de selección de avatares */
+input[type="radio"]:checked + .avatar-option,
+input[type="radio"]:checked + .avatar-card {
+    border-color: var(--neon-green) !important;
+    background-color: rgba(57, 255, 20, 0.05) !important;
+    box-shadow: inset 0 0 8px rgba(57, 255, 20, 0.1), 0 5px 15px rgba(57, 255, 20, 0.15) !important;
+}
+
+/* Botón de Registro Exclusivo */
 .btn-cyber-success {
     background: transparent;
     color: var(--neon-green);
@@ -281,46 +322,35 @@ input[type="radio"]:checked + .avatar-option {
     box-shadow: var(--glow-strength) rgba(57, 255, 20, 0.5);
 }
 
+/* Alertas del Sistema */
 .alert-cyber {
     background-color: rgba(255, 0, 85, 0.1);
     border: 1px solid rgba(255, 0, 85, 0.3);
     color: #ff80a5;
     border-radius: 8px;
 }
-
-/* Efecto de resplandor Neón para los botones */
-.neon-glow {
-    transition: 0.3s;
-    text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
-    border: 1px solid var(--neon-blue);
-}
-
-.neon-glow:hover {
-    box-shadow: 0 0 20px var(--neon-blue);
-}
-
-/* Inputs con estilo Terminal */
-.cyber-input {
-    background: rgba(10, 15, 25, 0.8) !important;
-    border: 1px solid #1e293b !important;
+.icon-consola {
     color: var(--neon-blue) !important;
-    padding: 12px 15px !important;
-    border-radius: 4px !important;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
 }
 
-.cyber-input:focus {
-    border-color: var(--neon-blue) !important;
-    background: rgba(10, 15, 25, 1) !important;
+.icon-game {
+    color: var(--neon-green) !important;
+    text-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
 }
 
-/* Cards de Avatar con efecto hover */
-.avatar-card {
-    transition: all 0.3s;
-    background: rgba(30, 41, 59, 0.5);
+.icon-misiones {
+    color: var(--neon-purple) !important;
+    text-shadow: 0 0 10px rgba(189, 0, 255, 0.4);
 }
 
-.avatar-card:hover {
-    border-color: var(--neon-blue) !important;
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 240, 255, 0.2);
+/* Subtítulos descriptivos legibles dentro de las tarjetas */
+.area-card .card-desc {
+    color: #94a3b8 !important; /* Gris claro de alta visibilidad */
+    font-size: 0.9rem;
+}
+
+.area-card .card-title {
+    color: #ffffff !important;
+    font-weight: bold;
 }
