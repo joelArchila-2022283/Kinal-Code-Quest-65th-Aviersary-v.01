@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>ERROR - 404</title>
+    <link rel="stylesheet" th:href="@{/css/styleErrors.css}">
+</head>
+<body>
+<div class="container">
+    <div class="scanline"></div>
+    <h1 class="error-code">404</h1>
+    <p class="message">ACCESO DENEGADO: RECURSO NO ENCONTRADO</p>
+
+    <p class="detail" th:text="${errorMessage}">La misión o el archivo que buscas no existe en el sistema.</p>
+
+    <a th:href="@{/}" class="btn">REINICIAR SISTEMA (HOME)</a>
+</div>
+</body>
+</html>
