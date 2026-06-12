@@ -25,12 +25,12 @@
             <i class="bi bi-exclamation-triangle-fill me-2"></i> <span th:text="${error}"></span>
         </div>
 
-        <form th:action="@{/auth/login}" method="post">
+        <form th:action="@{/auth/login}" th:object="${loginDTO}" method="post">
             <div class="mb-4">
                 <label for="username" class="form-label text-muted small fw-bold tech-font">
                     <i class="bi bi-person-badge text-info"></i> OPERATOR_ID
                 </label>
-                <input type="text" id="username" name="username"
+                <input type="text" id="username" th:field="*{username}"
                        class="form-control cyber-input shadow-none" required autocomplete="off"
                        placeholder="ej: user_kinal_01">
             </div>
@@ -39,7 +39,7 @@
                 <label for="password" class="form-label text-muted small fw-bold tech-font">
                     <i class="bi bi-key-fill text-info"></i> ACCESS_KEY
                 </label>
-                <input type="password" id="password" name="password"
+                <input type="password" id="password" th:field="*{password}"
                        class="form-control cyber-input shadow-none" required
                        placeholder="••••••••">
             </div>
