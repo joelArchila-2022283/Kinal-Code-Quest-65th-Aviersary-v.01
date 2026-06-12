@@ -1,23 +1,80 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Misiones Disponibles - KinalCodeQuest</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}"> </head>
-<body>
-<div class="container" style="max-width: 800px;">
-    <h1 class="error-code" style="font-size: 3rem;">MISIONES DISPONIBLES</h1>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KinalCodeQuest - Asignación de Misiones</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="auth-body"> <nav class="navbar navbar-expand-lg navbar-dark navbar-kinal sticky-top py-3 mb-4">
+    <div class="container">
+        <a class="navbar-brand tech-font d-flex align-items-center fs-4" th:href="@{/game/dashboard}">
+            <i class="bi bi-terminal-fill text-info me-2"></i>
+            <span class="fw-bold text-white">KINAL</span>
+            <span class="text-info">HQ_MISIONES</span>
+        </a>
+        <a th:href="@{/game/dashboard}" class="btn btn-cyber-danger btn-sm tech-font px-3">
+            <i class="bi bi-arrow-left-square me-1"></i> DASHBOARD
+        </a>
+    </div>
+</nav>
 
-    <div th:each="mision : ${misiones}" style="border: 1px solid #00ff41; margin: 15px; padding: 15px; text-align: left;">
-        <h3 th:text="${mision.titulo}" style="color: #00ff41;"></h3>
-        <p th:text="${mision.descripcionNarrativa}" style="color: #fff;"></p>
-        <p>Recompensa: <span th:text="${mision.expRecompensa}" style="color: #ff003c;"></span> EXP</p>
+<div class="container my-4" style="max-width: 900px;">
 
-        <a th:href="@{/game/mision/{id}(id=${mision.idMision})}" class="btn">INICIAR MISIÓN</a>
+    <div class="profile-card p-4 mb-4 text-start">
+        <div class="d-flex align-items-center gap-3">
+            <div class="area-icon-box p-2.5 rounded-3 bg-opacity-10 bg-info">
+                <i class="bi bi-journal-code text-info fs-3"></i>
+            </div>
+            <div>
+                <h2 class="text-white fw-bold tech-font mb-1"
+                    th:text="${area != null ? area.nombreArea : 'TODAS LAS MISIONES DISPONIBLES'}">ENTORNO_DATA</h2>
+                <p class="text-muted small mb-0 tech-font"
+                   th:text="${area != null ? area.descripcion : '[FILTRO_GLOBAL_ACTIVO]'}">Descripción de la categoría actual.</p>
+            </div>
+        </div>
     </div>
 
-    <br>
-    <a th:href="@{/game/dashboard}" style="color: #00ff41;">Volver al Dashboard</a>
+    <div th:if="${#lists.isEmpty(misiones)}" class="text-center p-5 profile-card">
+        <i class="bi bi-database-exclamation text-danger display-1 mb-3"></i>
+        <h4 class="text-white tech-font fw-bold">[NO_MISSIONS_FOUND]</h4>
+        <p class="text-muted small">No se han detectado protocolos de encriptación activos para este entorno en la base de datos.</p>
+        <a th:href="@{/game/dashboard}" class="btn btn-cyber-primary btn-sm tech-font mt-2">VOLVER_AL_NÚCLEO</a>
+    </div>
+
+    <div class="row g-3" th:if="${!#lists.isEmpty(misiones)}">
+        <div class="col-12" th:each="mision : ${misiones}">
+            <div class="card area-card p-4 h-100 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3"
+                 style="border-left: 3px solid var(--neon-blue);">
+
+                <div style="max-width: 75%;">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge badge-cyber text-info tech-font">MID_0[[${mision.idMision}]]</span>
+                        <h4 class="fw-bold text-white mb-0 tech-font" th:text="${mision.titulo}">TITULO_MISION</h4>
+                    </div>
+                    <p class="card-desc text-muted small lh-base mb-2" th:text="${mision.descripcionNarrativa}">Narrativa técnica.</p>
+
+                    <div class="d-flex gap-3 small tech-font">
+                        <span class="text-warning"><i class="bi bi-lightning-fill me-1"></i>[[${mision.expRecompensa}]] EXP</span>
+                        <span class="text-primary"><i class="bi bi-shield-check me-1"></i>+Responsabilidad</span>
+                        <span class="text-success"><i class="bi bi-cpu me-1"></i>+Laboriosidad</span>
+                    </div>
+                </div>
+
+                <div class="text-end min-w-md-150">
+                    <a th:href="@{/game/mision/{id}(id=${mision.idMision})}" class="btn btn-cyber-success w-100 py-2.5 tech-font small text-nowrap">
+                        INICIAR_DECODIFICACIÓN <i class="bi bi-chevron-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
