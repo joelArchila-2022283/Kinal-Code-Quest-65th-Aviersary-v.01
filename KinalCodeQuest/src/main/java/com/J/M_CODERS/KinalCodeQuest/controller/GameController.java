@@ -57,7 +57,7 @@ public class GameController {
         if (jugador == null) return "redirect:/auth/login";
 
         model.addAttribute("jugador", jugador);
-        model.addAttribute("misiones", misionesService.listarPorArea(1));
+        model.addAttribute("misiones", misionesService.listarTodas());
         return "game/misiones";
     }
 

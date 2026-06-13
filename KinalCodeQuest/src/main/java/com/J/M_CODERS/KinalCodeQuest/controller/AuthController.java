@@ -1,5 +1,7 @@
 package com.J.M_CODERS.KinalCodeQuest.controller;
 
+import com.J.M_CODERS.KinalCodeQuest.model.dto.LoginDTO;
+import com.J.M_CODERS.KinalCodeQuest.model.dto.RegistroDTO;
 import com.J.M_CODERS.KinalCodeQuest.model.entity.Jugador;
 import com.J.M_CODERS.KinalCodeQuest.service.evaluator.JugadorService;
 import jakarta.servlet.http.HttpSession;
@@ -16,13 +18,14 @@ public class AuthController {
     private JugadorService jugadorService;
 
     @GetMapping("/login")
-    public String loginPage() {
+    public String loginPage(Model model) {
+        model.addAttribute("loginDTO", new LoginDTO());
         return "player/login";
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam String username, @RequestParam String password, HttpSession session, Model model) {
-        Jugador jugador = jugadorService.autenticar(username, password);
+    public String login(@ModelAttribute("loginDTO") LoginDTO loginDTO, HttpSession session, Model model) {
+        Jugador jugador = jugadorService.autenticar(loginDTO.getUsername(), loginDTO.getPassword());
         if (jugador != null) {
             session.setAttribute("usuarioLogueado", jugador);
             return "redirect:/game/dashboard";
@@ -33,12 +36,23 @@ public class AuthController {
 
     @GetMapping("/registro")
     public String registroPage(Model model) {
-        model.addAttribute("jugador", new Jugador());
+        model.addAttribute("registroDTO", new RegistroDTO());
         return "player/registro";
     }
 
     @PostMapping("/registro")
-    public String registrar(@ModelAttribute Jugador jugador, HttpSession session) {
+    public String registrar(@ModelAttribute("registroDTO") RegistroDTO registroDTO, HttpSession session, Model model) {
+        if (!registroDTO.getPassword().equals(registroDTO.getConfirmarPassword())) {
+            model.addAttribute("error", "Las contraseñas no coinciden en la matriz de seguridad.");
+            return "player/registro";
+        }
+
+        // Mapea el DTO a la Entidad real para guardarla en la DB
+        Jugador jugador = new Jugador();
+        jugador.setUsername(registroDTO.getUsername());
+        jugador.setPassword(registroDTO.getPassword());
+        jugador.setNombreAvatar(registroDTO.getNombreAvatar());
+
         Jugador nuevo = jugadorService.registrarJugador(jugador);
         session.setAttribute("usuarioLogueado", nuevo);
         return "redirect:/game/dashboard";

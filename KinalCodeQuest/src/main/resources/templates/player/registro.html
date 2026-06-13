@@ -19,7 +19,12 @@
             <p class="text-success tech-font small mb-0">[ALTA_DE_NUEVO_AVATAR]</p>
         </div>
 
-        <form th:action="@{/auth/registro}" th:object="${jugador}" method="post">
+        <form th:action="@{/auth/registro}" th:object="${registroDTO}" method="post">
+
+            <div th:if="${error}" class="alert alert-cyber py-2.5 text-center small mb-3 tech-font" style="border-color: var(--neon-red); color: #ff003c;">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> <span th:text="${error}"></span>
+            </div>
+
             <div class="mb-3">
                 <label class="form-label text-muted small fw-bold tech-font">NUEVO_USERNAME</label>
                 <input type="text" th:field="*{username}" class="form-control cyber-input" required autocomplete="off">
@@ -28,6 +33,11 @@
             <div class="mb-3">
                 <label class="form-label text-muted small fw-bold tech-font">CONTRASEÑA_DE_SEGURIDAD</label>
                 <input type="password" th:field="*{password}" class="form-control cyber-input" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label text-muted small fw-bold tech-font">CONFIRMAR_CONTRASEÑA</label>
+                <input type="password" th:field="*{confirmarPassword}" class="form-control cyber-input" required placeholder="Repite tu contraseña">
             </div>
 
             <div class="mb-4">
