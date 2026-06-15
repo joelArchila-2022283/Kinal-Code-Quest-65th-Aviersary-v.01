@@ -5,7 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class KinalCodeQuestApplication implements CommandLineRunner {
+public class
+KinalCodeQuestApplication implements CommandLineRunner {
 
 	public static void main(String[] args) {
 		SpringApplication.run(KinalCodeQuestApplication.class, args);
