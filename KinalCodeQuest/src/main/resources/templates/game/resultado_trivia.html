@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KinalCodeQuest - Reporte del Compilador</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        body { background-color: #060b13; font-family: 'Share Tech Mono', monospace; color: #adbac7; }
+        .result-card { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; }
+    </style>
+</head>
+<body class="py-5">
+
+<div class="container" style="max-width: 650px;">
+    <div class="result-card p-5 text-center">
+
+        <div th:if="${aprobado}">
+            <div class="display-3 text-success mb-2"><i class="bi bi-check-circle-fill"></i></div>
+            <h2 class="text-white fw-bold font-monospace">STATUS: SECTOR_CLEAR</h2>
+            <p class="text-muted">Has decodificado la sintaxis de este nivel sin registrar errores de compilación.</p>
+            <div class="badge bg-success bg-opacity-20 text-success border border-success p-3 font-monospace mb-4 fs-6" th:text="|+ ${expGanada} EXP ASIGNADA AL PERFIL|">+50 EXP</div>
+        </div>
+
+        <div th:unless="${aprobado}">
+            <div class="display-3 text-danger mb-2"><i class="bi bi-exclamation-triangle-fill"></i></div>
+            <h2 class="text-white fw-bold font-monospace">STATUS: COMPILATION_FAILED</h2>
+            <p class="text-muted">Se detectaron anomalías lógicas. Para recibir las recompensas de EXP debes obtener el 100% de respuestas correctas.</p>
+            <div class="badge bg-danger bg-opacity-20 text-danger border border-danger p-2 font-monospace mb-4">RECOMPENSA BLOQUEADA</div>
+        </div>
+
+        <div class="text-start mt-4 bg-black bg-opacity-30 p-3 rounded border border-secondary border-opacity-10">
+            <h6 class="text-white border-bottom border-secondary border-opacity-20 pb-2 mb-2 font-monospace">[DEBUG_LOGS_REPORT]</h6>
+            <p th:each="feed : ${feedbacks}" class="small font-monospace mb-1"
+               th:classappend="${#strings.contains(feed,'CORRECTA')} ? 'text-success' : 'text-danger'" th:text="${feed}"></p>
+        </div>
+
+        <div class="mt-5">
+            <a th:href="@{/game/play}" class="btn btn-outline-light px-4 py-2 font-monospace">VOLVER_A_LA_TERMINAL</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
