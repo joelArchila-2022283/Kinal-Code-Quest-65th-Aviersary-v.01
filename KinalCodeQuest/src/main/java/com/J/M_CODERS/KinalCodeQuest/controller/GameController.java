@@ -1,6 +1,7 @@
 package com.J.M_CODERS.KinalCodeQuest.controller;
 
 import com.J.M_CODERS.KinalCodeQuest.model.entity.*;
+import com.J.M_CODERS.KinalCodeQuest.repository.ProgresoJugadorRepository;
 import com.J.M_CODERS.KinalCodeQuest.service.evaluator.AreaTecnicaService;
 import com.J.M_CODERS.KinalCodeQuest.service.evaluator.MisionService;
 import com.J.M_CODERS.KinalCodeQuest.service.evaluator.JugadorService;
@@ -28,6 +29,9 @@ public class GameController {
     private JugadorService jugadorService;
 
     /* Renderiza el panel de control del usuario con sus estadísticas y accesos directos */
+    @Autowired
+    private ProgresoJugadorRepository progresoRepository;
+
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session, Model model) {
         Jugador jugadorSesion = (Jugador) session.getAttribute("usuarioLogueado");
@@ -36,8 +40,21 @@ public class GameController {
         Jugador jugadorActualizado = jugadorService.buscarPorId(jugadorSesion.getIdJugador());
         session.setAttribute("usuarioLogueado", jugadorActualizado);
 
+        // Cómputo de analíticas avanzadas
+        long erroresTotales = progresoRepository.countErroresByJugador(jugadorActualizado.getIdJugador());
+        long intentosTotales = progresoRepository.sumTotalIntentosByJugador(jugadorActualizado.getIdJugador());
+        List<ProgresoJugador> misionesDificiles = progresoRepository.findHistorialDificultadDesc(jugadorActualizado.getIdJugador());
+
+        // Asegurar que erroresTotales nunca sea negativo
+        if (erroresTotales < 0) erroresTotales = 0;
+
         model.addAttribute("jugador", jugadorActualizado);
         model.addAttribute("areas", areaService.listarTodas());
+
+        // Atributos de telemetría enviados al HTML
+        model.addAttribute("erroresTotales", erroresTotales);
+        model.addAttribute("intentosTotales", intentosTotales);
+        model.addAttribute("misionesDificiles", misionesDificiles);
 
         return "game/dashboard";
     }
@@ -103,6 +120,7 @@ public class GameController {
 
         return "game/historia";
     }
+
 
     /* Redirige a la interfaz base del motor interactivo clásico */
     @GetMapping("/game")
