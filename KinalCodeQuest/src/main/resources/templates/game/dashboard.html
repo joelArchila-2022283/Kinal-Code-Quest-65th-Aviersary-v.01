@@ -39,7 +39,10 @@
                 <div class="d-flex justify-content-center my-3">
                     <div class="avatar-container">
                         <div class="avatar-frame rounded-circle w-100 h-100"></div>
-                        <i class="bi bi-shield-lock avatar-icon"></i>
+                        <span th:if="${jugador?.nombreAvatar == 'Cyborg_Inft'}" class="fs-1 py-2" style="position: absolute; z-index: 5;">🤖</span>
+                        <span th:if="${jugador?.nombreAvatar == 'Tesla_Volt'}" class="fs-1 py-2" style="position: absolute; z-index: 5;">⚡</span>
+                        <span th:if="${jugador?.nombreAvatar == 'Gear_Mech'}" class="fs-1 py-2" style="position: absolute; z-index: 5;">⚙️</span>
+                        <i th:if="${jugador?.nombreAvatar == null}" class="bi bi-shield-lock avatar-icon"></i>
                     </div>
                 </div>
 
@@ -54,26 +57,27 @@
                     <div class="stat-row p-3 mb-3">
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted small"><i class="bi bi-lightning-fill text-warning me-1"></i> Experiencia General</span>
-                            <span class="text-white tech-font fw-bold" th:text="|${jugador?.experiencia != null ? jugador?.experiencia : 0} EXP|">0 EXP</span>
+                            <span class="text-white tech-font fw-bold" th:text="|${jugador?.experiencia != null ? jugador.experiencia : 0} EXP|">0 EXP</span>
                         </div>
                         <div class="progress bg-dark border border-secondary border-opacity-50" style="height: 6px;">
-                            <div class="progress-bar bg-warning shadow" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-bar bg-warning shadow" role="progressbar"
+                                 th:style="|width: ${jugador?.experiencia != null ? ((jugador.experiencia % 200) / 2.0) : 0}%|"></div>
                         </div>
                     </div>
 
                     <div class="stat-row d-flex justify-content-between align-items-center p-2 px-3 mb-2">
                         <span class="small text-muted"><i class="bi bi-cpu text-success me-2"></i>LABORIOSIDAD:</span>
-                        <span class="tech-font fw-bold text-success fs-5" th:text="${jugador?.ptosLaboriosidad != null ? jugador?.ptosLaboriosidad : 0}">0</span>
+                        <span class="tech-font fw-bold text-success fs-5" th:text="${jugador?.ptosLaboriosidad != null ? jugador.ptosLaboriosidad : 0}">0</span>
                     </div>
 
                     <div class="stat-row d-flex justify-content-between align-items-center p-2 px-3 mb-2">
                         <span class="small text-muted"><i class="bi bi-shield-check text-primary me-2"></i>RESPONSABILIDAD:</span>
-                        <span class="tech-font fw-bold text-primary fs-5" th:text="${jugador?.ptosResponsabilidad != null ? jugador?.ptosResponsabilidad : 0}">0</span>
+                        <span class="tech-font fw-bold text-primary fs-5" th:text="${jugador?.ptosResponsabilidad != null ? jugador.ptosResponsabilidad : 0}">0</span>
                     </div>
 
                     <div class="stat-row d-flex justify-content-between align-items-center p-2 px-3 mb-2">
                         <span class="small text-muted"><i class="bi bi-heart-fill text-danger me-2"></i>SOLIDARIDAD:</span>
-                        <span class="tech-font fw-bold text-danger fs-5" th:text="${jugador?.ptosSolidaridad != null ? jugador?.ptosSolidaridad : 0}">0</span>
+                        <span class="tech-font fw-bold text-danger fs-5" th:text="${jugador?.ptosSolidaridad != null ? jugador.ptosSolidaridad : 0}">0</span>
                     </div>
                 </div>
             </div>
@@ -115,7 +119,7 @@
                                 </div>
                                 <h5 class="fw-bold text-white mb-0 tech-font">MODO_HISTORIA</h5>
                             </div>
-                            <p class="card-desc text-muted small lh-base mb-0">Desbloquea registros históricos sobre la evolución de Kinal a medida que juntas EXP.</p>
+                            <p class="card-desc text-muted small lh-base mb-0">Desbloquea registros y archivos históricos de Kinal a medida que completas misiones.</p>
                         </div>
                         <div class="mt-4 pt-2">
                             <a th:href="@{/game/historia}" class="btn btn-cyber-success w-100 py-2 tech-font small">
@@ -153,7 +157,7 @@
                                 </div>
                                 <h5 class="fw-bold text-white mb-0 tech-font">INICIAR_JUEGO</h5>
                             </div>
-                            <p class="card-desc text-muted small lh-base mb-0">Accede a la terminal de trivia de Java. Estudia manuales de firmware y aprueba los sectores.</p>
+                            <p class="card-desc text-muted small lh-base mb-0">Accede a la terminal interactiva de trivia de Java y aprueba los sectores de código.</p>
                         </div>
                         <div class="mt-4 pt-2">
                             <a th:href="@{/game/play}" class="btn btn-cyber w-100 py-2 tech-font small">
@@ -169,7 +173,7 @@
                 <h4 class="fw-bold text-white mb-0 tech-font">ENTORNOS_DE_DESAFÍO_DISPONIBLES</h4>
             </div>
 
-            <div class="row g-4">
+            <div class="row g-4 mb-5">
                 <div class="col-12 col-md-6" th:each="area : ${areas}">
                     <div class="area-card h-100 p-4 d-flex flex-column justify-content-between">
                         <div>
@@ -188,6 +192,79 @@
                             </a>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="d-flex align-items-center mb-4 ps-2">
+                <i class="bi bi-activity text-info fs-4 me-2"></i>
+                <h4 class="fw-bold text-white mb-0 tech-font">DIAGNÓSTICO_Y_TELEMETRÍA_DE_COMPILACIÓN</h4>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-12 col-md-4">
+                    <div class="profile-card p-3 text-start bg-black bg-opacity-30 h-100" style="border: 1px solid rgba(255, 51, 51, 0.2)">
+                        <span class="text-muted small d-block tech-font">[ERR_COMPILATION_LOGS]</span>
+                        <h3 class="text-danger fw-bold tech-font mb-0 mt-1">
+                            <i class="bi bi-bug-fill me-1"></i> <span th:text="${erroresTotales}">0</span>
+                        </h3>
+                        <span class="text-muted font-monospace bg-dark px-1 rounded" style="font-size: 11px;">Fallas lógicas</span>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <div class="profile-card p-3 text-start bg-black bg-opacity-30 h-100" style="border: 1px solid rgba(0, 255, 65, 0.2)">
+                        <span class="text-muted small d-block tech-font">[TOTAL_EXECUTIONS]</span>
+                        <h3 class="text-success fw-bold tech-font mb-0 mt-1">
+                            <i class="bi bi-play-terminal me-1"></i> <span th:text="${intentosTotales}">0</span>
+                        </h3>
+                        <span class="text-muted font-monospace bg-dark px-1 rounded" style="font-size: 11px;">Peticiones Javac</span>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                    <div class="profile-card p-3 text-start bg-black bg-opacity-30 h-100" style="border: 1px solid rgba(255, 193, 7, 0.2)">
+                        <span class="text-muted small d-block tech-font">[LOGIC_ACCURACY]</span>
+                        <h3 class="text-warning fw-bold tech-font mb-0 mt-1">
+                            <i class="bi bi-pie-chart-fill me-1"></i>
+                            <span th:text="${intentosTotales > 0 ? #numbers.formatPercent((intentosTotales - erroresTotales) * 1.0 / intentosTotales, 1, 0) : '100%'}">100%</span>
+                        </h3>
+                        <span class="text-muted font-monospace bg-dark px-1 rounded" style="font-size: 11px;">Efectividad estructural</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card area-card p-4 mb-4">
+                <h6 class="text-uppercase text-white tech-font fw-bold small mb-3">
+                    <i class="bi bi-bar-chart-steps text-info me-1"></i> HISTORIAL_DE_COMPLEJIDAD_ALGORÍTMICA (MAYOR A MENOR)
+                </h6>
+
+                <div th:if="${#lists.isEmpty(misionesDificiles)}" class="text-center text-muted font-monospace small py-3">
+                    [SISTEMA_LIMPIO: NO SE DETECTAN LOGS DE EJECUCIÓN EN LA MATRIZ]
+                </div>
+
+                <div class="table-responsive" th:if="${!#lists.isEmpty(misionesDificiles)}">
+                    <table class="table table-dark table-borderless align-middle font-monospace mb-0" style="font-size: 13px;">
+                        <thead>
+                        <tr class="text-muted border-bottom border-secondary border-opacity-25 tech-font">
+                            <th>ID_PROTOCOLO</th>
+                            <th>RETO_SISTEMA</th>
+                            <th class="text-center">INTENTOS_LOGUEADOS</th>
+                            <th class="text-end">FECHA_CIERRE</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="prog : ${misionesDificiles}" class="border-bottom border-secondary border-opacity-10">
+                            <td class="text-info fw-bold" th:text="|MID_0${prog.mision.idMision}|">MID_00</td>
+                            <td class="text-white" th:text="${prog.mision.titulo}">Título del reto</td>
+                            <td class="text-center fw-bold text-warning fs-6" th:text="${prog.intentos}">0</td>
+                            <td class="text-end text-muted">
+                                <span th:if="${prog.fechaCompletado != null}"
+                                      th:text="${#temporals.format(prog.fechaCompletado, 'dd/MM/yyyy HH:mm')}">--/--/--</span>
+                                <span th:if="${prog.fechaCompletado == null}" class="text-danger fw-bold">[PENDIENTE]</span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
