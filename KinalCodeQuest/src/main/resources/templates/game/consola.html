@@ -10,43 +10,130 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+
+    <style>
+        .CodeMirror {
+            font-family: 'Share Tech Mono', monospace !important;
+            font-size: 15px !important;
+            padding: 10px 0;
+        }
+        .CodeMirror-gutters {
+            background-color: #1e293b !important;
+            border-right: 1px solid #334155 !important;
+        }
+        /* Scrollbar personalizado para la lista de misiones */
+        .misiones-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .misiones-scroll::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+        .misiones-scroll::-webkit-scrollbar-thumb {
+            background: var(--neon-purple);
+            border-radius: 4px;
+        }
+        /* Efecto hover para las tarjetas de misiones laterales */
+        .mision-side-card {
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        .mision-side-card:hover {
+            background-color: rgba(189, 0, 255, 0.1) !important;
+            border-left: 3px solid var(--neon-purple);
+        }
+        .mision-side-card.active {
+            background-color: rgba(0, 240, 255, 0.1) !important;
+            border-left: 3px solid var(--neon-blue);
+            border-color: rgba(0, 240, 255, 0.3) !important;
+        }
+    </style>
 </head>
-<body class="auth-body py-4">
+<body class="auth-body py-4" style="align-items: flex-start;">
 
-<div class="container" style="max-width: 900px;">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <a th:href="@{/game/dashboard}" class="text-decoration-none small text-muted tech-font">
-                <i class="bi bi-chevron-left"></i> VOLVER_AL_CENTRO_DE_CONTROL
+<div class="container-fluid px-3 px-md-5">
+
+    <div class="row g-4">
+
+        <div class="col-12 col-lg-3">
+
+            <a th:href="@{/game/dashboard}" class="btn btn-cyber-danger w-100 py-3 mb-4 tech-font fw-bold d-flex align-items-center justify-content-center gap-2 shadow">
+                <i class="bi bi-box-arrow-left fs-5"></i>
+                <span>DESCONECTAR_TERMINAL</span>
             </a>
-            <h3 class="fw-bold text-white mt-1 tech-font" th:text="${mision != null ? mision.titulo : 'CONSOLA DE COMPILACIÓN'}">TÍTULO_MISIÓN</h3>
-        </div>
-        <span class="badge border border-info text-info px-3 py-2 fs-6 tech-font neon-glow"
-              th:text="|${mision != null ? mision.expRecompensa : 0} EXP|">0 EXP</span>
-    </div>
 
-    <div class="terminal-chassis p-1 shadow border border-secondary border-opacity-25 rounded-3" style="background-color: #1e293b;">
+            <div class="card area-card p-3 h-100" style="border-top: 2px solid var(--neon-purple);">
+                <div class="d-flex align-items-center mb-3 border-bottom border-secondary border-opacity-25 pb-2">
+                    <i class="bi bi-list-task text-info fs-5 me-2"></i>
+                    <h6 class="fw-bold text-white mb-0 tech-font">LOG_DE_MISIONES</h6>
+                </div>
 
-        <div class="d-flex justify-content-between align-items-center px-3 py-2 bg-dark rounded-top-3 border-bottom border-secondary border-opacity-25">
-            <div class="d-flex align-items-center gap-2">
-                <span class="badge bg-danger rounded-circle p-1" style="width: 10px; height: 10px;"></span>
-                <span class="badge bg-warning rounded-circle p-1" style="width: 10px; height: 10px;"></span>
-                <span class="badge bg-success rounded-circle p-1" style="width: 10px; height: 10px;"></span>
-                <span class="text-secondary small tech-font ms-2">src/main/java/KinalCodeQuestApplication.java</span>
+                <div class="misiones-scroll d-flex flex-column gap-2 pe-1" style="max-height: 65vh; overflow-y: auto;">
+
+                    <a th:each="m : ${listaMisiones}"
+                       th:href="@{/game/mision/{id}(id=${m.idMision})}"
+                       class="text-decoration-none p-3 rounded-2 border border-secondary border-opacity-25 bg-dark mision-side-card"
+                       th:classappend="${mision != null && mision.idMision == m.idMision} ? 'active' : ''">
+
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <span class="small tech-font fw-bold text-white text-truncate pe-2" th:text="${m.titulo}">Título de la Misión</span>
+
+                            <i class="bi bi-code-square text-secondary small flex-shrink-0"></i>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-between mt-2">
+                            <span class="badge bg-black border border-secondary text-info tech-font" style="font-size: 10px;" th:text="|ID: ${m.idMision}|">ID: 1</span>
+                            <span class="text-warning small tech-font" style="font-size: 11px;" th:text="|${m.expRecompensa} EXP|">100 EXP</span>
+                        </div>
+                    </a>
+
+                    <div th:if="${#lists.isEmpty(listaMisiones)}" class="text-center text-muted small p-3 font-monospace border border-secondary border-opacity-10 rounded">
+                        [ SIN_REGISTROS_EN_LA_MATRIZ ]
+                    </div>
+
+                </div>
             </div>
-            <span class="text-secondary small tech-font">INTENTOS:
-                <strong id="contadorIntentos" class="text-warning" th:text="${progreso?.intentos != null ? progreso.intentos : 0}">0</strong>
-            </span>
         </div>
 
-        <form th:action="@{/game/mision/{id}/compilar(id=${mision != null ? mision.idMision : 1})}"
-              method="post"
-              id="compilerForm"
-              onsubmit="return false;">
+        <div class="col-12 col-lg-9">
 
-            <textarea id="editorCodigo" name="codigoEnviado" th:if="${progreso?.ultimoCodigoEnviado != null}" th:text="${progreso.ultimoCodigoEnviado}"></textarea>
+            <div class="d-flex justify-content-between align-items-center mb-3 bg-dark bg-opacity-50 p-3 rounded-3 border border-secondary border-opacity-25 shadow-sm">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="p-2 rounded bg-info bg-opacity-10 border border-info border-opacity-25">
+                        <i class="bi bi-cpu text-info fs-4"></i>
+                    </div>
+                    <div>
+                        <span class="text-muted small tech-font d-block lh-1 mb-1">PROTOCOLO_ACTIVO</span>
+                        <h3 class="fw-bold text-white mb-0 tech-font" th:text="${mision != null ? mision.titulo : 'SISTEMA NO ASIGNADO'}">TÍTULO_MISIÓN</h3>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <span class="text-muted small tech-font d-block mb-1">RECOMPENSA_ESTIMADA</span>
+                    <span class="badge border border-warning text-warning px-3 py-2 fs-6 tech-font neon-glow"
+                          th:text="|${mision != null ? mision.expRecompensa : 0} EXP|">0 EXP</span>
+                </div>
+            </div>
 
-            <textarea id="editorCodigo" name="codigoEnviado" th:unless="${progreso?.ultimoCodigoEnviado != null}">package com.J.M_CODERS.KinalCodeQuest;
+            <div class="terminal-chassis p-1 shadow-lg border border-secondary border-opacity-50 rounded-3" style="background-color: #0a0e14;">
+
+                <div class="d-flex justify-content-between align-items-center px-3 py-2 bg-black rounded-top-3 border-bottom border-secondary border-opacity-50">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-danger rounded-circle p-1 shadow" style="width: 12px; height: 12px;"></span>
+                        <span class="badge bg-warning rounded-circle p-1 shadow" style="width: 12px; height: 12px;"></span>
+                        <span class="badge bg-success rounded-circle p-1 shadow" style="width: 12px; height: 12px;"></span>
+                        <span class="text-info small tech-font ms-3 fw-bold"><i class="bi bi-filetype-java me-1"></i> Main.java</span>
+                    </div>
+                    <span class="text-secondary small tech-font bg-dark px-2 py-1 rounded">INTENTOS:
+                        <strong id="contadorIntentos" class="text-warning" th:text="${progreso?.intentos != null ? progreso.intentos : 0}">0</strong>
+                    </span>
+                </div>
+
+                <form th:action="@{/game/mision/{id}/compilar(id=${mision != null ? mision.idMision : 1})}"
+                      method="post"
+                      id="compilerForm"
+                      onsubmit="return false;">
+
+                    <textarea id="editorCodigo" name="codigoEnviado" th:if="${progreso?.ultimoCodigoEnviado != null}" th:text="${progreso.ultimoCodigoEnviado}"></textarea>
+                    <textarea id="editorCodigo" name="codigoEnviado" th:unless="${progreso?.ultimoCodigoEnviado != null}">package com.J.M_CODERS.KinalCodeQuest;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -67,24 +154,27 @@ public class KinalCodeQuestApplication implements CommandLineRunner {
     }
 }</textarea>
 
-            <div class="p-3 bg-dark bg-opacity-50 rounded-bottom-3">
-                <button type="submit" id="btnEjecutar" class="btn btn-cyber-primary w-100 fw-bold tech-font py-3 neon-glow">
-                    <span>EJECUTAR_KINAL_COMPILER</span> <i class="bi bi-play-fill ms-2"></i>
-                </button>
+                    <div class="p-2 bg-black rounded-bottom-3 border-top border-secondary border-opacity-25">
+                        <button type="submit" id="btnEjecutar" class="btn btn-cyber-primary w-100 fw-bold tech-font py-3 neon-glow d-flex align-items-center justify-content-center gap-2">
+                            <span>EJECUTAR_KINAL_COMPILER</span> <i class="bi bi-play-fill fs-5"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
-        </form>
-    </div>
 
-    <div id="boxTerminal" class="mt-4 shadow-lg border border-secondary border-opacity-25 rounded-3 overflow-hidden d-none">
-        <div class="px-3 py-2 bg-dark d-flex justify-content-between align-items-center border-bottom border-secondary border-opacity-25">
-            <div class="d-flex align-items-center gap-2">
-                <i class="bi bi-terminal text-info"></i>
-                <span class="text-white small font-monospace">Output Terminal - KinalCompiler.exe</span>
+            <div id="boxTerminal" class="mt-4 shadow-lg border border-secondary border-opacity-50 rounded-3 overflow-hidden d-none">
+                <div class="px-3 py-2 bg-black d-flex justify-content-between align-items-center border-bottom border-secondary border-opacity-50">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-terminal-fill text-info"></i>
+                        <span class="text-white small font-monospace">Output Terminal - jvm_runtime.exe</span>
+                    </div>
+                    <span id="badgeStatus" class="badge font-monospace text-uppercase">STATUS</span>
+                </div>
+                <div class="p-3" style="background-color: #070a0f; min-height: 180px; max-height: 300px; overflow-y: auto;">
+                    <pre id="textoConsola" class="font-monospace mb-0" style="white-space: pre-wrap; font-size: 14px;">C:\></pre>
+                </div>
             </div>
-            <span id="badgeStatus" class="badge font-monospace text-uppercase">STATUS</span>
-        </div>
-        <div class="p-3 bg-black" style="min-height: 150px; max-height: 250px; overflow-y: auto;">
-            <pre id="textoConsola" class="font-monospace mb-0" style="white-space: pre-wrap;">C:\></pre>
+
         </div>
     </div>
 </div>
@@ -105,7 +195,8 @@ public class KinalCodeQuestApplication implements CommandLineRunner {
         tabSize: 4
     });
 
-    editor.setSize(null, "420px");
+    // Altura mejorada para el grid layout
+    editor.setSize(null, "480px");
 
     document.getElementById("compilerForm").addEventListener("submit", function(event) {
         event.preventDefault();
@@ -114,9 +205,11 @@ public class KinalCodeQuestApplication implements CommandLineRunner {
         const form = event.target;
         const formData = new FormData(form);
         const btn = document.getElementById("btnEjecutar");
+        const icon = btn.querySelector("i");
 
         btn.disabled = true;
         btn.querySelector("span").innerText = "COMPILANDO_SISTEMA...";
+        icon.className = "bi bi-arrow-repeat spinner-border spinner-border-sm ms-2";
 
         const urlEndpoint = form.getAttribute("action");
 
@@ -128,58 +221,48 @@ public class KinalCodeQuestApplication implements CommandLineRunner {
                 "X-Requested-With": "XMLHttpRequest"
             }
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Respuesta inválida del servidor HTTP.");
-            }
-            return response.json();
-        })
-        .then(data => {
-            const boxTerminal = document.getElementById("boxTerminal");
-            boxTerminal.classList.remove("d-none");
+            .then(response => {
+                if (!response.ok) throw new Error("Respuesta inválida del servidor HTTP.");
+                return response.json();
+            })
+            .then(data => {
+                const boxTerminal = document.getElementById("boxTerminal");
+                boxTerminal.classList.remove("d-none");
 
-            const textoConsola = document.getElementById("textoConsola");
-            textoConsola.innerText = data.consolaResult;
+                const textoConsola = document.getElementById("textoConsola");
+                textoConsola.innerText = data.consolaResult;
 
-            const badge = document.getElementById("badgeStatus");
-            badge.innerText = data.statusText;
+                const badge = document.getElementById("badgeStatus");
+                badge.innerText = data.statusText;
 
-            if (data.success) {
-                textoConsola.style.color = "#39ff14";
-                badge.className = "badge font-monospace text-uppercase bg-success bg-opacity-25 text-success";
-            } else {
-                textoConsola.style.color = "#ff3333";
-                badge.className = "badge font-monospace text-uppercase bg-danger bg-opacity-25 text-danger";
-            }
+                if (data.success) {
+                    textoConsola.style.color = "#39ff14"; // Neon green
+                    badge.className = "badge font-monospace text-uppercase bg-success bg-opacity-25 text-success border border-success";
+                } else {
+                    textoConsola.style.color = "#ff0055"; // Neon pink/red
+                    badge.className = "badge font-monospace text-uppercase bg-danger bg-opacity-25 text-danger border border-danger";
+                }
 
-            document.getElementById("contadorIntentos").innerText = data.intentos;
-        })
-        .catch(err => {
-            alert("No se pudo conectar con el compilador.");
-            console.error(err);
-        })
-        .finally(() => {
-            btn.disabled = false;
-            btn.querySelector("span").innerText = "EJECUTAR_KINAL_COMPILER";
-        });
+                document.getElementById("contadorIntentos").innerText = data.intentos;
+
+                // Auto-scroll a la terminal si el código tira output largo
+                boxTerminal.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            })
+            .catch(err => {
+                alert("Error crítico: No se pudo enlazar con la matriz del compilador.");
+                console.error(err);
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.querySelector("span").innerText = "EJECUTAR_KINAL_COMPILER";
+                icon.className = "bi bi-play-fill fs-5";
+            });
     });
 
     document.getElementById("btnEjecutar").addEventListener("click", function() {
         document.getElementById("compilerForm").requestSubmit();
     });
 </script>
-
-<style>
-    .CodeMirror {
-        font-family: 'Share Tech Mono', monospace !important;
-        font-size: 15px !important;
-        padding: 10px 0;
-    }
-    .CodeMirror-gutters {
-        background-color: #1e293b !important;
-        border-right: 1px solid #334155 !important;
-    }
-</style>
 
 </body>
 </html>
