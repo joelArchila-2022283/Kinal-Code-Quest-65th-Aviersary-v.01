@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,10 +36,12 @@ public class ConsolaController {
         }
 
         Mision m = null;
+        List<Mision> listaMisiones = null;
+
         try {
-            java.util.List<Mision> lista = misionesService.listarTodas();
-            if (lista != null && !lista.isEmpty()) {
-                m = lista.get(0);
+            listaMisiones = misionesService.listarTodas();
+            if (listaMisiones != null && !listaMisiones.isEmpty()) {
+                m = listaMisiones.get(0);
             }
         } catch (Exception e) {
             // Ignorar fallos de consulta
@@ -63,6 +66,9 @@ public class ConsolaController {
         model.addAttribute("mision", m);
         model.addAttribute("progreso", progreso);
         model.addAttribute("jugador", jugador);
+
+        // ¡NUEVO!: Pasamos la lista completa de misiones a la vista para el panel lateral
+        model.addAttribute("listaMisiones", listaMisiones);
 
         return "game/consola";
     }
@@ -92,9 +98,20 @@ public class ConsolaController {
             progreso.setIntentos(0);
         }
 
+        // Obtenemos todas las misiones para que el panel lateral siempre las muestre
+        List<Mision> listaMisiones = null;
+        try {
+            listaMisiones = misionesService.listarTodas();
+        } catch (Exception e) {
+            // Ignorar
+        }
+
         model.addAttribute("mision", mision);
         model.addAttribute("progreso", progreso);
         model.addAttribute("jugador", jugador);
+
+        // ¡NUEVO!: Pasamos la lista completa
+        model.addAttribute("listaMisiones", listaMisiones);
 
         return "game/consola";
     }
