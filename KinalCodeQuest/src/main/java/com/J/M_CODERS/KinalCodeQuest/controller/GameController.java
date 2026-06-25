@@ -12,7 +12,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /* Controlador central encargado de la navegación principal y los módulos del juego */
 @Controller
@@ -27,6 +30,21 @@ public class GameController {
 
     @Autowired
     private JugadorService jugadorService;
+
+    // Repositorio en memoria de preguntas de Java asociadas a las Áreas Técnicas (Niveles)
+    private final List<PreguntaTrivia> bancoPreguntas = Arrays.asList(
+            // Preguntas para Área 1 (Sintaxis y Variables Básicas)
+            new PreguntaTrivia(1, 1, "¿Cuál de los siguientes es un tipo de dato primitivo en Java?",
+                    Arrays.asList("String", "int", "Integer", "Scanner"), 1, "Los tipos primitivos como 'int', 'char' y 'boolean' almacenan valores directamente en la memoria Stack y no son objetos."),
+            new PreguntaTrivia(2, 1, "¿Cómo se declara una constante inmutable en Java?",
+                    Arrays.asList("const int X = 10;", "final int X = 10;", "static int X = 10;", "immutable int X = 10;"), 1, "La palabra clave 'final' define una variable cuyo valor no puede cambiar tras su primera asignación."),
+
+            // Preguntas para Área 2 (Estructuras de Control y Flujo)
+            new PreguntaTrivia(3, 2, "¿Qué estructura garantiza que el bloque de código se ejecute al menos una vez de forma obligatoria?",
+                    Arrays.asList("for", "while", "do-while", "if-else"), 2, "La condición de un bucle 'do-while' se evalúa al final del ciclo, asegurando siempre una primera ejecución."),
+            new PreguntaTrivia(4, 2, "¿Cuál es el resultado de un ciclo 'for (int i = 0; i < 3; i++)' si imprimimos el valor de 'i' consecutivamente?",
+                    Arrays.asList("0 1 2 3", "1 2 3", "0 1 2", "0 0 0"), 2, "El ciclo se rompe de forma inmediata en el momento en que 'i' incrementa a 3, imprimiendo únicamente los índices 0, 1 y 2.")
+    );
 
     /* Renderiza el panel de control del usuario con sus estadísticas y accesos directos */
     @Autowired
@@ -59,6 +77,82 @@ public class GameController {
         return "game/dashboard";
     }
 
+    /* MÓDULO INICIAR JUEGO: Selector de Niveles y Manual Técnico de Usuario integrado */
+    @GetMapping("/play")
+    public String iniciarJuego(HttpSession session, Model model) {
+        Jugador jugadorSesion = (Jugador) session.getAttribute("usuarioLogueado");
+        if (jugadorSesion == null) return "redirect:/auth/login";
+
+        model.addAttribute("jugador", jugadorService.buscarPorId(jugadorSesion.getIdJugador()));
+        model.addAttribute("areas", areaService.listarTodas());
+        return "game/play";
+    }
+
+    /* MÓDULO INICIAR JUEGO: Carga el cuestionario interactivo del Nivel/Área Técnica seleccionada */
+    @GetMapping("/play/trivia/{idArea}")
+    public String lanzarTrivia(@PathVariable Integer idArea, HttpSession session, Model model) {
+        if (session.getAttribute("usuarioLogueado") == null) return "redirect:/auth/login";
+
+        AreaTecnica area = areaService.buscarPorId(idArea);
+        List<PreguntaTrivia> preguntasNivel = bancoPreguntas.stream()
+                .filter(p -> p.getIdAreaAsociada().equals(idArea))
+                .collect(Collectors.toList());
+
+        if (preguntasNivel.isEmpty()) {
+            return "redirect:/game/play?error=no_questions";
+        }
+
+        model.addAttribute("area", area);
+        model.addAttribute("preguntas", preguntasNivel);
+        return "game/trivia";
+    }
+
+    /* MÓDULO INICIAR JUEGO: Evalúa el examen de la trivia y premia al usuario si saca 100% */
+    @PostMapping("/play/trivia/evaluar")
+    public String evaluarTrivia(@RequestParam Map<String, String> params, HttpSession session, Model model) {
+        Jugador jugadorSesion = (Jugador) session.getAttribute("usuarioLogueado");
+        if (jugadorSesion == null) return "redirect:/auth/login";
+
+        Jugador jugador = jugadorService.buscarPorId(jugadorSesion.getIdJugador());
+        Integer idArea = Integer.parseInt(params.get("idArea"));
+
+        List<PreguntaTrivia> preguntasNivel = bancoPreguntas.stream()
+                .filter(p -> p.getIdAreaAsociada().equals(idArea))
+                .collect(Collectors.toList());
+
+        int correctas = 0;
+        List<String> feedback = new ArrayList<>();
+
+        for (PreguntaTrivia pregunta : preguntasNivel) {
+            String respuestaEnviada = params.get("pregunta_" + pregunta.getIdPregunta());
+            if (respuestaEnviada != null && Integer.parseInt(respuestaEnviada) == pregunta.getRespuestaCorrectaIndex()) {
+                correctas++;
+                feedback.add("Pregunta #" + pregunta.getIdPregunta() + ": [CORRECTA] -> " + pregunta.getJustificacion());
+            } else {
+                feedback.add("Pregunta #" + pregunta.getIdPregunta() + ": [INCORRECTA] -> " + pregunta.getJustificacion());
+            }
+        }
+
+        boolean aprobado = (correctas == preguntasNivel.size());
+        int expGanada = aprobado ? 50 : 0;
+
+        if (aprobado) {
+            jugador.setExperiencia((jugador.getExperiencia() != null ? jugador.getExperiencia() : 0) + expGanada);
+            jugadorService.guardar(jugador);
+            session.setAttribute("usuarioLogueado", jugador);
+        }
+
+        model.addAttribute("jugador", jugador);
+        model.addAttribute("aprobado", aprobado);
+        model.addAttribute("expGanada", expGanada);
+        model.addAttribute("correctas", correctas);
+        model.addAttribute("total", preguntasNivel.size());
+        model.addAttribute("feedbacks", feedback);
+        model.addAttribute("areaId", idArea);
+
+        return "game/resultado_trivia";
+    }
+
     /* Apartado progresivo de la historia que evalúa la EXP del jugador para desbloquear capítulos */
     @GetMapping("/historia")
     public String verHistoria(HttpSession session, Model model) {
@@ -75,7 +169,7 @@ public class GameController {
         cap1.setIdCapitulo(1);
         cap1.setTitulo("El Cimiento del Núcleo (1961)");
         cap1.setExpRequerida(0);
-        cap1.setContenidoNarrativo("El Centro Educativo Técnico Laboral Kinal nació en 1961 en Guatemala, gracias a la iniciativa de un grupo de profesionales e ingenieros motivados por las enseñanzas de San Josemaría Escrivá de Balaguer. Su meta fundamental era brindar oportunidades de superación técnica y humana a jóvenes y adultos de escasos recursos. Iniciando en instalaciones humildes en la zona 12, Kinal revolucionó la educación técnica en el país promoviendo que el trabajo diario es un medio para alcanzar la excelencia humana y la santificación.");
+        cap1.setContenidoNarrativo("El Centro Educativo Técnico Laboral Kinal nació en 1961 en Guatemala, gracias a la iniciativa de un grupo de profesionales e ingenieros motivados por las enseñanzas de San Josemaría Escrivá de Balaguer. Su meta fundamental era brindar oportunidades de superación técnica y humana a jóvenes y adultos de escasos recursos. Iniciando en instalaciones humildes en la zona 12, Kinal revolutionized la educación técnica en el país promoviendo que el trabajo diario es un medio para alcanzar la excelencia humana y la santificación.");
         cap1.setDesbloqueado(expActual >= cap1.getExpRequerida());
         capitulos.add(cap1);
 

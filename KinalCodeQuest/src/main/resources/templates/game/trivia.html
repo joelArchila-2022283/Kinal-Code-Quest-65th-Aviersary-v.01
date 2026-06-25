@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KinalCodeQuest - Evaluador Sintáctico</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        body { background-color: #060b13; font-family: 'Share Tech Mono', monospace; color: #adbac7; }
+        .trivia-card { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; }
+        .option-item { background: #161b22; border: 1px solid #30363d; padding: 12px; border-radius: 4px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; }
+        .option-item:hover { border-color: #58a6ff; background: #21262d; }
+    </style>
+</head>
+<body class="py-5">
+
+<div class="container" style="max-width: 700px;">
+    <div class="trivia-card p-4">
+        <h3 class="text-white font-monospace text-center mb-1" th:text="|COMPILANDO: ${area.nombre}|">ÁREA</h3>
+        <p class="text-muted small text-center mb-4">Responde correctamente todas las variables de la consola de pruebas.</p>
+
+        <form th:action="@{/game/play/trivia/evaluar}" method="POST">
+            <input type="hidden" name="idArea" th:value="${area.idArea}">
+
+            <div th:each="preg, iter : ${preguntas}" class="mb-5 border-bottom border-secondary border-opacity-10 pb-4">
+                <h5 class="text-white mb-3" th:text="|${iter.index + 1}. ${preg.enunciado}|">Pregunta</h5>
+
+                <div class="d-flex flex-column">
+                    <label th:each="opt, optIter : ${preg.opciones}" class="option-item d-flex align-items-center m-0 mb-2">
+                        <input type="radio" th:name="|pregunta_${preg.idPregunta}|" th:value="${optIter.index}" required class="me-3">
+                        <span class="text-light" th:text="${opt}">Opción</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary px-5 py-2 font-monospace fw-bold">EVALUAR_RESPUESTAS_SYS <i class="bi bi-shield-check"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

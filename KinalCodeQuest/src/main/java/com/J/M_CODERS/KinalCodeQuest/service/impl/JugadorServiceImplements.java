@@ -35,4 +35,10 @@ public class JugadorServiceImplements implements JugadorService {
     public Jugador actualizarProgreso(Jugador jugador) {
         return jugadorRepository.save(jugador);
     }
+
+
+    @Override
+    public Jugador guardar(Jugador jugador) {
+        return jugadorRepository.save(jugador);
+    }
 }

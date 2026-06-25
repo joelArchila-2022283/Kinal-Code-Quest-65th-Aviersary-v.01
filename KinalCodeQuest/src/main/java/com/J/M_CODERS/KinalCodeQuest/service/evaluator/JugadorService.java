@@ -7,4 +7,5 @@ public interface JugadorService {
     Jugador autenticar(String username, String password);
     Jugador buscarPorId(Integer id);
     Jugador actualizarProgreso(Jugador jugador);
+    Jugador guardar(Jugador jugador);
 }
