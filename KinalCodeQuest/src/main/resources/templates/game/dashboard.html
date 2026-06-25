@@ -90,82 +90,89 @@
                 <h4 class="fw-bold text-white mb-0 tech-font">SISTEMAS_DE_CONTROL_CORE</h4>
             </div>
 
+            <!-- APARTADO MODIFICADO A ESTRUCTURA HORIZONTAL -->
             <div class="row g-4 mb-5">
-                <div class="col-12 col-md-6 col-xl-3">
-                    <div class="card area-card p-4 h-100 d-flex flex-column justify-content-between">
-                        <div>
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="area-icon-box p-2.5 rounded-3 me-3">
-                                    <i class="bi bi-terminal fs-4 icon-consola"></i>
-                                </div>
-                                <h5 class="fw-bold text-white mb-0 tech-font">CONSOLA</h5>
+
+                <!-- CONSOLA -->
+                <div class="col-12 col-md-6">
+                    <div class="card area-card p-3 h-100 d-flex flex-row align-items-center justify-content-between gap-3">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="area-icon-box p-2.5 rounded-3 flex-shrink-0">
+                                <i class="bi bi-terminal fs-4 icon-consola"></i>
                             </div>
-                            <p class="card-desc text-muted small lh-base mb-0">Monitorea logs, comandos del sistema y parámetros en tiempo real.</p>
+                            <div>
+                                <h5 class="fw-bold text-white mb-1 tech-font">CONSOLA</h5>
+                                <p class="card-desc text-muted small lh-sm mb-0">Monitorea logs, comandos del sistema y parámetros en tiempo real.</p>
+                            </div>
                         </div>
-                        <div class="mt-4 pt-2">
+                        <div class="flex-shrink-0" style="min-width: 120px;">
                             <a th:href="@{/game/consola}" class="btn btn-cyber-primary w-100 py-2 tech-font small">
-                                ABRIR_CONSOLA <i class="bi bi-chevron-right ms-1"></i>
+                                ABRIR <i class="bi bi-chevron-right ms-1"></i>
                             </a>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-12 col-md-6 col-xl-3">
-                    <div class="card area-card p-4 h-100 d-flex flex-column justify-content-between" style="border-top: 2px solid var(--neon-green);">
-                        <div>
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="area-icon-box p-2.5 rounded-3 me-3" style="background-color: rgba(57, 255, 20, 0.05);">
-                                    <i class="bi bi-book-half fs-4 icon-game" style="color: var(--neon-green);"></i>
-                                </div>
-                                <h5 class="fw-bold text-white mb-0 tech-font">MODO_HISTORIA</h5>
+                <!-- MODO HISTORIA -->
+                <div class="col-12 col-md-6">
+                    <div class="card area-card p-3 h-100 d-flex flex-row align-items-center justify-content-between gap-3" style="border-left: 2px solid var(--neon-green); border-top: none;">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="area-icon-box p-2.5 rounded-3 flex-shrink-0" style="background-color: rgba(57, 255, 20, 0.05);">
+                                <i class="bi bi-book-half fs-4 icon-game" style="color: var(--neon-green);"></i>
                             </div>
-                            <p class="card-desc text-muted small lh-base mb-0">Desbloquea registros y archivos históricos de Kinal a medida que completas misiones.</p>
+                            <div>
+                                <h5 class="fw-bold text-white mb-1 tech-font">MODO_HISTORIA</h5>
+                                <p class="card-desc text-muted small lh-sm mb-0">Desbloquea registros históricos de Kinal a medida que completas misiones.</p>
+                            </div>
                         </div>
-                        <div class="mt-4 pt-2">
+                        <div class="flex-shrink-0" style="min-width: 120px;">
                             <a th:href="@{/game/historia}" class="btn btn-cyber-success w-100 py-2 tech-font small">
-                                VER_HISTORIA <i class="bi bi-book ms-1"></i>
+                                VER <i class="bi bi-book ms-1"></i>
                             </a>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-12 col-md-6 col-xl-3">
-                    <div class="card area-card p-4 h-100 d-flex flex-column justify-content-between" style="border-top: 2px solid var(--neon-purple);">
-                        <div>
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="area-icon-box p-2.5 rounded-3 me-3" style="background-color: rgba(189, 0, 255, 0.05);">
-                                    <i class="bi bi-journal-code fs-4 icon-misiones"></i>
-                                </div>
-                                <h5 class="fw-bold text-white mb-0 tech-font">HQ_MISIONES</h5>
+                <!-- HQ MISIONES -->
+                <div class="col-12 col-md-6">
+                    <div class="card area-card p-3 h-100 d-flex flex-row align-items-center justify-content-between gap-3" style="border-left: 2px solid var(--neon-purple); border-top: none;">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="area-icon-box p-2.5 rounded-3 flex-shrink-0" style="background-color: rgba(189, 0, 255, 0.05);">
+                                <i class="bi bi-journal-code fs-4 icon-misiones"></i>
                             </div>
-                            <p class="card-desc text-muted small lh-base mb-0">Objetivos activos y bitácoras de asignaciones para ganar experiencia extra.</p>
+                            <div>
+                                <h5 class="fw-bold text-white mb-1 tech-font">HQ_MISIONES</h5>
+                                <p class="card-desc text-muted small lh-sm mb-0">Objetivos activos y bitácoras de asignaciones para ganar experiencia extra.</p>
+                            </div>
                         </div>
-                        <div class="mt-4 pt-2">
+                        <div class="flex-shrink-0" style="min-width: 120px;">
                             <a th:href="@{/game/misiones}" class="btn btn-cyber-primary w-100 py-2 tech-font small badge-cyber">
-                                VER_MISIONES <i class="bi bi-list-task ms-1"></i>
+                                MISIONES <i class="bi bi-list-task ms-1"></i>
                             </a>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-12 col-md-6 col-xl-3">
-                    <div class="card area-card p-4 h-100 d-flex flex-column justify-content-between" style="border-top: 2px solid var(--neon-blue);">
-                        <div>
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="area-icon-box p-2.5 rounded-3 me-3" style="background-color: rgba(0, 240, 255, 0.05);">
-                                    <i class="bi bi-play-btn fs-4 icon-game" style="color: var(--neon-blue);"></i>
-                                </div>
-                                <h5 class="fw-bold text-white mb-0 tech-font">INICIAR_JUEGO</h5>
+                <!-- INICIAR JUEGO -->
+                <div class="col-12 col-md-6">
+                    <div class="card area-card p-3 h-100 d-flex flex-row align-items-center justify-content-between gap-3" style="border-left: 2px solid var(--neon-blue); border-top: none;">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="area-icon-box p-2.5 rounded-3 flex-shrink-0" style="background-color: rgba(0, 240, 255, 0.05);">
+                                <i class="bi bi-play-btn fs-4 icon-game" style="color: var(--neon-blue);"></i>
                             </div>
-                            <p class="card-desc text-muted small lh-base mb-0">Accede a la terminal interactiva de trivia de Java y aprueba los sectores de código.</p>
+                            <div>
+                                <h5 class="fw-bold text-white mb-1 tech-font">INICIAR_JUEGO</h5>
+                                <p class="card-desc text-muted small lh-sm mb-0">Accede a la terminal interactiva de trivia de Java y aprueba los sectores.</p>
+                            </div>
                         </div>
-                        <div class="mt-4 pt-2">
+                        <div class="flex-shrink-0" style="min-width: 120px;">
                             <a th:href="@{/game/play}" class="btn btn-cyber w-100 py-2 tech-font small">
-                                EJECUTAR_CORE <i class="bi bi-cpu ms-1"></i>
+                                EJECUTAR <i class="bi bi-cpu ms-1"></i>
                             </a>
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="d-flex align-items-center mb-4 ps-2">
