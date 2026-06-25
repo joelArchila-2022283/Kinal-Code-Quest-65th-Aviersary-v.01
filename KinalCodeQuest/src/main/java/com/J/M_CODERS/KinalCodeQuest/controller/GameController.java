@@ -30,7 +30,7 @@ public class GameController {
     @Autowired
     private JugadorService jugadorService;
 
-    // Repositorio en memoria de preguntas de Java asociadas a las Áreas Técnicas (Niveles)
+    // Repositorio en memoria de preguntas de Java asociadas a las Áreas Técnicas (Niveles del 1 al 4)
     private final List<PreguntaTrivia> bancoPreguntas = Arrays.asList(
             // Preguntas para Área 1 (Sintaxis y Variables Básicas)
             new PreguntaTrivia(1, 1, "¿Cuál de los siguientes es un tipo de dato primitivo en Java?",
@@ -42,7 +42,17 @@ public class GameController {
             new PreguntaTrivia(3, 2, "¿Qué estructura garantiza que el bloque de código se ejecute al menos una vez de forma obligatoria?",
                     Arrays.asList("for", "while", "do-while", "if-else"), 2, "La condición de un bucle 'do-while' se evalúa al final del ciclo, asegurando siempre una primera ejecución."),
             new PreguntaTrivia(4, 2, "¿Cuál es el resultado de un ciclo 'for (int i = 0; i < 3; i++)' si imprimimos el valor de 'i' consecutivamente?",
-                    Arrays.asList("0 1 2 3", "1 2 3", "0 1 2", "0 0 0"), 2, "El ciclo se rompe de forma inmediata en el momento en que 'i' incrementa a 3, imprimiendo únicamente los índices 0, 1 y 2.")
+                    Arrays.asList("0 1 2 3", "1 2 3", "0 1 2", "0 0 0"), 2, "El ciclo se rompe de forma inmediata en el momento en que 'i' incrementa a 3, imprimiendo únicamente los índices 0, 1 y 2."),
+
+            // Preguntas para Área 3 (Colecciones e Inventarios - Nivel Informática)
+            new PreguntaTrivia(5, 3, "¿Qué colección utilizarías para almacenar una lista dinámica de herramientas que cambia de tamaño dinámicamente?",
+                    Arrays.asList("Array[]", "ArrayList<String>", "int[]", "ListMap"), 1, "ArrayList permite añadir o eliminar elementos dinámicamente, ideal para gestionar listas de inventario dinámicas."),
+            new PreguntaTrivia(6, 3, "¿Qué estructura de datos usarías para buscar una herramienta por su 'código de activo' de forma rápida (complejidad O(1))?",
+                    Arrays.asList("ArrayList", "LinkedList", "HashMap", "Stack"), 2, "HashMap utiliza llaves hashing para acceder a los valores instantáneamente sin recorrer toda la lista."),
+
+            // Preguntas para Área 4 (Estructura de Métodos - Lógica de Sensores)
+            new PreguntaTrivia(7, 4, "¿Cuál es la firma correcta para un método que recibe un voltaje (double) y retorna true si es menor a 220.0v?",
+                    Arrays.asList("void validar(double v)", "boolean validar(double v)", "int validar(double v)", "main(double v)"), 1, "Un método encargado de validar condiciones lógicas debe especificar el tipo de retorno 'boolean' en su firma para responder con true o false.")
     );
 
     /* Renderiza el panel de control del usuario con sus estadísticas y accesos directos */
@@ -135,7 +145,7 @@ public class GameController {
 
         return "game/resultado_trivia";
     }
-
+    
     /* Apartado progresivo de la historia que evalúa la EXP del jugador para desbloquear capítulos */
     @GetMapping("/historia")
     public String verHistoria(HttpSession session, Model model) {
