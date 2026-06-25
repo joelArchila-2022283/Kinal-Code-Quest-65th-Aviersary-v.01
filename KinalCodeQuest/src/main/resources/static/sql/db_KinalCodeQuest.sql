@@ -49,3 +49,14 @@ CREATE TABLE progreso_jugador (
     FOREIGN KEY (id_mision) REFERENCES mision(id_mision),
     UNIQUE(id_jugador, id_mision)             -- Evita que el jugador tenga el progreso duplicado
 );
+
+-- INSERCIÓN DE DATOS INICIALES PARA LAS ÁREAS TÉCNICAS (NIVELES 1 AL 4) --
+
+INSERT INTO area_tecnica (id_area, nombre, descripcion_tematica) VALUES
+(1, 'Sintaxis y Variables Básicas', 'Fundamentos del compilador y manejo de memoria en Stack.'),
+(2, 'Estructuras de Control', 'Bifurcaciones lógicas complejas y bucles estructurados.'),
+(3, 'Colecciones e Inventarios', 'Manejo dinámico de estructuras ArrayList y HashMap para la gestión del Pañol de Kinal.'),
+(4, 'Estructura de Métodos', 'Modularización, firmas de retorno y encapsulamiento de lógica de sistemas.')
+ON DUPLICATE KEY UPDATE 
+    nombre = VALUES(nombre), 
+    descripcion_tematica = VALUES(descripcion_tematica);
