@@ -37,12 +37,13 @@
             <div class="profile-card p-4 text-center">
 
                 <div class="d-flex justify-content-center my-3">
-                    <div class="avatar-container">
-                        <div class="avatar-frame rounded-circle w-100 h-100"></div>
-                        <span th:if="${jugador?.nombreAvatar == 'Cyborg_Inft'}" class="fs-1 py-2" style="position: absolute; z-index: 5;">🤖</span>
-                        <span th:if="${jugador?.nombreAvatar == 'Tesla_Volt'}" class="fs-1 py-2" style="position: absolute; z-index: 5;">⚡</span>
-                        <span th:if="${jugador?.nombreAvatar == 'Gear_Mech'}" class="fs-1 py-2" style="position: absolute; z-index: 5;">⚙️</span>
-                        <i th:if="${jugador?.nombreAvatar == null}" class="bi bi-shield-lock avatar-icon"></i>
+                    <div class="avatar-container d-flex align-items-center justify-content-center" style="position: relative; width: 120px; height: 120px;">
+                        <div class="avatar-frame rounded-circle w-100 h-100 position-absolute" style="top: 0; left: 0; z-index: 1;"></div>
+
+                        <span th:if="${jugador?.nombreAvatar == 'Cyborg_Inft'}" class="fs-1 m-0 lh-1" style="position: relative; z-index: 5;">🤖</span>
+                        <span th:if="${jugador?.nombreAvatar == 'Tesla_Volt'}" class="fs-1 m-0 lh-1" style="position: relative; z-index: 5;">⚡</span>
+                        <span th:if="${jugador?.nombreAvatar == 'Gear_Mech'}" class="fs-1 m-0 lh-1" style="position: relative; z-index: 5;">⚙️</span>
+                        <i th:if="${jugador?.nombreAvatar == null}" class="bi bi-shield-lock avatar-icon" style="position: relative; z-index: 5; margin: 0;"></i>
                     </div>
                 </div>
 
@@ -90,10 +91,8 @@
                 <h4 class="fw-bold text-white mb-0 tech-font">SISTEMAS_DE_CONTROL_CORE</h4>
             </div>
 
-            <!-- APARTADO MODIFICADO A ESTRUCTURA HORIZONTAL -->
             <div class="row g-4 mb-5">
 
-                <!-- CONSOLA -->
                 <div class="col-12 col-md-6">
                     <div class="card area-card p-3 h-100 d-flex flex-row align-items-center justify-content-between gap-3" style="border-left: 2px solid var(--neon-blue); border-top: none;">
                         <div class="d-flex align-items-start gap-3">
@@ -113,7 +112,6 @@
                     </div>
                 </div>
 
-                <!-- MODO HISTORIA -->
                 <div class="col-12 col-md-6">
                     <div class="card area-card p-3 h-100 d-flex flex-row align-items-center justify-content-between gap-3" style="border-left: 2px solid var(--neon-green); border-top: none;">
                         <div class="d-flex align-items-start gap-3">
@@ -133,7 +131,6 @@
                     </div>
                 </div>
 
-                <!-- HQ MISIONES -->
                 <div class="col-12 col-md-6">
                     <div class="card area-card p-3 h-100 d-flex flex-row align-items-center justify-content-between gap-3" style="border-left: 2px solid var(--neon-purple); border-top: none;">
                         <div class="d-flex align-items-start gap-3">
@@ -153,7 +150,6 @@
                     </div>
                 </div>
 
-                <!-- INICIAR JUEGO -->
                 <div class="col-12 col-md-6">
                     <div class="card area-card p-3 h-100 d-flex flex-row align-items-center justify-content-between gap-3" style="border-left: 2px solid var(--neon-blue); border-top: none;">
                         <div class="d-flex align-items-start gap-3">
