@@ -145,7 +145,7 @@ public class GameController {
 
         return "game/resultado_trivia";
     }
-    
+
     /* Apartado progresivo de la historia que evalúa la EXP del jugador para desbloquear capítulos */
     @GetMapping("/historia")
     public String verHistoria(HttpSession session, Model model) {
