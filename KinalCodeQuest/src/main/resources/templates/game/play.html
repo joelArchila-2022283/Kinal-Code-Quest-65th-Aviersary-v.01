@@ -33,7 +33,6 @@
     </div>
 
     <div class="row g-4">
-
         <div class="col-12 col-lg-5">
             <div class="cyber-panel p-4 h-100">
                 <h4 class="text-white border-bottom border-secondary border-opacity-20 pb-2 mb-3 font-monospace">[// SELECCIÓN_DE_NIVEL]</h4>
@@ -68,6 +67,8 @@
                             <button class="nav-link active font-monospace" id="tab-variables" data-bs-toggle="pill" data-bs-target="#content-variables" type="button" role="tab">01. VARIABLES</button>
                             <button class="nav-link font-monospace" id="tab-control" data-bs-toggle="pill" data-bs-target="#content-control" type="button" role="tab">02. CONDICIONALES</button>
                             <button class="nav-link font-monospace" id="tab-bucles" data-bs-toggle="pill" data-bs-target="#content-bucles" type="button" role="tab">03. BUCLES_LOOPS</button>
+                            <button class="nav-link font-monospace" id="tab-colecciones" data-bs-toggle="pill" data-bs-target="#content-colecciones" type="button" role="tab">04. COLECCIONES</button>
+                            <button class="nav-link font-monospace" id="tab-metodos" data-bs-toggle="pill" data-bs-target="#content-metodos" type="button" role="tab">05. MÉTODOS</button>
                         </div>
                     </div>
                     <div class="col-md-8 border-start border-secondary border-opacity-10 ps-3">
@@ -95,13 +96,26 @@
                                 </ul>
                             </div>
 
+                            <div class="tab-pane fade" id="content-colecciones" role="tabpanel">
+                                <h6 class="text-white font-monospace fw-bold mb-2 text-neon-cyan">> ESTRUCTURAS DINÁMICAS DE DATOS</h6>
+                                <p>A diferencia de los arreglos estáticos, el framework de colecciones maneja memoria dinámica estructurada:</p>
+                                <ul>
+                                    <li><code>ArrayList</code>: Crece o se reduce dinámicamente según se requiera con los métodos nativos <code>.add()</code> y <code>.remove()</code>.</li>
+                                    <li><code>HashMap</code>: Guarda pares clave-valor indexados, optimizando la búsqueda directa de elementos en un tiempo computacional constante <code>O(1)</code>.</li>
+                                </ul>
+                            </div>
+
+                            <div class="tab-pane fade" id="content-metodos" role="tabpanel">
+                                <h6 class="text-white font-monospace fw-bold mb-2 text-neon-cyan">> MODULARIZACIÓN Y FIRMAS DE RETORNO</h6>
+                                <p>Los métodos empaquetan bloques de lógica reutilizables en el firmware. Es obligatorio declarar el tipo de datos preciso que regresará el flujo mediante la palabra reservada <code>return</code> (como <code>int</code>, <code>String</code> o <code>boolean</code>).</p>
+                                <p>Si la función ejecuta una rutina directa sin retornar ningún valor al flujo del sistema, se declara con la palabra clave <code>void</code>.</p>
+                            </div>
+
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
-
     </div>
 </div>
 
