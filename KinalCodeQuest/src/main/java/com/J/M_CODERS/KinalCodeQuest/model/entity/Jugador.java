@@ -24,10 +24,16 @@ public class Jugador {
     @Column(nullable = false, length = 30)
     private String rol;
 
+    // --- ESTADÍSTICAS HISTÓRICAS (Solo suben - Nivel de acceso y prestigio) ---
     private Integer experiencia;
     private Integer ptosResponsabilidad;
     private Integer ptosSolidaridad;
     private Integer ptosLaboriosidad;
+
+    // --- BILLETERA ACTIVA (Saldos que se restan al comprar archivos del lore) ---
+    private Integer saldoResponsabilidad;
+    private Integer saldoSolidaridad;
+    private Integer saldoLaboriosidad;
 
     private LocalDateTime fechaRegistro;
 
@@ -36,8 +42,15 @@ public class Jugador {
         fechaRegistro = LocalDateTime.now();
         experiencia = (experiencia == null) ? 0 : experiencia;
         rol = (rol == null) ? "ROLE_ESTUDIANTE" : rol;
+
+        // Inicialización de puntos históricos
         ptosResponsabilidad = 0;
         ptosSolidaridad = 0;
         ptosLaboriosidad = 0;
+
+        // Inicialización de la billetera
+        saldoResponsabilidad = 0;
+        saldoSolidaridad = 0;
+        saldoLaboriosidad = 0;
     }
 }
