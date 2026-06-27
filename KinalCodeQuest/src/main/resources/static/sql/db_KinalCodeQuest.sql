@@ -90,10 +90,14 @@ ON DUPLICATE KEY UPDATE
     descripcion_tematica = VALUES(descripcion_tematica);
 
 INSERT INTO capitulo_historia (id_capitulo, id_capitulo_padre, titulo, epoca, tipo_contenido, contenido_narrativo, ruta_imagen, costo_cantidad, tipo_moneda, bonus_recompensa) VALUES 
-(1, NULL, 'El Cimiento del Núcleo (1961)', '1961', 'PRINCIPAL', 'El Centro Educativo Técnico Laboral Kinal nació en 1961 en Guatemala, gracias a la iniciativa de profesionales motivados por las enseñanzas de San Josemaría Escrivá de Balaguer. Su meta fundamental era brindar oportunidades de superación técnica y humana.', NULL, 0, 'EXP', NULL),
+(1, NULL, 'El Cimiento del Núcleo', '1961', 'PRINCIPAL', 'El Centro Educativo Técnico Laboral Kinal nació en 1961 en Guatemala. Su meta fundamental desde su origen ha sido brindar oportunidades de superación técnica y humana a la clase trabajadora.', '/img/historia/Construccion-sede-1989.jpg', 0, 'EXP', NULL),
 
-(2, 1, 'Archivo Secreto: Primeros Talleres', '1965', 'FOTO_ANTIGUA', 'Fichero recuperado: Las primeras clases nocturnas de dibujo técnico y electricidad industrial se impartieron en instalaciones humildes de la zona 12, con herramientas donadas por empresas locales.', NULL, 15, 'RESPONSABILIDAD', '[+5 Ptos Prestigio Técnico]'),
+(2, 1, 'Archivo Visual: Los Primeros Pasos', '1965', 'FOTO_ANTIGUA', 'Fichero recuperado de los archivos confidenciales. Las primeras clases de dibujo técnico y electricidad se estructuraron con recursos limitados pero con un alto estándar de excelencia.', '/img/aniversarios/61-aniversario.jpg', 20, 'RESPONSABILIDAD', '[+10 Ptos Prestigio Logrado]'),
 
-(3, NULL, 'Migración de Datos y Expansión', '1970', 'PRINCIPAL', 'Durante las décadas de los 70 y 80, la Fundación expandió sus programas de formación acelerada para adultos trabajadores. Fue en esta era donde se consolidaron los pilares formativos tradicionales.', NULL, 100, 'EXP', NULL),
+(3, NULL, 'La Consolidación del Servidor', '1989', 'PRINCIPAL', 'En 1989 se concreta el traslado definitivo a la sede actual en la Zona 7 de la Ciudad de Guatemala, expandiendo radicalmente la infraestructura de los laboratorios y talleres tecnológicos.', '/img/historia/Construccion-sede-1989.jpg', 100, 'EXP', NULL),
 
-(4, 3, 'Código de Honor: Laboriosidad', '1975', 'VALOR_INSTITUCIONAL', 'Protocolo ético: El trabajo diario no es solo una carga, sino un medio para alcanzar la excelencia humana, santificar el entorno y desarrollar la infraestructura de Guatemala.', NULL, 25, 'LABORIOSIDAD', '[Análisis de Integridad Completado]');
+(4, 3, 'Planos de Infraestructura: Edificio C', '1992', 'FOTO_ANTIGUA', 'Planos estructurales recuperados de los servidores centrales. Captura histórica que documenta las fases de cimentación y levantamiento del icónico Edificio C.', '/img/historia/Construccion-edificio-C-1992.jpg', 40, 'LABORIOSIDAD', '[Módulo de Hardware Desbloqueado]'),
+
+(5, 3, 'Registro de Campo: Bloque de Básicos', '2005', 'FOTO_ANTIGUA', 'Compilación de capturas del área de educación básica técnica del año 2005, mostrando la evolución de los entornos académicos interactivos.', '/img/historia/Construccion-basicos-2005.jpg', 30, 'SOLIDARIDAD', '[+5 Ptos Cooperación Colectiva]'),
+
+(6, NULL, 'La Era Moderna del Core', '2026', 'PRINCIPAL', 'Kinal se transforma en un referente de innovación digital y tecnológica en la región, integrando desarrollo de software de vanguardia y metodologías ágiles avanzadas.', '/img/historia/Entrada-Kinal-actual.jpg', 250, 'EXP', NULL);
