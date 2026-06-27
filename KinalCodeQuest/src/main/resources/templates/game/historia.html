@@ -7,122 +7,71 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
-        body {
-            background-color: #0a0f1d;
-            font-family: 'Share Tech Mono', monospace;
-            color: #c3c9d6;
-        }
-        .timeline-container {
-            position: relative;
-            padding-left: 35px;
-            border-left: 2px dashed #1e293b;
-        }
-        .timeline-node {
-            position: absolute;
-            left: -9px;
-            top: 5px;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background-color: #0a0f1d;
-            border: 2px solid #ef4444;
-            box-shadow: 0 0 8px #ef4444;
-            transition: all 0.3s ease;
-        }
-        .node-unlocked {
-            border-color: #39ff14;
-            box-shadow: 0 0 10px #39ff14;
-        }
-        .history-card {
-            background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
-            border: 1px solid #1e293b;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-        }
-        .card-unlocked {
-            border-color: rgba(57, 255, 20, 0.2);
-            box-shadow: inset 0 0 15px rgba(57, 255, 20, 0.05);
-        }
-        .card-unlocked:hover {
-            border-color: #39ff14;
-            box-shadow: 0 0 15px rgba(57, 255, 20, 0.15);
-        }
-        .card-locked {
-            border-color: rgba(239, 68, 68, 0.15);
-            background: #090d16;
-        }
-        .text-neon-green { color: #39ff14; text-shadow: 0 0 5px rgba(57, 255, 20, 0.5); }
-        .text-neon-red { color: #ef4444; text-shadow: 0 0 5px rgba(239, 68, 68, 0.5); }
-        .text-neon-cyan { color: #00f0ff; text-shadow: 0 0 5px rgba(0, 240, 255, 0.5); }
-        .glitch-bg {
-            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15), rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
-        }
+        /* ... (Tus estilos se mantienen igual) ... */
+        body { background-color: #0a0f1d; font-family: 'Share Tech Mono', monospace; color: #c3c9d6; }
+        .timeline-container { position: relative; padding-left: 35px; border-left: 2px dashed #1e293b; }
+        .timeline-node { position: absolute; left: -9px; top: 5px; width: 16px; height: 16px; border-radius: 50%; background-color: #0a0f1d; border: 2px solid #ef4444; box-shadow: 0 0 8px #ef4444; transition: all 0.3s ease; }
+        .node-unlocked { border-color: #39ff14; box-shadow: 0 0 10px #39ff14; }
+        .history-card { background: linear-gradient(135deg, #0f172a 0%, #020617 100%); border: 1px solid #1e293b; border-radius: 4px; transition: all 0.3s ease; }
+        .card-unlocked { border-color: rgba(57, 255, 20, 0.2); }
+        .card-locked { border-color: rgba(239, 68, 68, 0.15); background: #090d16; }
+        .text-neon-green { color: #39ff14; }
+        .text-neon-red { color: #ef4444; }
+        .text-neon-cyan { color: #00f0ff; }
+        .btn-decode { background: transparent; border: 1px solid #39ff14; color: #39ff14; font-family: 'Share Tech Mono'; }
+        .btn-decode:hover { background: #39ff14; color: #000; }
     </style>
 </head>
 <body class="py-5">
 
 <div class="container" style="max-width: 800px;">
 
+    <div th:if="${mensajeExito}" class="alert alert-success bg-transparent border-success text-success mb-4" th:text="${mensajeExito}"></div>
+    <div th:if="${mensajeError}" class="alert alert-danger bg-transparent border-danger text-danger mb-4" th:text="${mensajeError}"></div>
+
     <div class="d-flex justify-content-between align-items-center mb-5 border-bottom border-secondary border-opacity-10 pb-4">
         <div>
             <a th:href="@{/game/dashboard}" class="text-decoration-none small text-secondary font-monospace tracking-widest">
                 <i class="bi bi-terminal-fill text-neon-cyan"></i> SYS_BACK_TO_CORE
             </a>
-            <h2 class="fw-bold text-white mt-2 mb-0 tracking-tight">
-                [<span class="text-neon-green">ARCHIVE_DECRYPTER</span>]
-            </h2>
+            <h2 class="fw-bold text-white mt-2 mb-0">[<span class="text-neon-green">ARCHIVE_DECRYPTER</span>]</h2>
         </div>
-        <div class="text-end bg-dark bg-opacity-40 p-2 px-3 border border-secondary border-opacity-20 rounded">
-            <span class="text-muted small d-block font-monospace mb-1">OPERATOR_AUTH_LEVEL</span>
-            <span class="text-neon-cyan font-monospace fw-bold" th:text="|${jugador.experiencia != null ? jugador.experiencia : 0} EXP|">0 EXP</span>
+        <div class="text-end bg-dark bg-opacity-40 p-2 border border-secondary rounded">
+            <span class="text-muted small d-block mb-1">WALLET_BALANCE</span>
+            <div class="d-flex gap-2">
+                <span class="text-neon-green" th:text="|R:${jugador.saldoResponsabilidad}|">R:0</span>
+                <span class="text-neon-cyan" th:text="|S:${jugador.saldoSolidaridad}|">S:0</span>
+                <span class="text-neon-cyan" th:text="|L:${jugador.saldoLaboriosidad}|">L:0</span>
+            </div>
         </div>
     </div>
 
     <div class="position-relative">
         <div class="timeline-container mb-5" th:each="cap : ${capitulos}">
-
             <div class="timeline-node" th:classappend="${cap.desbloqueado} ? 'node-unlocked' : ''"></div>
-
-            <div class="card history-card p-4 glitch-bg" th:classappend="${cap.desbloqueado} ? 'card-unlocked' : 'card-locked'">
+            <div class="card history-card p-4" th:classappend="${cap.desbloqueado} ? 'card-unlocked' : 'card-locked'">
 
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div>
-                        <span class="font-monospace small opacity-50" th:text="|INDEX_RECORDS://0${cap.idCapitulo}|">INDEX_RECORDS://01</span>
-                        <h4 class="fw-bold text-white my-1 font-monospace"
-                            th:classappend="${cap.desbloqueado} ? 'text-neon-green' : 'text-neon-red'"
-                            th:text="${cap.titulo}">EL ORIGEN</h4>
-                    </div>
-
-                    <div>
-                        <span th:if="${cap.desbloqueado}" class="badge border border-success text-neon-green bg-success bg-opacity-10 font-monospace py-1.5 px-3">
-                            <i class="bi bi-shield-check me-1"></i> DECODED
-                        </span>
-                        <span th:unless="${cap.desbloqueado}" class="badge border border-danger text-neon-red bg-danger bg-opacity-10 font-monospace py-1.5 px-3"
-                              th:text="|REQ: ${cap.expRequerida} EXP|">REQ: 150 EXP</span>
-                    </div>
+                    <h4 class="fw-bold text-white my-1 font-monospace" th:classappend="${cap.desbloqueado} ? 'text-neon-green' : 'text-neon-red'" th:text="${cap.titulo}"></h4>
                 </div>
 
                 <div th:if="${cap.desbloqueado}">
-                    <p class="text-light-emphasis font-monospace lh-base mb-0 p-3 bg-black bg-opacity-40 rounded border border-secondary border-opacity-10"
-                       style="text-align: justify; font-size: 0.95rem; line-height: 1.6;"
-                       th:text="${cap.contenidoNarrativo}">
-                        Contenido Histórico.
-                    </p>
+                    <p class="text-light-emphasis p-3 bg-black bg-opacity-40 rounded" th:text="${cap.contenidoNarrativo}"></p>
                 </div>
 
-                <div th:unless="${cap.desbloqueado}" class="p-4 rounded border border-danger border-opacity-10 bg-black bg-opacity-30 text-center">
-                    <span class="text-neon-red font-monospace d-block small mb-2 tracking-widest">[!!! CORRUPTED_DATA_STREAM !!!]</span>
-                    <p class="text-muted small font-monospace mb-0">El núcleo de datos requiere parámetros de experiencia más altos para ejecutar el script de desencriptación.</p>
+                <div th:unless="${cap.desbloqueado}" class="p-3 text-center">
+                    <p class="text-muted small mb-3">[!!! ENCRYPTION_LOCKED !!!]</p>
+                    <form th:action="@{/game/historia/comprar/{id}(id=${cap.idCapitulo})}" method="post">
+                        <button type="submit" class="btn btn-decode w-100">
+                            DESCIFRAR POR <span th:text="${cap.costoCantidad}"></span>
+                            <span th:text="${cap.tipoMoneda}"></span>
+                        </button>
+                    </form>
                 </div>
-
             </div>
         </div>
     </div>
-
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
