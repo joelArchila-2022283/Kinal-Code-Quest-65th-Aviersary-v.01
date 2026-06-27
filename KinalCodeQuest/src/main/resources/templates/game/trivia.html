@@ -12,14 +12,16 @@
         .trivia-card { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; }
         .option-item { background: #161b22; border: 1px solid #30363d; padding: 12px; border-radius: 4px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; }
         .option-item:hover { border-color: #58a6ff; background: #21262d; }
+        /* Mejora visual: resaltar el radio seleccionado */
+        input[type="radio"]:checked + span { color: #58a6ff !important; font-weight: bold; }
     </style>
 </head>
 <body class="py-5">
 
 <div class="container" style="max-width: 700px;">
-    <div class="trivia-card p-4">
+    <div class="trivia-card p-4 shadow-lg">
         <h3 class="text-white font-monospace text-center mb-1" th:text="|COMPILANDO: ${area.nombre}|">ÁREA</h3>
-        <p class="text-muted small text-center mb-4">Responde correctamente todas las variables de la consola de pruebas.</p>
+        <p class="text-muted small text-center mb-4 text-uppercase">Responde correctamente para extraer datos y acumular créditos de sistema.</p>
 
         <form th:action="@{/game/play/trivia/evaluar}" method="POST">
             <input type="hidden" name="idArea" th:value="${area.idArea}">
@@ -29,14 +31,16 @@
 
                 <div class="d-flex flex-column">
                     <label th:each="opt, optIter : ${preg.opciones}" class="option-item d-flex align-items-center m-0 mb-2">
-                        <input type="radio" th:name="|pregunta_${preg.idPregunta}|" th:value="${optIter.index}" required class="me-3">
+                        <input type="radio" th:name="'pregunta_' + ${preg.idPregunta}" th:value="${optIter.index}" required class="me-3">
                         <span class="text-light" th:text="${opt}">Opción</span>
                     </label>
                 </div>
             </div>
 
             <div class="text-center mt-4">
-                <button type="submit" class="btn btn-primary px-5 py-2 font-monospace fw-bold">EVALUAR_RESPUESTAS_SYS <i class="bi bi-shield-check"></i></button>
+                <button type="submit" class="btn btn-primary px-5 py-2 font-monospace fw-bold shadow-sm">
+                    EVALUAR_RESPUESTAS_SYS <i class="bi bi-shield-check"></i>
+                </button>
             </div>
         </form>
     </div>
