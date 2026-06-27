@@ -14,7 +14,10 @@ CREATE TABLE jugador (
     ptos_responsabilidad INT DEFAULT 0,       -- Recompensa institucional
     ptos_solidaridad INT DEFAULT 0,           -- Recompensa institucional
     ptos_laboriosidad INT DEFAULT 0,          -- Recompensa institucional
-    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    saldo_responsabilidad INT DEFAULT 0,
+    saldo_solidaridad INT DEFAULT 0,
+    saldo_laboriosidad INT DEFAULT 0
 );
 
 -- 2. Tabla de Áreas del Campus
@@ -48,6 +51,20 @@ CREATE TABLE progreso_jugador (
     FOREIGN KEY (id_jugador) REFERENCES jugador(id_jugador),
     FOREIGN KEY (id_mision) REFERENCES mision(id_mision),
     UNIQUE(id_jugador, id_mision)             -- Evita que el jugador tenga el progreso duplicado
+);
+
+CREATE TABLE capitulo_historia (
+    id_capitulo INT AUTO_INCREMENT PRIMARY KEY,
+    id_capitulo_padre INT NULL,
+    titulo VARCHAR(150) NOT NULL,
+    epoca VARCHAR(50) NULL,
+    tipo_contenido VARCHAR(30) NULL,
+    contenido_narrativo TEXT NOT NULL,
+    ruta_imagen VARCHAR(255) NULL,
+    costo_cantidad INT NOT NULL DEFAULT 0,
+    tipo_moneda VARCHAR(30) NOT NULL,
+    bonus_recompensa VARCHAR(100) NULL,
+    FOREIGN KEY (id_capitulo_padre) REFERENCES capitulo_historia(id_capitulo) ON DELETE CASCADE
 );
 
 -- INSERCIÓN DE DATOS INICIALES PARA LAS ÁREAS TÉCNICAS (NIVELES 1 AL 4) --
