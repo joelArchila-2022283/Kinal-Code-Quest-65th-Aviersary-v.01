@@ -67,6 +67,17 @@ CREATE TABLE capitulo_historia (
     FOREIGN KEY (id_capitulo_padre) REFERENCES capitulo_historia(id_capitulo) ON DELETE CASCADE
 );
 
+CREATE TABLE compra_historia (
+    id_compra INT AUTO_INCREMENT PRIMARY KEY,
+    id_jugador INT NOT NULL,
+    id_capitulo INT NOT NULL,
+    fecha_compra DATETIME NOT NULL,
+
+    -- Restricciones de Claves Foráneas para asegurar la integridad lógica
+    FOREIGN KEY (id_jugador) REFERENCES jugador(id_jugador) ON DELETE CASCADE,
+    FOREIGN KEY (id_capitulo) REFERENCES capitulo_historia(id_capitulo) ON DELETE CASCADE
+);
+
 -- INSERCIÓN DE DATOS INICIALES PARA LAS ÁREAS TÉCNICAS (NIVELES 1 AL 4) --
 
 INSERT INTO area_tecnica (id_area, nombre, descripcion_tematica) VALUES
