@@ -71,6 +71,13 @@
         .glitch-bg {
             background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15), rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
         }
+        .img-lore {
+            max-height: 320px;
+            width: 100%;
+            object-fit: cover;
+            filter: brightness(0.85) contrast(1.1);
+            border: 1px solid rgba(48, 54, 61, 0.6);
+        }
     </style>
 </head>
 <body class="py-5">
@@ -102,11 +109,6 @@
 
     <div class="position-relative">
 
-        <div th:if="${capitulos.isEmpty()}" class="text-center p-5 border border-secondary border-opacity-20 rounded bg-black bg-opacity-20">
-            <i class="bi bi-exclamation-triangle text-neon-red display-5 d-block mb-3"></i>
-            <span class="text-white font-monospace">[SISTEMA]: No se encontraron trazas de datos históricos en el mainframe.</span>
-        </div>
-
         <div class="timeline-container mb-5" th:each="cap : ${capitulos}">
 
             <div class="timeline-node" th:classappend="${cap.desbloqueado} ? 'node-unlocked' : ''"></div>
@@ -131,26 +133,34 @@
                 </div>
 
                 <div th:if="${cap.desbloqueado}">
+
+                    <div th:if="${cap.rutaImagen != null}" class="mb-3 text-center position-relative border border-secondary border-opacity-20 rounded overflow-hidden">
+                        <img th:src="${cap.rutaImagen}" alt="Visual Data" class="img-lore">
+                        <div class="position-absolute bottom-0 start-0 bg-dark bg-opacity-80 text-neon-green small font-monospace px-2 py-1 m-2 rounded border border-success border-opacity-30" style="font-size: 0.72rem;">
+                            <i class="bi bi-image-fill me-1"></i> VISUAL_STREAM_ONLINE
+                        </div>
+                    </div>
+
                     <p class="text-light-emphasis font-monospace lh-base mb-0 p-3 bg-black bg-opacity-40 rounded border border-secondary border-opacity-10"
                        style="text-align: justify; font-size: 0.95rem; line-height: 1.6;"
                        th:text="${cap.contenidoNarrativo}">
-                        Contenido Histórico Desencriptado.
+                        Contenido Histórico.
                     </p>
                     <div th:if="${cap.bonusRecompensa != null}" class="mt-2 text-end small font-monospace text-neon-cyan opacity-75" th:text="${cap.bonusRecompensa}"></div>
                 </div>
 
                 <div th:unless="${cap.desbloqueado}" class="p-4 rounded border border-danger border-opacity-10 bg-black bg-opacity-30 text-center">
-                    <span class="text-neon-red font-monospace d-block small mb-2 tracking-widest">[!!! CORRUPTED_DATA_STREAM !!!]</span>
+                    <span class="text-neon-red font-monospace d-block small mb-2 tracking-widest">[!!! ARCHIVO_ENCRIPTADO !!!]</span>
 
                     <p th:if="${cap.tipoMoneda == 'EXP'}" class="text-muted small font-monospace mb-0">
-                        El núcleo requiere mayor experiencia total en los lenguajes para ejecutar la autodesencriptación.
+                        El descifrador central de la terminal requiere un nivel de experiencia (EXP) superior para forzar el flujo de datos de este nodo de memoria.
                     </p>
 
                     <div th:unless="${cap.tipoMoneda == 'EXP'}">
-                        <p class="text-muted small font-monospace mb-3">El nodo requiere una inversión de créditos del sistema para romper el algoritmo de encriptación.</p>
+                        <p class="text-muted small font-monospace mb-3">El flujo de este registro de datos complementarios se encuentra restringido por algoritmos institucionales.</p>
                         <form th:action="@{/game/historia/comprar/{id}(id=${cap.idCapitulo})}" method="post">
                             <button type="submit" class="btn btn-decode w-100 font-monospace py-2 fw-bold">
-                                <i class="bi bi-unlock-fill me-1"></i> EJECUTAR_SCRIPT_COMPRA.SH
+                                <i class="bi bi-cpu-fill me-1"></i> COMPILAR_SCRIPT_DESBLOQUEO.SH
                             </button>
                         </form>
                     </div>
