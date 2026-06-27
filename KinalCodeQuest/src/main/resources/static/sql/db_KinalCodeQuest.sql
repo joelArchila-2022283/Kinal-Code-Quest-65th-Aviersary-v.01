@@ -89,9 +89,11 @@ ON DUPLICATE KEY UPDATE
     nombre = VALUES(nombre), 
     descripcion_tematica = VALUES(descripcion_tematica);
 
-INSERT INTO capitulo_historia
-(titulo, epoca, tipo_contenido, contenido_narrativo, costo_cantidad, tipo_moneda)
-VALUES
-    ('El Cimiento del Núcleo', '1961', 'PRINCIPAL', 'El Centro Educativo Técnico Laboral Kinal nació en 1961...', 0, 'EXP'),
-    ('La Primera Expansión', '1970', 'PRINCIPAL', 'La demanda creció y la institución se expandió...', 100, 'EXP'),
-    ('El Gran Servidor', '1990', 'PRINCIPAL', 'Traslado definitivo a la sede actual en zona 7...', 250, 'EXP');
+INSERT INTO capitulo_historia (id_capitulo, id_capitulo_padre, titulo, epoca, tipo_contenido, contenido_narrativo, ruta_imagen, costo_cantidad, tipo_moneda, bonus_recompensa) VALUES 
+(1, NULL, 'El Cimiento del Núcleo (1961)', '1961', 'PRINCIPAL', 'El Centro Educativo Técnico Laboral Kinal nació en 1961 en Guatemala, gracias a la iniciativa de profesionales motivados por las enseñanzas de San Josemaría Escrivá de Balaguer. Su meta fundamental era brindar oportunidades de superación técnica y humana.', NULL, 0, 'EXP', NULL),
+
+(2, 1, 'Archivo Secreto: Primeros Talleres', '1965', 'FOTO_ANTIGUA', 'Fichero recuperado: Las primeras clases nocturnas de dibujo técnico y electricidad industrial se impartieron en instalaciones humildes de la zona 12, con herramientas donadas por empresas locales.', NULL, 15, 'RESPONSABILIDAD', '[+5 Ptos Prestigio Técnico]'),
+
+(3, NULL, 'Migración de Datos y Expansión', '1970', 'PRINCIPAL', 'Durante las décadas de los 70 y 80, la Fundación expandió sus programas de formación acelerada para adultos trabajadores. Fue en esta era donde se consolidaron los pilares formativos tradicionales.', NULL, 100, 'EXP', NULL),
+
+(4, 3, 'Código de Honor: Laboriosidad', '1975', 'VALOR_INSTITUCIONAL', 'Protocolo ético: El trabajo diario no es solo una carga, sino un medio para alcanzar la excelencia humana, santificar el entorno y desarrollar la infraestructura de Guatemala.', NULL, 25, 'LABORIOSIDAD', '[Análisis de Integridad Completado]');
