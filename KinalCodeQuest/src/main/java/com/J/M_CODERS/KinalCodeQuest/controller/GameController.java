@@ -3,6 +3,7 @@ package com.J.M_CODERS.KinalCodeQuest.controller;
 import com.J.M_CODERS.KinalCodeQuest.model.entity.*;
 import com.J.M_CODERS.KinalCodeQuest.repository.ProgresoJugadorRepository;
 import com.J.M_CODERS.KinalCodeQuest.service.evaluator.AreaTecnicaService;
+import com.J.M_CODERS.KinalCodeQuest.service.evaluator.HistoriaService;
 import com.J.M_CODERS.KinalCodeQuest.service.evaluator.MisionService;
 import com.J.M_CODERS.KinalCodeQuest.service.evaluator.JugadorService;
 import jakarta.servlet.http.HttpSession;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/* Controlador central encargado de la navegación principal y los módulos del juego */
 @Controller
 @RequestMapping("/game")
 public class GameController {
@@ -31,34 +32,23 @@ public class GameController {
     @Autowired
     private JugadorService jugadorService;
 
-    // Repositorio en memoria de preguntas de Java asociadas a las Áreas Técnicas (Niveles del 1 al 4)
-    private final List<PreguntaTrivia> bancoPreguntas = Arrays.asList(
-            // Preguntas para Área 1 (Sintaxis y Variables Básicas)
-            new PreguntaTrivia(1, 1, "¿Cuál de los siguientes es un tipo de dato primitivo en Java?",
-                    Arrays.asList("String", "int", "Integer", "Scanner"), 1, "Los tipos primitivos como 'int', 'char' y 'boolean' almacenan valores directamente en la memoria Stack y no son objetos."),
-            new PreguntaTrivia(2, 1, "¿Cómo se declara una constante inmutable en Java?",
-                    Arrays.asList("const int X = 10;", "final int X = 10;", "static int X = 10;", "immutable int X = 10;"), 1, "La palabra clave 'final' define una variable cuyo valor no puede cambiar tras su primera asignación."),
-
-            // Preguntas para Área 2 (Estructuras de Control y Flujo)
-            new PreguntaTrivia(3, 2, "¿Qué estructura garantiza que el bloque de código se ejecute al menos una vez de forma obligatoria?",
-                    Arrays.asList("for", "while", "do-while", "if-else"), 2, "La condición de un bucle 'do-while' se evalúa al final del ciclo, asegurando siempre una primera ejecución."),
-            new PreguntaTrivia(4, 2, "¿Cuál es el resultado de un ciclo 'for (int i = 0; i < 3; i++)' si imprimimos el valor de 'i' consecutivamente?",
-                    Arrays.asList("0 1 2 3", "1 2 3", "0 1 2", "0 0 0"), 2, "El ciclo se rompe de forma inmediata en el momento en que 'i' incrementa a 3, imprimiendo únicamente los índices 0, 1 y 2."),
-
-            // Preguntas para Área 3 (Colecciones e Inventarios - Nivel Informática)
-            new PreguntaTrivia(5, 3, "¿Qué colección utilizarías para almacenar una lista dinámica de herramientas que cambia de tamaño dinámicamente?",
-                    Arrays.asList("Array[]", "ArrayList<String>", "int[]", "ListMap"), 1, "ArrayList permite añadir o eliminar elementos dinámicamente, ideal para gestionar listas de inventario dinámicas."),
-            new PreguntaTrivia(6, 3, "¿Qué estructura de datos usarías para buscar una herramienta por su 'código de activo' de forma rápida (complejidad O(1))?",
-                    Arrays.asList("ArrayList", "LinkedList", "HashMap", "Stack"), 2, "HashMap utiliza llaves hashing para acceder a los valores instantáneamente sin recorrer toda la lista."),
-
-            // Preguntas para Área 4 (Estructura de Métodos - Lógica de Sensores)
-            new PreguntaTrivia(7, 4, "¿Cuál es la firma correcta para un método que recibe un voltaje (double) y retorna true si es menor a 220.0v?",
-                    Arrays.asList("void validar(double v)", "boolean validar(double v)", "int validar(double v)", "main(double v)"), 1, "Un método encargado de validar condiciones lógicas debe especificar el tipo de retorno 'boolean' en su firma para responder con true o false.")
-    );
-
-    /* Renderiza el panel de control del usuario con sus estadísticas y accesos directos */
     @Autowired
     private ProgresoJugadorRepository progresoRepository;
+
+    @Autowired
+    private HistoriaService historiaService;
+
+    // Banco de preguntas en memoria
+    private final List<PreguntaTrivia> bancoPreguntas = Arrays.asList(
+            new PreguntaTrivia(1, 1, "¿Cuál de los siguientes es un tipo de dato primitivo en Java?",
+                    Arrays.asList("String", "int", "Integer", "Scanner"), 1, "Los tipos primitivos como 'int' almacenan valores directamente en Stack."),
+            new PreguntaTrivia(2, 1, "¿Cómo se declara una constante inmutable en Java?",
+                    Arrays.asList("const int X = 10;", "final int X = 10;", "static int X = 10;", "immutable int X = 10;"), 1, "La palabra clave 'final' define una constante."),
+            new PreguntaTrivia(3, 2, "¿Qué estructura garantiza que el código se ejecute al menos una vez?",
+                    Arrays.asList("for", "while", "do-while", "if-else"), 2, "El ciclo 'do-while' evalúa la condición al final."),
+            new PreguntaTrivia(4, 3, "¿Qué colección usarías para almacenar una lista dinámica?",
+                    Arrays.asList("Array[]", "ArrayList<String>", "int[]", "ListMap"), 1, "ArrayList permite añadir/eliminar elementos dinámicamente.")
+    );
 
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session, Model model) {
@@ -68,56 +58,50 @@ public class GameController {
         Jugador jugadorActualizado = jugadorService.buscarPorId(jugadorSesion.getIdJugador());
         session.setAttribute("usuarioLogueado", jugadorActualizado);
 
-        // Cómputo de analíticas avanzadas
-        long erroresTotales = progresoRepository.countErroresByJugador(jugadorActualizado.getIdJugador());
-        long intentosTotales = progresoRepository.sumTotalIntentosByJugador(jugadorActualizado.getIdJugador());
-        List<ProgresoJugador> misionesDificiles = progresoRepository.findHistorialDificultadDesc(jugadorActualizado.getIdJugador());
-
-        // Asegurar que erroresTotales nunca sea negativo
-        if (erroresTotales < 0) erroresTotales = 0;
-
         model.addAttribute("jugador", jugadorActualizado);
         model.addAttribute("areas", areaService.listarTodas());
-
-        // Atributos de telemetría enviados al HTML
-        model.addAttribute("erroresTotales", erroresTotales);
-        model.addAttribute("intentosTotales", intentosTotales);
-        model.addAttribute("misionesDificiles", misionesDificiles);
+        model.addAttribute("erroresTotales", progresoRepository.countErroresByJugador(jugadorActualizado.getIdJugador()));
 
         return "game/dashboard";
     }
 
-    /* MÓDULO INICIAR JUEGO: Selector de Niveles y Manual Técnico de Usuario integrado */
-    @GetMapping("/play")
-    public String iniciarJuego(HttpSession session, Model model) {
+    @GetMapping("/historia")
+    public String verHistoria(HttpSession session, Model model) {
         Jugador jugadorSesion = (Jugador) session.getAttribute("usuarioLogueado");
         if (jugadorSesion == null) return "redirect:/auth/login";
 
-        model.addAttribute("jugador", jugadorService.buscarPorId(jugadorSesion.getIdJugador()));
-        model.addAttribute("areas", areaService.listarTodas());
-        return "game/play";
+        Jugador jugador = jugadorService.buscarPorId(jugadorSesion.getIdJugador());
+        List<CapituloHistoria> capitulos = historiaService.obtenerHistoriaParaJugador(jugador);
+
+        model.addAttribute("jugador", jugador);
+        model.addAttribute("capitulos", capitulos);
+        return "game/historia";
     }
 
-    /* MÓDULO INICIAR JUEGO: Carga el cuestionario interactivo del Nivel/Área Técnica seleccionada */
+    @PostMapping("/historia/comprar/{idCapitulo}")
+    public String comprarArchivo(@PathVariable Integer idCapitulo, HttpSession session, RedirectAttributes redirectAttributes) {
+        Jugador jugadorSesion = (Jugador) session.getAttribute("usuarioLogueado");
+        if (jugadorSesion == null) return "redirect:/auth/login";
+
+        boolean compraExitosa = historiaService.comprarCapituloSecundario(jugadorSesion.getIdJugador(), idCapitulo);
+
+        if (compraExitosa) {
+            redirectAttributes.addFlashAttribute("mensajeExito", "[NÚCLEO]: Archivo descifrado con éxito.");
+        } else {
+            redirectAttributes.addFlashAttribute("mensajeError", "[ERROR]: Fondos insuficientes o nodo principal bloqueado.");
+        }
+        return "redirect:/game/historia";
+    }
+
     @GetMapping("/play/trivia/{idArea}")
     public String lanzarTrivia(@PathVariable Integer idArea, HttpSession session, Model model) {
         if (session.getAttribute("usuarioLogueado") == null) return "redirect:/auth/login";
 
-        AreaTecnica area = areaService.buscarPorId(idArea);
-        List<PreguntaTrivia> preguntasNivel = bancoPreguntas.stream()
-                .filter(p -> p.getIdAreaAsociada().equals(idArea))
-                .collect(Collectors.toList());
-
-        if (preguntasNivel.isEmpty()) {
-            return "redirect:/game/play?error=no_questions";
-        }
-
-        model.addAttribute("area", area);
-        model.addAttribute("preguntas", preguntasNivel);
+        model.addAttribute("area", areaService.buscarPorId(idArea));
+        model.addAttribute("preguntas", bancoPreguntas.stream().filter(p -> p.getIdAreaAsociada().equals(idArea)).collect(Collectors.toList()));
         return "game/trivia";
     }
 
-    /* MÓDULO INICIAR JUEGO: Evalúa el examen de la trivia y premia al usuario si saca 100% */
     @PostMapping("/play/trivia/evaluar")
     public String evaluarTrivia(@RequestParam Map<String, String> params, HttpSession session, Model model) {
         Jugador jugadorSesion = (Jugador) session.getAttribute("usuarioLogueado");
@@ -126,140 +110,48 @@ public class GameController {
         Jugador jugador = jugadorService.buscarPorId(jugadorSesion.getIdJugador());
         Integer idArea = Integer.parseInt(params.get("idArea"));
 
+        // Filtrar preguntas del área
         List<PreguntaTrivia> preguntasNivel = bancoPreguntas.stream()
                 .filter(p -> p.getIdAreaAsociada().equals(idArea))
                 .collect(Collectors.toList());
 
         int correctas = 0;
-        List<String> feedback = new ArrayList<>();
-
         for (PreguntaTrivia pregunta : preguntasNivel) {
             String respuestaEnviada = params.get("pregunta_" + pregunta.getIdPregunta());
             if (respuestaEnviada != null && Integer.parseInt(respuestaEnviada) == pregunta.getRespuestaCorrectaIndex()) {
                 correctas++;
-                feedback.add("Pregunta #" + pregunta.getIdPregunta() + ": [CORRECTA] -> " + pregunta.getJustificacion());
-            } else {
-                feedback.add("Pregunta #" + pregunta.getIdPregunta() + ": [INCORRECTA] -> " + pregunta.getJustificacion());
             }
         }
 
         boolean aprobado = (correctas == preguntasNivel.size());
-        int expGanada = aprobado ? 50 : 0;
 
         if (aprobado) {
-            jugador.setExperiencia((jugador.getExperiencia() != null ? jugador.getExperiencia() : 0) + expGanada);
+            // 1. Otorgar Experiencia
+            jugador.setExperiencia((jugador.getExperiencia() != null ? jugador.getExperiencia() : 0) + 50);
+
+            // 2. Otorgar Saldo según Área
+            switch (idArea) {
+                case 1: jugador.setSaldoResponsabilidad((jugador.getSaldoResponsabilidad() == null ? 0 : jugador.getSaldoResponsabilidad()) + 20); break;
+                case 2: jugador.setSaldoSolidaridad((jugador.getSaldoSolidaridad() == null ? 0 : jugador.getSaldoSolidaridad()) + 20); break;
+                case 3: jugador.setSaldoLaboriosidad((jugador.getSaldoLaboriosidad() == null ? 0 : jugador.getSaldoLaboriosidad()) + 20); break;
+            }
+
             jugadorService.guardar(jugador);
             session.setAttribute("usuarioLogueado", jugador);
         }
 
         model.addAttribute("jugador", jugador);
         model.addAttribute("aprobado", aprobado);
-        model.addAttribute("expGanada", expGanada);
-        model.addAttribute("correctas", correctas);
-        model.addAttribute("total", preguntasNivel.size());
-        model.addAttribute("feedbacks", feedback);
-        model.addAttribute("areaId", idArea);
-
+        model.addAttribute("expGanada", aprobado ? 50 : 0);
         return "game/resultado_trivia";
     }
 
-    /* Apartado progresivo de la historia que evalúa la EXP del jugador para desbloquear capítulos */
-    @GetMapping("/historia")
-    public String verHistoria(HttpSession session, Model model) {
+    @GetMapping("/play")
+    public String iniciarJuego(HttpSession session, Model model) {
         Jugador jugadorSesion = (Jugador) session.getAttribute("usuarioLogueado");
         if (jugadorSesion == null) return "redirect:/auth/login";
-
-        Jugador jugador = jugadorService.buscarPorId(jugadorSesion.getIdJugador());
-        int expActual = (jugador.getExperiencia() != null) ? jugador.getExperiencia() : 0;
-
-        List<CapituloHistoria> capitulos = new ArrayList<>();
-
-        // CAPÍTULO 1: El Origen
-        CapituloHistoria cap1 = new CapituloHistoria();
-        cap1.setIdCapitulo(1);
-        cap1.setTitulo("El Cimiento del Núcleo (1961)");
-        cap1.setExpRequerida(0);
-        cap1.setContenidoNarrativo("El Centro Educativo Técnico Laboral Kinal nació en 1961 en Guatemala, gracias a la iniciativa de un grupo de profesionales e ingenieros motivados por las enseñanzas de San Josemaría Escrivá de Balaguer. Su meta fundamental era brindar oportunidades de superación técnica y humana a jóvenes y adultos de escasos recursos. Iniciando en instalaciones humildes en la zona 12, Kinal revolutionized la educación técnica en el país promoviendo que el trabajo diario es un medio para alcanzar la excelencia humana y la santificación.");
-        cap1.setDesbloqueado(expActual >= cap1.getExpRequerida());
-        capitulos.add(cap1);
-
-        // CAPÍTULO 2: La Primera Expansión
-        CapituloHistoria cap2 = new CapituloHistoria();
-        cap2.setIdCapitulo(2);
-        cap2.setTitulo("Migración de Datos y Expansión (1970-1980)");
-        cap2.setExpRequerida(100);
-        cap2.setContenidoNarrativo("A medida que la demanda de técnicos calificados crecía en Guatemala, la sede inicial de la zona 12 empezó a quedarse pequeña. Durante las décadas de los 70 y 80, la Fundación expandió sus programas nocturnos y de formación acelerada para adultos trabajadores. Fue en esta era donde se consolidaron los pilares formativos tradicionales, demostrando que la disciplina técnica y la ética profesional podían transformar radicalmente el panorama industrial y laboral de las familias guatemaltecas.");
-        cap2.setDesbloqueado(expActual >= cap2.getExpRequerida());
-        capitulos.add(cap2);
-
-        // CAPÍTULO 3: La Nueva Sede
-        CapituloHistoria cap3 = new CapituloHistoria();
-        cap3.setIdCapitulo(3);
-        cap3.setTitulo("El Gran Servidor: Sede Zona 7 (1990)");
-        cap3.setExpRequerida(250);
-        cap3.setContenidoNarrativo("Un hito trascendental ocurrió en la década de los 90 con el traslado definitivo de la institución a sus amplias e innovadoras instalaciones actuales en la Zona 7 de la Ciudad de Guatemala. Diseñado específicamente para albergar talleres mecánicos, eléctricos y laboratorios industriales, este nuevo complejo arquitectónico permitió a Kinal cuadriplicar su capacidad operativa y dar vida al plan de Perito Técnico para jóvenes de nivel diversificado.");
-        cap3.setDesbloqueado(expActual >= cap3.getExpRequerida());
-        capitulos.add(cap3);
-
-        // CAPÍTULO 4: El Desembarco Digital
-        CapituloHistoria cap4 = new CapituloHistoria();
-        cap4.setIdCapitulo(4);
-        cap4.setTitulo("Inyección del Compilador: Perito en Informática");
-        cap4.setExpRequerida(450);
-        cap4.setContenidoNarrativo("Con la llegada del nuevo milenio y la inminente automatización global, Kinal integró a su matriz de estudio la carrera de Perito en Informática. Los antiguos talleres de herramientas manuales abrieron paso a servidores, redes estructuradas, bases de datos y desarrollo de software lógico. Los estudiantes dejaron de ser solo operarios de maquinaria para transformarse en arquitectos digitales, capaces de escribir código estructurado bajo rigurosos estándares de calidad internacional.");
-        cap4.setDesbloqueado(expActual >= cap4.getExpRequerida());
-        capitulos.add(cap4);
-
-        // CAPÍTULO 5: El Legado Vivo
-        CapituloHistoria cap5 = new CapituloHistoria();
-        cap5.setIdCapitulo(5);
-        cap5.setTitulo("Kinal en la Red Global: El Legado Vivo");
-        cap5.setExpRequerida(700);
-        cap5.setContenidoNarrativo("Hoy en día, con más de seis décadas de trayectoria ininterrumpida, el Centro Técnico Laboral Kinal sigue transformando vidas. Su filosofía operativa original no ha cambiado: formar profesionales con alta capacidad técnica pero, sobre todo, con sólidos valores de Laboriosidad, Responsabilidad y Solidaridad. Cada línea de código que compilas en esta terminal rinde homenaje a los miles de egresados que mueven y desarrollan la infraestructura tecnológica de Guatemala.");
-        cap5.setDesbloqueado(expActual >= cap5.getExpRequerida());
-        capitulos.add(cap5);
-
-        model.addAttribute("jugador", jugador);
-        model.addAttribute("capitulos", capitulos);
-
-        return "game/historia";
-    }
-
-
-    /* Redirige a la interfaz base del motor interactivo clásico */
-    @GetMapping("/game")
-    public String gameCore(HttpSession session, Model model) {
-        Jugador jugadorSesion = (Jugador) session.getAttribute("usuarioLogueado");
-        if (jugadorSesion == null) return "redirect:/auth/login";
-
-        Jugador jugadorActualizado = jugadorService.buscarPorId(jugadorSesion.getIdJugador());
-        session.setAttribute("usuarioLogueado", jugadorActualizado);
-
-        model.addAttribute("jugador", jugadorActualizado);
+        model.addAttribute("jugador", jugadorService.buscarPorId(jugadorSesion.getIdJugador()));
         model.addAttribute("areas", areaService.listarTodas());
-
-        return "game/game";
-    }
-
-    /* Despliega la bitácora completa de misiones generales disponibles */
-    @GetMapping("/misiones")
-    public String misionesGenerales(HttpSession session, Model model) {
-        Jugador jugador = (Jugador) session.getAttribute("usuarioLogueado");
-        if (jugador == null) return "redirect:/auth/login";
-
-        model.addAttribute("jugador", jugador);
-        model.addAttribute("misiones", misionesService.listarTodas());
-        return "game/misiones";
-    }
-
-    /* Filtra y expone los retos de programación correspondientes a un área en específico */
-    @GetMapping("/area/{idArea}")
-    public String verMisionesArea(@PathVariable Integer idArea, HttpSession session, Model model) {
-        if (session.getAttribute("usuarioLogueado") == null) return "redirect:/auth/login";
-
-        model.addAttribute("area", areaService.buscarPorId(idArea));
-        model.addAttribute("misiones", misionesService.listarPorArea(idArea));
-
-        return "game/misiones";
+        return "game/play";
     }
 }
