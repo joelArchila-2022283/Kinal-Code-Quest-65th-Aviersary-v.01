@@ -14,10 +14,10 @@ CREATE TABLE jugador (
     ptos_responsabilidad INT DEFAULT 0,       -- Recompensa institucional
     ptos_solidaridad INT DEFAULT 0,           -- Recompensa institucional
     ptos_laboriosidad INT DEFAULT 0,          -- Recompensa institucional
-    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     saldo_responsabilidad INT DEFAULT 0,
     saldo_solidaridad INT DEFAULT 0,
-    saldo_laboriosidad INT DEFAULT 0
+    saldo_laboriosidad INT DEFAULT 0,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 2. Tabla de Áreas del Campus
@@ -88,3 +88,10 @@ INSERT INTO area_tecnica (id_area, nombre, descripcion_tematica) VALUES
 ON DUPLICATE KEY UPDATE 
     nombre = VALUES(nombre), 
     descripcion_tematica = VALUES(descripcion_tematica);
+
+INSERT INTO capitulo_historia
+(titulo, epoca, tipo_contenido, contenido_narrativo, costo_cantidad, tipo_moneda)
+VALUES
+    ('El Cimiento del Núcleo', '1961', 'PRINCIPAL', 'El Centro Educativo Técnico Laboral Kinal nació en 1961...', 0, 'EXP'),
+    ('La Primera Expansión', '1970', 'PRINCIPAL', 'La demanda creció y la institución se expandió...', 100, 'EXP'),
+    ('El Gran Servidor', '1990', 'PRINCIPAL', 'Traslado definitivo a la sede actual en zona 7...', 250, 'EXP');
