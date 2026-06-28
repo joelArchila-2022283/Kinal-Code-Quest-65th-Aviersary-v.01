@@ -24,11 +24,13 @@
             <div class="badge bg-success bg-opacity-20 text-success border border-success p-3 font-monospace mb-4 fs-6" th:text="|+ ${expGanada} EXP ASIGNADA AL PERFIL|">+50 EXP</div>
         </div>
 
-        <div th:unless="${aprobado}">
-            <div class="display-3 text-danger mb-2"><i class="bi bi-exclamation-triangle-fill"></i></div>
-            <h2 class="text-white fw-bold font-monospace">STATUS: COMPILATION_FAILED</h2>
-            <p class="text-muted">Se detectaron anomalías lógicas. Para recibir las recompensas de EXP debes obtener el 100% de respuestas correctas.</p>
-            <div class="badge bg-danger bg-opacity-20 text-danger border border-danger p-2 font-monospace mb-4">RECOMPENSA BLOQUEADA</div>
+        <div th:if="${aprobado}" class="text-center my-4">
+            <h3 class="text-success font-monospace">[// COMPILACIÓN_EXITOSA]</h3>
+            <p class="text-muted">Has recolectado recursos del sistema:</p>
+            <div class="d-flex justify-content-center gap-3">
+                <span class="badge bg-warning text-dark p-2 font-monospace"><i class="bi bi-star-fill"></i> +<span th:text="${expGanada}">0</span> EXP</span>
+                <span class="badge bg-info text-dark p-2 font-monospace"><i class="bi bi-shield-check"></i> +<span th:text="${responsabilidadGanada}">0</span> RESPONSABILIDAD</span>
+            </div>
         </div>
 
         <div class="text-start mt-4 bg-black bg-opacity-30 p-3 rounded border border-secondary border-opacity-10">
