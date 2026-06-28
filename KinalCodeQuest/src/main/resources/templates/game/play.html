@@ -69,6 +69,9 @@
                             <button class="nav-link font-monospace" id="tab-bucles" data-bs-toggle="pill" data-bs-target="#content-bucles" type="button" role="tab">03. BUCLES_LOOPS</button>
                             <button class="nav-link font-monospace" id="tab-colecciones" data-bs-toggle="pill" data-bs-target="#content-colecciones" type="button" role="tab">04. COLECCIONES</button>
                             <button class="nav-link font-monospace" id="tab-metodos" data-bs-toggle="pill" data-bs-target="#content-metodos" type="button" role="tab">05. MÉTODOS</button>
+                            <button class="nav-link font-monospace" id="tab-poo" data-bs-toggle="pill" data-bs-target="#content-poo" type="button" role="tab">06. ORIENTACIÓN OBJETOS</button>
+                            <button class="nav-link font-monospace" id="tab-excepciones" data-bs-toggle="pill" data-bs-target="#content-excepciones" type="button" role="tab">07. EXCEPCIONES Error</button>
+                            <button class="nav-link font-monospace" id="tab-jdbc" data-bs-toggle="pill" data-bs-target="#content-jdbc" type="button" role="tab">08. PERSISTENCIA JDBC</button>
                         </div>
                     </div>
                     <div class="col-md-8 border-start border-secondary border-opacity-10 ps-3">
@@ -76,40 +79,45 @@
 
                             <div class="tab-pane fade show active" id="content-variables" role="tabpanel">
                                 <h6 class="text-white font-monospace fw-bold mb-2 text-neon-cyan">> DATOS PRIMITIVOS Y CONSTANTES</h6>
-                                <p>En Java, las variables se clasifican en tipos primitivos y objetos de referencia. Los tipos primitivos (como <code>int</code>, <code>double</code>, <code>boolean</code>) guardan el valor puro en la memoria Stack.</p>
-                                <p>Para fijar un valor inalterable en el sistema y mapearlo como constante, se debe anteponer la palabra reservada <code>final</code>. Una vez asignado, el compilador bloqueará cualquier intento de reescritura.</p>
+                                <p>En Java, las variables guardan valores puros en la memoria Stack (como <code>int</code> o <code>double</code>). El uso de la palabra clave <code>final</code> congela el valor convirtiéndolo en una constante inmutable del sistema.</p>
                             </div>
 
                             <div class="tab-pane fade" id="content-control" role="tabpanel">
                                 <h6 class="text-white font-monospace fw-bold mb-2 text-neon-cyan">> TOMA DE DECISIONES DE FLUJO</h6>
-                                <p>La compuerta lógica básica es el bloque <code>if-else</code>. Evalúa una expresión booleana para bifurcar el comportamiento del sistema informático.</p>
-                                <p>Para evaluar múltiples opciones basadas en una única variable limpia, la alternativa estructurada es el bloque <code>switch</code>, el cual optimiza los saltos de instrucción en bytecode.</p>
+                                <p>El flujo básico se ramifica mediante la compuerta lógica condicional <code>if-else</code> o a través de bloques indexados de tipo <code>switch</code> para optimizar bytecode.</p>
                             </div>
 
                             <div class="tab-pane fade" id="content-bucles" role="tabpanel">
                                 <h6 class="text-white font-monospace fw-bold mb-2 text-neon-cyan">> ITERACIÓN Y REPETICIÓN</h6>
-                                <p>Java cuenta con tres herramientas de iteración nativas:</p>
-                                <ul>
-                                    <li><code>for</code>: Ideal cuando la cantidad de ciclos es conocida mediante un contador.</li>
-                                    <li><code>while</code>: Evalúa la expresión al inicio; si es falsa desde el principio, el bloque jamás se ejecuta.</li>
-                                    <li><code>do-while</code>: Evalúa la condición al final, asegurando que el código se ejecute <strong>al menos una vez</strong> de forma obligatoria.</li>
-                                </ul>
+                                <p>Bucle <code>for</code> (ciclos fijos con contador), <code>while</code> (evaluación al inicio) y el ciclo <code>do-while</code> (evalúa al final, asegurando <strong>al menos una ejecución obligatoria</strong>).</p>
                             </div>
 
                             <div class="tab-pane fade" id="content-colecciones" role="tabpanel">
                                 <h6 class="text-white font-monospace fw-bold mb-2 text-neon-cyan">> ESTRUCTURAS DINÁMICAS DE DATOS</h6>
-                                <p>A diferencia de los arreglos estáticos, el framework de colecciones maneja memoria dinámica estructurada:</p>
-                                <ul>
-                                    <li><code>ArrayList</code>: Crece o se reduce dinámicamente según se requiera con los métodos nativos <code>.add()</code> y <code>.remove()</code>.</li>
-                                    <li><code>HashMap</code>: Guarda pares clave-valor indexados, optimizando la búsqueda directa de elementos en un tiempo computacional constante <code>O(1)</code>.</li>
-                                </ul>
+                                <p>Manejo de memoria dinámica: <code>ArrayList</code> ofrece redimensionamiento elástico automático. <code>HashMap</code> asocia llaves hashing únicas con sus respectivos objetos logrando búsquedas en complejidad óptima <code>O(1)</code>.</p>
                             </div>
 
                             <div class="tab-pane fade" id="content-metodos" role="tabpanel">
                                 <h6 class="text-white font-monospace fw-bold mb-2 text-neon-cyan">> MODULARIZACIÓN Y FIRMAS DE RETORNO</h6>
-                                <p>Los métodos empaquetan bloques de lógica reutilizables en el firmware. Es obligatorio declarar el tipo de datos preciso que regresará el flujo mediante la palabra reservada <code>return</code> (como <code>int</code>, <code>String</code> o <code>boolean</code>).</p>
-                                <p>Si la función ejecuta una rutina directa sin retornar ningún valor al flujo del sistema, se declara con la palabra clave <code>void</code>.</p>
+                                <p>Bloques lógicos reutilizables. Requieren definir en su firma el tipo de dato explícito a regresar con la cláusula <code>return</code> o marcarse como <code>void</code> si son rutinas directas sin retorno.</p>
                             </div>
+
+                            <div class="tab-pane fade" id="content-poo" role="tabpanel">
+                                <h6 class="text-white font-monospace fw-bold mb-2 text-neon-cyan">> PILARES POO: CLASES, HERENCIA Y ACCESOS</h6>
+                                <p>Los objetos nacen en la memoria Heap usando el operador <code>new</code>. Mediante <code>extends</code> una subclase hereda comportamientos del padre. Los modificadores (como <code>private</code>) protegen los datos internos (Encapsulamiento).</p>
+                            </div>
+
+                            <div class="tab-pane fade" id="content-excepciones" role="tabpanel">
+                                <h6 class="text-white font-monospace fw-bold mb-2 text-neon-cyan">> COMPUERTAS DE SEGURIDAD (TRY-CATCH-FINALLY)</h6>
+                                <p>Las excepciones controlan fallos en tiempo de ejecución. El código inestable se encierra en un <code>try</code>, el error se procesa en el <code>catch</code>, y los flujos abiertos de memoria se clausuran limpiamente dentro del bloque <code>finally</code>.</p>
+                            </div>
+
+                            <div class="tab-pane fade" id="content-jdbc" role="tabpanel">
+                                <h6 class="text-white font-monospace fw-bold mb-2 text-neon-cyan">> ACCESO A DATOS PERSISTENTES (JDBC)</h6>
+                                <p>Para transferir registros del software a la base de datos MySQL, se levantan conexiones a través de drivers JDBC. Las consultas parametrizadas se orquestan mediante objetos de tipo <code>PreparedStatement</code> para blindar la base de datos.</p>
+                            </div>
+
+                        </div>
 
                         </div>
                     </div>
