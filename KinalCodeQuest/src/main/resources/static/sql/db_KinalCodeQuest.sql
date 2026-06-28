@@ -56,7 +56,13 @@ INSERT INTO area_tecnica (id_area, nombre, descripcion_tematica) VALUES
 (1, 'Sintaxis y Variables Básicas', 'Fundamentos del compilador y manejo de memoria en Stack.'),
 (2, 'Estructuras de Control', 'Bifurcaciones lógicas complejas y bucles estructurados.'),
 (3, 'Colecciones e Inventarios', 'Manejo dinámico de estructuras ArrayList y HashMap para la gestión del Pañol de Kinal.'),
-(4, 'Estructura de Métodos', 'Modularización, firmas de retorno y encapsulamiento de lógica de sistemas.')
+(4, 'Estructura de Métodos', 'Modularización, firmas de retorno y encapsulamiento de lógica de sistemas.'),
+(5, 'Programación Orientada a Objetos', 'Conceptos de Clases, Objetos, Instanciación y Constructores en Java.'),
+(6, 'Pilares POO: Herencia y Polimorfismo', 'Reutilización de código mediante herencia (extends) y sobreescritura de métodos (@Override).'),
+(7, 'Encapsulamiento y Abstracción', 'Modificadores de acceso (private, public, protected), Getters/Setters, Interfaces y Clases Abstractas.'),
+(8, 'Manejo de Excepciones', 'Control de errores en tiempo de ejecución utilizando bloques try-catch-finally y throws.'),
+(9, 'Manejo de Archivos e I/O', 'Lectura y escritura de flujos de datos y archivos de texto plano con BufferedReader y PrintWriter.'),
+(10, 'Introducción a JDBC y Persistencia', 'Conexión del ecosistema Java hacia bases de datos relacionales mediante controladores JDBC.')
 ON DUPLICATE KEY UPDATE 
     nombre = VALUES(nombre), 
     descripcion_tematica = VALUES(descripcion_tematica);
