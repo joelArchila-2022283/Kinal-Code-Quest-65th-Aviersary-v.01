@@ -17,16 +17,16 @@ public class CapituloHistoria {
     private Integer idCapitulo;
 
     @Column(name = "id_capitulo_padre")
-    private Integer idCapituloPadre; // Enlace al nodo principal (Null si es historia core)
+    private Integer idCapituloPadre;
 
     @Column(nullable = false, length = 150)
     private String titulo;
 
     @Column(length = 50)
-    private String epoca; // Ej: 'MARZO_1961' o 'FILOSOFÍA'
+    private String epoca;
 
     @Column(length = 30)
-    private String tipoContenido; // 'PRINCIPAL', 'FOTO_ANTIGUA', 'VALOR_INSTITUCIONAL'
+    private String tipoContenido;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String contenidoNarrativo;
@@ -34,16 +34,21 @@ public class CapituloHistoria {
     @Column(length = 255)
     private String rutaImagen;
 
-    // --- SISTEMA DE COSTOS Y ECONOMÍA ---
     @Column(nullable = false)
-    private Integer costoCantidad; // Cuánto cuesta (puntos o EXP)
+    private Integer costoCantidad;
 
     @Column(nullable = false, length = 30)
-    private String tipoMoneda; // 'EXP', 'RESPONSABILIDAD', 'LABORIOSIDAD', 'SOLIDARIDAD'
+    private String tipoMoneda;
 
     @Column(length = 100)
-    private String bonusRecompensa; // Texto estético del beneficio obtenido
+    private String bonusRecompensa;
 
     @Transient
     private boolean desbloqueado;
+
+    @Transient
+    private boolean imagenDesbloqueada;
+
+    @Transient
+    private Integer costoLaboriosidad;
 }

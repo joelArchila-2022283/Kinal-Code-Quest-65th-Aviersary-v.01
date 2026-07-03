@@ -9,9 +9,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
         body {
-            background-color: #0a0f1d;
+            background-color: #060a13;
             font-family: 'Share Tech Mono', monospace;
-            color: #c3c9d6;
+            color: #d1d7e2;
+        }
+        .tech-font {
+            font-family: 'Share Tech Mono', monospace !important;
         }
         .timeline-container {
             position: relative;
@@ -35,48 +38,70 @@
             box-shadow: 0 0 10px #39ff14;
         }
         .history-card {
-            background: linear-gradient(135deg, #0f172a 0%, #020617 100%);
+            background: linear-gradient(135deg, #090f1e 0%, #02050b 100%);
             border: 1px solid #1e293b;
             border-radius: 4px;
             transition: all 0.3s ease;
         }
         .card-unlocked {
-            border-color: rgba(57, 255, 20, 0.2);
-            box-shadow: inset 0 0 15px rgba(57, 255, 20, 0.05);
+            border-color: rgba(57, 255, 20, 0.25);
+            box-shadow: inset 0 0 15px rgba(57, 255, 20, 0.03);
         }
         .card-unlocked:hover {
             border-color: #39ff14;
-            box-shadow: 0 0 15px rgba(57, 255, 20, 0.15);
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.12);
         }
         .card-locked {
-            border-color: rgba(239, 68, 68, 0.15);
-            background: #090d16;
+            border-color: rgba(239, 68, 68, 0.2);
+            background: #04070d;
         }
-        .text-neon-green { color: #39ff14; text-shadow: 0 0 5px rgba(57, 255, 20, 0.5); }
-        .text-neon-red { color: #ef4444; text-shadow: 0 0 5px rgba(239, 68, 68, 0.5); }
-        .text-neon-cyan { color: #00f0ff; text-shadow: 0 0 5px rgba(0, 240, 255, 0.5); }
 
-        .btn-decode {
+        .narrative-text {
+            color: #f8fafc !important;
+            letter-spacing: 0.5px;
+            font-size: 0.98rem;
+            line-height: 1.65;
+            background-color: rgba(0, 0, 0, 0.65) !important;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        }
+
+        /* --- COLORES TERMINAL DE ALTO CONTRASTE --- */
+        .text-neon-green { color: #39ff14 !important; text-shadow: 0 0 8px rgba(57, 255, 20, 0.5); }
+        .text-neon-red { color: #ff4d4d !important; text-shadow: 0 0 8px rgba(255, 77, 77, 0.5); }
+        .text-neon-cyan { color: #00f0ff !important; text-shadow: 0 0 8px rgba(0, 240, 255, 0.5); }
+
+        .text-high-contrast-label {
+            color: #e2e8f0 !important;
+            font-weight: bold;
+        }
+        .text-high-contrast-warning {
+            color: #f1f5f9 !important;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- CORRECCIÓN DEL BOTÓN (RELLENO ROJO + LETRAS BLANCAS) --- */
+        .btn-back-dashboard {
             background: transparent;
-            border: 1px solid #39ff14;
-            color: #39ff14;
-            font-family: 'Share Tech Mono', monospace;
-            transition: all 0.2s ease;
+            border: 1.5px solid #ff0044 !important;
+            color: #ff0044 !important;
+            border-radius: 8px;
+            letter-spacing: 1px;
+            transition: all 0.2s ease-in-out;
         }
-        .btn-decode:hover {
-            background: #39ff14;
-            color: #000;
-            box-shadow: 0 0 10px #39ff14;
+        .btn-back-dashboard:hover {
+            background: #ff0044 !important; /* Se pone rojo completo */
+            color: #ffffff !important;      /* Letras e iconos pasan a blanco */
+            box-shadow: 0 0 20px rgba(255, 0, 68, 0.6);
         }
+
+        .py-2\.5 {
+            padding-top: 0.65rem !important;
+            padding-bottom: 0.65rem !important;
+        }
+
         .glitch-bg {
-            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15), rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
-        }
-        .img-lore {
-            max-height: 320px;
-            width: 100%;
-            object-fit: cover;
-            filter: brightness(0.85) contrast(1.1);
-            border: 1px solid rgba(48, 54, 61, 0.6);
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.2), rgba(0,0,0,0.2) 1px, transparent 1px, transparent 2px);
         }
     </style>
 </head>
@@ -84,86 +109,101 @@
 
 <div class="container" style="max-width: 800px;">
 
+    <!-- Mensajes del Sistema -->
     <div th:if="${mensajeExito}" class="alert alert-success bg-transparent border-success text-success font-monospace mb-4" th:text="${mensajeExito}"></div>
     <div th:if="${mensajeError}" class="alert alert-danger bg-transparent border-danger text-danger font-monospace mb-4" th:text="${mensajeError}"></div>
 
-    <div class="d-flex justify-content-between align-items-center mb-5 border-bottom border-secondary border-opacity-10 pb-4">
-        <div>
-            <a th:href="@{/game/dashboard}" class="text-decoration-none small text-secondary font-monospace tracking-widest">
-                <i class="bi bi-terminal-fill text-neon-cyan"></i> SYS_BACK_TO_CORE
-            </a>
-            <h2 class="fw-bold text-white mt-2 mb-0 tracking-tight">
-                [<span class="text-neon-green">ARCHIVE_DECRYPTER</span>]
-            </h2>
-        </div>
+    <!-- Header del Decodificador -->
+    <div class="mb-5 border-bottom border-secondary border-opacity-10 pb-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
 
-        <div class="text-end bg-dark bg-opacity-40 p-2 px-3 border border-secondary border-opacity-20 rounded font-monospace">
-            <span class="text-muted small d-block mb-1" style="font-size: 0.75rem;">BILLETERA_ACTIVA_SYS</span>
-            <div class="d-flex gap-3 small fw-bold">
-                <span class="text-neon-green" th:text="|R: ${jugador.saldoResponsabilidad != null ? jugador.saldoResponsabilidad : 0}|">R: 0</span>
-                <span class="text-neon-cyan" th:text="|S: ${jugador.saldoSolidaridad != null ? jugador.saldoSolidaridad : 0}|">S: 0</span>
-                <span class="text-neon-green" th:text="|L: ${jugador.saldoLaboriosidad != null ? jugador.saldoLaboriosidad : 0}|">L: 0</span>
+            <!-- Estructura exacta con el efecto de hover corregido -->
+            <div class="d-flex justify-content-start mb-0">
+                <a th:href="@{/game/dashboard}" class="btn btn-back-dashboard w-auto px-4 py-2.5 tech-font fw-bold d-inline-flex align-items-center justify-content-center gap-2 shadow">
+                    <i class="bi bi-arrow-left-square fs-5"></i>
+                    <span>VOLVER_AL_DASHBOARD</span>
+                </a>
+            </div>
+
+            <!-- Billetera del Jugador -->
+            <div class="text-end bg-dark bg-opacity-40 p-2 px-3 border border-secondary border-opacity-20 rounded font-monospace">
+                <span class="text-high-contrast-label small d-block mb-1" style="font-size: 0.75rem;">BILLETERA_ACTIVA_SYS</span>
+                <div class="d-flex gap-3 small fw-bold">
+                    <span class="text-neon-green" th:text="|R: ${jugador.saldoResponsabilidad != null ? jugador.saldoResponsabilidad : 0}|">R: 0</span>
+                    <span class="text-neon-cyan" th:text="|S: ${jugador.saldoSolidaridad != null ? jugador.saldoSolidaridad : 0}|">S: 0</span>
+                    <span class="text-neon-green" th:text="|L: ${jugador.saldoLaboriosidad != null ? jugador.saldoLaboriosidad : 0}|">L: 0</span>
+                </div>
             </div>
         </div>
+
+        <h2 class="fw-bold text-white mt-4 mb-0 tracking-tight">
+            [<span class="text-neon-green">ARCHIVE_DECRYPTER</span>]
+        </h2>
     </div>
 
+    <!-- Línea de Tiempo del Mainframe -->
     <div class="position-relative">
 
+        <!-- Estado vacío -->
+        <div th:if="${capitulos.isEmpty()}" class="text-center p-5 border border-secondary border-opacity-20 rounded bg-black bg-opacity-20">
+            <i class="bi bi-exclamation-triangle text-neon-red display-5 d-block mb-3"></i>
+            <span class="text-white font-monospace">[SISTEMA]: No se encontraron trazas de datos históricos en el mainframe.</span>
+        </div>
+
+        <!-- Iteración de Capítulos -->
         <div class="timeline-container mb-5" th:each="cap : ${capitulos}">
 
+            <!-- Nodo visual de progreso -->
             <div class="timeline-node" th:classappend="${cap.desbloqueado} ? 'node-unlocked' : ''"></div>
 
             <div class="card history-card p-4 glitch-bg" th:classappend="${cap.desbloqueado} ? 'card-unlocked' : 'card-locked'">
 
-                <div class="d-flex justify-content-between align-items-center mb-3">
+                <!-- Encabezado dinámico -->
+                <div class="d-flex justify-content-between align-items-start mb-3">
                     <div>
-                        <span class="font-monospace small opacity-50" th:text="|INDEX_RECORDS://0${cap.idCapitulo} [${cap.epoca}]|">INDEX_RECORDS://01</span>
-                        <h4 class="fw-bold text-white my-1 font-monospace"
+                        <span class="font-monospace small d-block text-high-contrast-label" th:text="|INDEX_RECORDS://0${cap.idCapitulo} [${cap.epoca}]|">INDEX_RECORDS://01 [1961]</span>
+                        <h4 class="fw-bold my-1 font-monospace"
                             th:classappend="${cap.desbloqueado} ? 'text-neon-green' : 'text-neon-red'"
                             th:text="${cap.titulo}">EL ORIGEN</h4>
                     </div>
-
-                    <div>
-                        <span th:if="${cap.desbloqueado}" class="badge border border-success text-neon-green bg-success bg-opacity-10 font-monospace py-1.5 px-3">
-                            <i class="bi bi-shield-check me-1"></i> DECODED
-                        </span>
-                        <span th:unless="${cap.desbloqueado}" class="badge border border-danger text-neon-red bg-danger bg-opacity-10 font-monospace py-1.5 px-3"
-                              th:text="|REQ: ${cap.costoCantidad} ${cap.tipoMoneda}|">REQ: 150 EXP</span>
+                    <div class="text-end">
+                        <span class="badge border border-info border-opacity-30 text-neon-cyan font-monospace small d-block mb-1" style="font-size: 0.75rem;" th:text="|REQ_TEXTO: ${cap.costoCantidad} EXP|">REQ_TEXTO: 0 EXP</span>
+                        <span class="badge border border-success border-opacity-30 text-neon-green font-monospace small" style="font-size: 0.75rem;" th:text="|REQ_IMG: ${cap.costoLaboriosidad} LAB|">REQ_IMG: 10 LAB</span>
                     </div>
                 </div>
 
-                <div th:if="${cap.desbloqueado}">
-
-                    <div th:if="${cap.rutaImagen != null}" class="mb-3 text-center position-relative border border-secondary border-opacity-20 rounded overflow-hidden">
-                        <img th:src="${cap.rutaImagen}" alt="Visual Data" class="img-lore">
-                        <div class="position-absolute bottom-0 start-0 bg-dark bg-opacity-80 text-neon-green small font-monospace px-2 py-1 m-2 rounded border border-success border-opacity-30" style="font-size: 0.72rem;">
-                            <i class="bi bi-image-fill me-1"></i> VISUAL_STREAM_ONLINE
-                        </div>
+                <!-- ==================== LOGICA DE LA IMAGEN ==================== -->
+                <div class="mb-4">
+                    <div th:if="${cap.imagenDesbloqueada and cap.rutaImagen != null and !cap.rutaImagen.isEmpty()}" class="text-center">
+                        <img th:src="@{${cap.rutaImagen}}" class="img-fluid rounded border border-success border-opacity-30 mb-1" alt="Visual Log Archive" style="max-height: 280px; width: 100%; object-fit: cover;">
+                        <div class="text-start"><small class="font-monospace text-neon-green" style="font-size: 0.75rem;"><i class="bi bi-unlock-fill"></i> VISUAL_STREAM_DECRYPTED // ACCESS_GRANTED</small></div>
                     </div>
 
-                    <p class="text-light-emphasis font-monospace lh-base mb-0 p-3 bg-black bg-opacity-40 rounded border border-secondary border-opacity-10"
-                       style="text-align: justify; font-size: 0.95rem; line-height: 1.6;"
+                    <div th:unless="${cap.imagenDesbloqueada}" class="p-3 rounded border border-secondary border-opacity-20 bg-black bg-opacity-40 text-center font-monospace">
+                        <i class="bi bi-eye-slash-fill text-neon-cyan d-block mb-1" style="font-size: 1.2rem;"></i>
+                        <span class="text-high-contrast-warning small d-block mb-1">[ARCHIVO_VISUAL_ENCRIPTADO]</span>
+                        <span class="text-neon-cyan small" style="font-size: 0.8rem;"
+                              th:text="|Requiere: ${cap.costoLaboriosidad} Pts. de Laboriosidad (Tienes: ${jugador.saldoLaboriosidad != null ? jugador.saldoLaboriosidad : 0})|">
+                            Requiere: 20 Pts
+                        </span>
+                    </div>
+                </div>
+
+                <!-- ==================== LOGICA DEL TEXTO ==================== -->
+                <div class="th-text-container" th:if="${cap.desbloqueado}">
+                    <p class="narrative-text font-monospace lh-base mb-0 p-3 rounded border border-secondary border-opacity-20"
+                       style="text-align: justify;"
                        th:text="${cap.contenidoNarrativo}">
-                        Contenido Histórico.
+                        Contenido Histórico Desencriptado.
                     </p>
                     <div th:if="${cap.bonusRecompensa != null}" class="mt-2 text-end small font-monospace text-neon-cyan opacity-75" th:text="${cap.bonusRecompensa}"></div>
                 </div>
 
                 <div th:unless="${cap.desbloqueado}" class="p-4 rounded border border-danger border-opacity-10 bg-black bg-opacity-30 text-center">
-                    <span class="text-neon-red font-monospace d-block small mb-2 tracking-widest">[!!! ARCHIVO_ENCRIPTADO !!!]</span>
-
-                    <p th:if="${cap.tipoMoneda == 'EXP'}" class="text-muted small font-monospace mb-0">
-                        El descifrador central de la terminal requiere un nivel de experiencia (EXP) superior para forzar el flujo de datos de este nodo de memoria.
+                    <span class="text-neon-red font-monospace d-block small mb-2 tracking-widest">[!!! NARRATIVE_STREAM_LOCKED !!!]</span>
+                    <p class="text-high-contrast-warning small font-monospace mb-0">
+                        El núcleo requiere mayor experiencia total en los lenguajes para ejecutar la autodesencriptación del texto.
                     </p>
-
-                    <div th:unless="${cap.tipoMoneda == 'EXP'}">
-                        <p class="text-muted small font-monospace mb-3">El flujo de este registro de datos complementarios se encuentra restringido por algoritmos institucionales.</p>
-                        <form th:action="@{/game/historia/comprar/{id}(id=${cap.idCapitulo})}" method="post">
-                            <button type="submit" class="btn btn-decode w-100 font-monospace py-2 fw-bold">
-                                <i class="bi bi-cpu-fill me-1"></i> COMPILAR_SCRIPT_DESBLOQUEO.SH
-                            </button>
-                        </form>
-                    </div>
                 </div>
 
             </div>

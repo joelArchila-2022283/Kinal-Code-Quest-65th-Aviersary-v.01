@@ -2,10 +2,7 @@ package com.J.M_CODERS.KinalCodeQuest.controller;
 
 import com.J.M_CODERS.KinalCodeQuest.model.entity.*;
 import com.J.M_CODERS.KinalCodeQuest.repository.ProgresoJugadorRepository;
-import com.J.M_CODERS.KinalCodeQuest.service.evaluator.AreaTecnicaService;
-import com.J.M_CODERS.KinalCodeQuest.service.evaluator.HistoriaService;
-import com.J.M_CODERS.KinalCodeQuest.service.evaluator.MisionService;
-import com.J.M_CODERS.KinalCodeQuest.service.evaluator.JugadorService;
+import com.J.M_CODERS.KinalCodeQuest.service.evaluator.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,10 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /* Controlador central encargado de la navegación principal y los módulos del juego */
@@ -39,6 +33,11 @@ public class GameController {
     @Autowired
     private HistoriaService historiaService;
 
+    @Autowired
+    private EjercicioGuiaService ejercicioGuiaService;
+
+    @Autowired
+    private com.J.M_CODERS.KinalCodeQuest.repository.ProgresoEjercicioRepository progresoEjercicioRepository;
     // Banco de preguntas en memoria de Java optimizado (Niveles del 1 al 10 completificados)
     private final List<PreguntaTrivia> bancoPreguntas = Arrays.asList(
             // Nivel 1: Sintaxis y Variables Básicas
@@ -118,6 +117,21 @@ public class GameController {
         model.addAttribute("intentosTotales", intentosTotales);
         model.addAttribute("misionesDificiles", misionesDificiles);
 
+        // Métrica adicional: número de ejercicios guía completados por el jugador (para diagnóstico)
+        try {
+            java.util.List<Integer> ejerciciosCompletadosIds = ejercicioGuiaService.ejerciciosCompletadosIds(jugadorActualizado);
+            model.addAttribute("ejerciciosCompletadosCount", ejerciciosCompletadosIds != null ? ejerciciosCompletadosIds.size() : 0);
+        } catch (Exception ex) {
+            model.addAttribute("ejerciciosCompletadosCount", 0);
+        }
+
+        // Añadir historial de intentos sobre ejercicios guía del jugador para visualización (opción B)
+        try {
+            List<com.J.M_CODERS.KinalCodeQuest.model.entity.ProgresoEjercicio> historial = progresoEjercicioRepository.findByJugador(jugadorActualizado);
+            model.addAttribute("progresoEjercicios", historial);
+        } catch (Exception ex) {
+            model.addAttribute("progresoEjercicios", java.util.Collections.emptyList());
+        }
         return "game/dashboard";
     }
 
@@ -224,7 +238,7 @@ public class GameController {
         return "game/resultado_trivia";
     }
 
-    /* Apartado progresivo de la historia que evalúa la EXP del jugador para desbloquear los 10 capítulos secuenciales */
+    /* Apartado progresivo de la historia con nuevos registros de la BD y escala lineal de Laboriosidad (10-100) */
     @GetMapping("/historia")
     public String verHistoria(HttpSession session, Model model) {
         Jugador jugadorSesion = (Jugador) session.getAttribute("usuarioLogueado");
@@ -232,20 +246,50 @@ public class GameController {
 
         Jugador jugador = jugadorService.buscarPorId(jugadorSesion.getIdJugador());
         int expActual = (jugador.getExperiencia() != null) ? jugador.getExperiencia() : 0;
+        int laboriosidadActual = (jugador.getSaldoLaboriosidad() != null) ? jugador.getSaldoLaboriosidad() : 0;
 
         List<CapituloHistoria> capitulos = new ArrayList<>();
 
-        // Carga secuencial balanceada de la historia institucional y técnica (Paso de 10 en 10 EXP)
-        capitulos.add(crearCapitulo(1, "El Cimiento del Núcleo (1961)", 0, "El Centro Educativo Técnico Laboral Kinal nació en 1961 en Guatemala, gracias a la iniciativa de un grupo de profesionales e ingenieros motivados por las enseñanzas de San Josemaría Escrivá de Balaguer. Su meta fundamental era brindar oportunidades de superación técnica y humana a jóvenes y adultos de escasos recursos. Iniciando en instalaciones humildes en la zona 12, Kinal revolucionó la educación técnica en el país promoviendo que el trabajo diario es un medio para alcanzar la excelencia humana y la santificación.", expActual));
-        capitulos.add(crearCapitulo(2, "Migración de Datos y Expansión (1970-1980)", 10, "A medida que la demanda de técnicos calificados crecía en Guatemala, la sede inicial de la zona 12 empezó a quedarse pequeña. Durante las décadas de los 70 y 80, la Fundación expandió sus programas nocturnos y de formación acelerada para adultos trabajadores. Fue en esta era donde se consolidaron los pilares formativos tradicionales, demostrando que la disciplina técnica y la ética profesional podían transformar radicalmente el panorama industrial y laboral de las familias guatemaltecas.", expActual));
-        capitulos.add(crearCapitulo(3, "El Gran Servidor: Sede Zona 7 (1990)", 20, "Un hito trascendental ocurrió en la década de los 90 con el traslado definitivo de la institución a sus amplias e innovadoras instalaciones actuales en la Zona 7 de la Ciudad de Guatemala. Diseñado específicamente para albergar talleres mecánicos, eléctricos y laboratorios industriales, este nuevo complejo arquitectónico permitió a Kinal cuadriplicar su capacidad operativa y dar vida al plan de Perito Técnico para jóvenes de nivel diversificado.", expActual));
-        capitulos.add(crearCapitulo(4, "Inyección del Compilador: Perito en Informática", 30, "Con la llegada del nuevo milenio y la inminente automatización global, Kinal integró a su matriz de estudio la carrera de Perito en Informática. Los antiguos talleres de herramientas manuales abrieron paso a servidores, redes estructuradas, bases de datos y desarrollo de software lógico. Los estudiantes dejaron de ser solo operarios de maquinaria para transformarse en arquitectos digitales, capaces de escribir código estructurado bajo rigurosos estándares de calidad internacional.", expActual));
-        capitulos.add(crearCapitulo(5, "Kinal en la Red Global: El Legado Vivo", 40, "Hoy en día, con más de seis décadas de trayectoria ininterrumpida, el Centro Técnico Laboral Kinal sigue transformando vidas. Su filosofía operativa original no ha cambiado: formar profesionales con alta capacidad técnica pero, sobre todo, con sólidos valores de Laboriosidad, Responsabilidad y Solidaridad. Cada línea de código que compilas en esta terminal rinde homenaje a los miles de egresados que mueven y desarrollan la infraestructura tecnológica de Guatemala.", expActual));
-        capitulos.add(crearCapitulo(6, "Capítulo VI: Arquitectura Orientada a Objetos", 50, "El software moderno demanda abstracción. Kinal adoptó metodologías avanzadas de desarrollo, enseñando que cada entidad del mundo real puede ser modelada como un objeto con responsabilidades específicas. El código limpio es un reflejo del orden interno.", expActual));
-        capitulos.add(crearCapitulo(7, "Capítulo VII: El Legado Compartido (Herencia)", 60, "Así como las nuevas generaciones heredan la disciplina y los valores de los fundadores de 1961, en Java la herencia permite extender las capacidades del código base. Construimos soluciones robustas sobre cimientos fuertes ya validados.", expActual));
-        capitulos.add(crearCapitulo(8, "Capítulo VIII: Blindaje del Núcleo (Encapsulamiento)", 70, "Protegemos los datos sensibles aislando las variables mediante accesos restringidos. El software de alta confiabilidad requiere capas seguras de abstracción, asegurando que las modificaciones externas no alteren el comportamiento esencial del sistema.", expActual));
-        capitulos.add(crearCapitulo(9, "Capítulo IX: Tolerancia a Fallos (Excepciones)", 80, "Los sistemas reales fallan, pero un ingeniero de Kinal escribe software preparado para mitigar el caos. El control estructurado de excepciones captura los imprevistos de ejecución y previene el colapso total de la infraestructura crítica.", expActual));
-        capitulos.add(crearCapitulo(10, "Capítulo X: Persistencia e Impacto Social Eterno", 90, "Los archivos pasan, pero las conexiones estables a base de datos (JDBC) trascienden las sesiones activas de memoria. De igual manera, el impacto formativo y social de Kinal queda grabado de forma persistente en la historia de Guatemala.", expActual));
+        // Estructura: crearCapitulo(id, titulo, epoca, expReq, textoNarrativo, expActual, rutaImg, labReq, labActual, bonusRecompensa)
+        capitulos.add(crearCapitulo(1, "El Cimiento del Núcleo", "1961", 0,
+                "El Centro Educativo Técnico Laboral Kinal nació en 1961 en Guatemala. Su meta fundamental desde su origen ha sido brindar oportunidades de superación técnica y humana a la clase trabajadora.",
+                expActual, "/img/historia/logo-Kinal.jpg", 10, laboriosidadActual, null));
+
+        capitulos.add(crearCapitulo(2, "Archivo Visual: Los Primeros Pasos", "1965", 10,
+                "Fichero recuperado de los archivos confidenciales. Las primeras clases de dibujo técnico y electricidad se estructuraron con recursos limitados pero con un alto estándar de excelencia.",
+                expActual, "/img/aniversarios/61-aniversario.jpg", 20, laboriosidadActual, "[+10 Ptos Prestigio Logrado]"));
+
+        capitulos.add(crearCapitulo(3, "La Consolidación del Servidor", "1989", 20,
+                "En 1989 se concreta el traslado definitivo a la sede actual en la Zona 7 de la Ciudad de Guatemala, expandiendo radicalmente la infraestructura de los laboratorios y talleres tecnológicos.",
+                expActual, "/img/historia/Construccion-sede-1989.jpg", 30, laboriosidadActual, null));
+
+        capitulos.add(crearCapitulo(4, "Código de Honor: Laboriosidad", "1975", 30,
+                "Protocolo ético: El trabajo diario no es solo una carga, sino un medio para alcanzar la excelencia humana, santificar el entorno y desarrollar la infraestructura de Guatemala.",
+                expActual, "/img/historia/Construccion-basicos-2005.jpg", 40, laboriosidadActual, "[Análisis de Integridad Completado]"));
+
+        capitulos.add(crearCapitulo(5, "Planos de Infraestructura: Edificio C", "1992", 40,
+                "Planos estructurales recuperados de los servidores centrales. Captura histórica que documenta las fases de cimentación y levantamiento del icónico Edificio C.",
+                expActual, "/img/historia/Construccion-edificio-C-1992.jpg", 50, laboriosidadActual, "[Módulo de Hardware Desbloqueado]"));
+
+        capitulos.add(crearCapitulo(6, "Registro de Campo: Bloque de Básicos", "2005", 50,
+                "Compilación de capturas del área de educación básica técnica del año 2005, mostrando la evolución de los entornos académicos interactivos.",
+                expActual, "/img/historia/Construccion-basicos-2-2005.jpg", 60, laboriosidadActual, "[+5 Ptos Cooperación Colectiva]"));
+
+        capitulos.add(crearCapitulo(7, "La Era Moderna del Core", "2026", 60,
+                "Kinal se transforma en un referente de innovación digital y tecnológica en la región, integrando desarrollo de software de vanguardia y metodologías ágiles avanzadas.",
+                expActual, "/img/historia/Entrada-Kinal-actual.jpg", 70, laboriosidadActual, "[+20 Ptos Sistema de Vanguardia]"));
+
+        capitulos.add(crearCapitulo(8, "Arquitectura Orientada a Objetos", "POO", 70,
+                "El software moderno demanda abstracción. Kinal adoptó metodologías avanzadas de desarrollo, enseñando que cada entidad del mundo real puede ser modelada como un objeto con responsabilidades específicas.",
+                expActual, "/img/historia/Construccion-basicos-3-2005.jpg", 80, laboriosidadActual, "[Compilador POO Activado]"));
+
+        capitulos.add(crearCapitulo(9, "Tolerancia a Fallos", "EXCEPCIONES", 80,
+                "Los sistemas reales fallan, pero un ingeniero de Kinal escribe software preparado para mitigar el caos. El control estructurado de excepciones captura los imprevistos de ejecución y previene el colapso total de la infraestructura.",
+                expActual, "/img/aniversarios/63-aniversario.jpg", 90, laboriosidadActual, "[Manejo de Excepciones Ok]"));
+
+        capitulos.add(crearCapitulo(10, "Persistencia del Núcleo", "JDBC", 90,
+                "Los archivos pasan, pero las conexiones estables a base de datos (JDBC) trascienden las sesiones activas de memoria. De igual manera, el impacto formativo y social de Kinal queda grabado de forma persistente en la historia.",
+                expActual, "/img/aniversarios/65-aniversario.jpg", 100, laboriosidadActual, "[Persistencia de Datos Completa]"));
 
         model.addAttribute("jugador", jugador);
         model.addAttribute("capitulos", capitulos);
@@ -253,17 +297,26 @@ public class GameController {
         return "game/historia";
     }
 
-    /* Función de soporte rápido para inicializar capítulos de historia sin repetir código estructurado */
-    private CapituloHistoria crearCapitulo(int id, String titulo, int exp, String contenido, int expActual) {
+    /* Función de soporte mapeada con soporte para bonus estéticos de recompensa */
+    private CapituloHistoria crearCapitulo(int id, String titulo, String epoca, int exp, String contenido, int expActual, String rutaImagen, int costoLaboriosidad, int laboriosidadActual, String bonusRecompensa) {
         CapituloHistoria cap = new CapituloHistoria();
         cap.setIdCapitulo(id);
         cap.setTitulo(titulo);
+        cap.setEpoca(epoca);
         cap.setCostoCantidad(exp);
         cap.setTipoMoneda("EXP");
         cap.setTipoContenido("PRINCIPAL");
-
         cap.setContenidoNarrativo(contenido);
+        cap.setRutaImagen(rutaImagen);
+        cap.setBonusRecompensa(bonusRecompensa);
+
+        // Evaluación de Desbloqueo de TEXTO (Por Puntos de Experiencia)
         cap.setDesbloqueado(expActual >= exp);
+
+        // Evaluación de Desbloqueo de IMAGEN (Por Puntos de Laboriosidad)
+        cap.setCostoLaboriosidad(costoLaboriosidad);
+        cap.setImagenDesbloqueada(laboriosidadActual >= costoLaboriosidad);
+
         return cap;
     }
 
@@ -289,8 +342,31 @@ public class GameController {
         Jugador jugador = (Jugador) session.getAttribute("usuarioLogueado");
         if (jugador == null) return "redirect:/auth/login";
 
+        List<Mision> misiones = misionesService.listarTodas();
+        Map<Integer, Boolean> misionesCompletadas = new HashMap<>();
+        
+        // Crear mapa de misiones completadas
+        for (Mision mision : misiones) {
+            ProgresoJugador progreso = progresoRepository.findByJugadorAndMision(jugador, mision).orElse(null);
+            misionesCompletadas.put(mision.getIdMision(), progreso != null && progreso.getCompletada());
+        }
+
         model.addAttribute("jugador", jugador);
-        model.addAttribute("misiones", misionesService.listarTodas());
+        model.addAttribute("misiones", misiones);
+        model.addAttribute("misionesCompletadas", misionesCompletadas);
+        
+        // Añadimos ejercicios guía para mostrarlos en la página de misiones
+        try {
+            model.addAttribute("listaEjercicios", ejercicioGuiaService.listarTodosActivos());
+        } catch (Exception e) {
+            model.addAttribute("listaEjercicios", null);
+        }
+        // Pasar lista de ejercicios completados para renderizar botones
+        try {
+            model.addAttribute("ejerciciosCompletados", ejercicioGuiaService.ejerciciosCompletadosIds(jugador));
+        } catch (Exception e) {
+            model.addAttribute("ejerciciosCompletados", java.util.Collections.emptyList());
+        }
         return "game/misiones";
     }
 
