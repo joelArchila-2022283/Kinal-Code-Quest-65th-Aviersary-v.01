@@ -17,8 +17,7 @@ public class DataInitializerConfig {
     CommandLineRunner verificarYpoblarBaseDatos(
             AreaTecnicaRepository areaRepo,
             MisionRepository misionRepo,
-            EjercicioGuiaRepository ejercicioRepo,
-            TiendaItemRepository tiendaRepo) {
+            EjercicioGuiaRepository ejercicioRepo) {
 
         return args -> {
             // Verificar si el sistema ya tiene datos para no duplicar
@@ -51,7 +50,7 @@ public class DataInitializerConfig {
                     EjercicioGuia e1 = EjercicioGuia.builder()
                             .titulo("Hello World")
                             .descripcion("Imprime en consola el texto: HOLA KINAL")
-                            .enunciado("Usa System.out.println para mostrar el mensaje exacto: HOLA KINAL")
+                            .enunciado("Usa System.out.println para muestra el mensaje exacto: HOLA KINAL")
                             .codigoTemplate("public class Main {\n    public static void main(String[] args) {\n        // Escribe aquí\n    }\n}")
                             .criterioEvaluacion(".*System\\.out\\.println\\s*\\(\\s*\"HOLA KINAL\"\\s*\\)\\s*;.*")
                             .dificultad("FACIL")
@@ -188,94 +187,6 @@ public class DataInitializerConfig {
                     ejercicioRepo.save(e8);
                     ejercicioRepo.save(e9);
                     ejercicioRepo.save(e10);
-                }
-
-                // Inicializar items de tienda
-                if (tiendaRepo.count() == 0) {
-                   System.out.println(">>> [CONFIG-CORE] Inyectando items de tienda...");
-
-                   TiendaItem item1 = TiendaItem.builder()
-                           .titulo("Logo Kinal")
-                           .imagePath("/img/historia/logo-Kinal.jpg")
-                           .precioPuntos(50)
-                           .activo(true)
-                           .build();
-
-                   TiendaItem item2 = TiendaItem.builder()
-                           .titulo("Entrada Kinal Actual")
-                           .imagePath("/img/historia/Entrada-Kinal-actual.jpg")
-                           .precioPuntos(75)
-                           .activo(true)
-                           .build();
-
-                   TiendaItem item3 = TiendaItem.builder()
-                           .titulo("Construcción 1989")
-                           .imagePath("/img/historia/Construccion-sede-1989.jpg")
-                           .precioPuntos(100)
-                           .activo(true)
-                           .build();
-
-                   TiendaItem item4 = TiendaItem.builder()
-                           .titulo("Construcción Edificio C 1992")
-                           .imagePath("/img/historia/Construccion-edificio-C-1992.jpg")
-                           .precioPuntos(100)
-                           .activo(true)
-                           .build();
-
-                   TiendaItem item5 = TiendaItem.builder()
-                           .titulo("Construcción Básicos 2005")
-                           .imagePath("/img/historia/Construccion-basicos-2005.jpg")
-                           .precioPuntos(90)
-                           .activo(true)
-                           .build();
-
-                   TiendaItem item6 = TiendaItem.builder()
-                           .titulo("Expo Kinal 2026")
-                           .imagePath("/img/expos/icon-expo-kinal-2026.jpg")
-                           .precioPuntos(80)
-                           .activo(true)
-                           .build();
-
-                   TiendaItem item7 = TiendaItem.builder()
-                           .titulo("Expo Kinal 2023")
-                           .imagePath("/img/expos/icon-expo-kinal-2023.jpg")
-                           .precioPuntos(70)
-                           .activo(true)
-                           .build();
-
-                   TiendaItem item8 = TiendaItem.builder()
-                           .titulo("65 Aniversario")
-                           .imagePath("/img/aniversarios/65-aniversario.jpg")
-                           .precioPuntos(150)
-                           .activo(true)
-                           .build();
-
-                   TiendaItem item9 = TiendaItem.builder()
-                           .titulo("63 Aniversario")
-                           .imagePath("/img/aniversarios/63-aniversario.jpg")
-                           .precioPuntos(120)
-                           .activo(true)
-                           .build();
-
-                   TiendaItem item10 = TiendaItem.builder()
-                           .titulo("61 Aniversario")
-                           .imagePath("/img/aniversarios/61-aniversario.jpg")
-                           .precioPuntos(100)
-                           .activo(true)
-                           .build();
-
-                   tiendaRepo.save(item1);
-                   tiendaRepo.save(item2);
-                   tiendaRepo.save(item3);
-                   tiendaRepo.save(item4);
-                   tiendaRepo.save(item5);
-                   tiendaRepo.save(item6);
-                   tiendaRepo.save(item7);
-                   tiendaRepo.save(item8);
-                   tiendaRepo.save(item9);
-                   tiendaRepo.save(item10);
-
-                   System.out.println(">>> [CONFIG-CORE] Items de tienda cargados con éxito.");
                 }
 
                 System.out.println(">>> [CONFIG-CORE] Estructuras de misiones y ejercicios cargadas con éxito.");
