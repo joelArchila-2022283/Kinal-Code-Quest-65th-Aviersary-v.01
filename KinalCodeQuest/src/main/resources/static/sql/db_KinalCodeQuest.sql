@@ -67,6 +67,18 @@ CREATE TABLE capitulo_historia (
     FOREIGN KEY (id_capitulo_padre) REFERENCES capitulo_historia(id_capitulo) ON DELETE CASCADE
 );
 
+-- 5. Tabla de Progreso de Ejercicios Guía (registro de intentos y completados)
+CREATE TABLE IF NOT EXISTS progreso_ejercicio (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    id_jugador INT NOT NULL,
+    id_ejercicio INT NOT NULL,
+    completada BOOLEAN DEFAULT FALSE,
+    intentos INT DEFAULT 0,
+    ultimo_codigo_enviado TEXT,
+    fecha_completado TIMESTAMP NULL,
+    FOREIGN KEY (id_jugador) REFERENCES jugador(id_jugador) ON DELETE CASCADE
+);
+
 CREATE TABLE compra_historia (
     id_compra INT AUTO_INCREMENT PRIMARY KEY,
     id_jugador INT NOT NULL,
