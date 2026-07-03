@@ -6,6 +6,7 @@
     <title>KinalCodeQuest - Evaluador Sintáctico</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
         body { background-color: #060b13; font-family: 'Share Tech Mono', monospace; color: #adbac7; }
@@ -38,11 +39,17 @@
             </div>
 
             <div class="text-center mt-4">
-                <button type="submit" class="btn btn-primary px-5 py-2 font-monospace fw-bold shadow-sm">
+                <button type="submit" class="btn btn-cyber-primary px-5 py-2 font-monospace fw-bold shadow-sm">
                     EVALUAR_RESPUESTAS_SYS <i class="bi bi-shield-check"></i>
                 </button>
             </div>
         </form>
+
+        <div class="text-center mt-4 border-top border-secondary border-opacity-10 pt-3">
+            <a th:href="@{/game/play}" class="btn btn-back-dashboard w-auto py-3 tech-font fw-bold d-flex align-items-center justify-content-center gap-2 shadow">
+                <i class="bi bi-arrow-left"></i> VOLVER_AL_PLAY
+            </a>
+        </div>
     </div>
 </div>
 

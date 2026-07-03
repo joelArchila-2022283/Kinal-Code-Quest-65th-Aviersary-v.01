@@ -8,122 +8,238 @@
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <!-- ARQUITECTURA DE ESTILOS: SALA DE EJECUCIÓN -->
     <style>
-        body { background-color: #060b13; font-family: 'Share Tech Mono', monospace; color: #adbac7; }
-        .cyber-panel { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; }
-        .level-btn { background: #21262d; border: 1px solid #30363d; color: #c9d1d9; transition: all 0.2s; }
-        .level-btn:hover { background: #30363d; border-color: #58a6ff; color: #ffffff; }
-        .text-neon-cyan { color: #00f0ff; text-shadow: 0 0 5px rgba(0,240,255,0.3); }
-        .manual-nav .nav-link { color: #8b949e; border: 1px solid transparent; margin-bottom: 5px; text-align: left; }
-        .manual-nav .nav-link.active { background: #1f6feb !important; color: white; border-color: #388bfd; }
+        body {
+            background-color: #060a13;
+            font-family: 'Share Tech Mono', monospace;
+            color: #d1d7e2;
+        }
+        .tech-font {
+            font-family: 'Share Tech Mono', monospace !important;
+        }
+
+        /* Paneles con profundidad Cyber */
+        .cyber-panel {
+            background: linear-gradient(135deg, #090f1e 0%, #02050b 100%);
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Ranuras/Tarjetas de Sectores */
+        .level-card {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(30, 41, 59, 0.8);
+            border-left: 3px solid #00f0ff !important;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        .level-card:hover {
+            border-color: rgba(0, 240, 255, 0.4);
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        /* Textos y Efectos Neón */
+        .text-neon-cyan {
+            color: #00f0ff;
+            text-shadow: 0 0 5px rgba(0,240,255,0.3);
+        }
+
+        /* Etiquetas de código del manual */
+        code {
+            background-color: #111827 !important;
+            color: #ff7900 !important; /* Naranja código */
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.95em;
+            border: 1px solid rgba(255, 121, 0, 0.15);
+        }
+
+        /* --- MENÚ DE NAVEGACIÓN DEL MANUAL (TABS) --- */
+        .manual-nav .nav-link {
+            color: #94a3b8;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            text-align: left;
+            font-size: 0.85rem;
+            transition: all 0.15s ease-in-out;
+            background: rgba(15, 23, 42, 0.3);
+        }
+        .manual-nav .nav-link:hover {
+            color: #ffffff;
+            background: rgba(30, 41, 59, 0.5);
+        }
+        .manual-nav .nav-link.active {
+            background: #02050b !important;
+            color: #00f0ff !important;
+            border: 1px solid #1e293b !important;
+            border-left: 3px solid #00f0ff !important;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
+        }
+
+        /* --- BOTONES DE PRECISIÓN COMPACTOS --- */
+        .btn-cyber-yellow, .btn-back-dashboard {
+            font-size: 0.85rem !important;
+            padding: 0.45rem 1.2rem !important;
+            letter-spacing: 0.5px;
+            border-radius: 5px;
+            transition: all 0.2s ease-in-out;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: bold;
+            width: auto;
+        }
+
+        /* Volver al Dashboard (Rojo) */
+        .btn-back-dashboard {
+            background: transparent;
+            border: 1.5px solid #ff0044 !important;
+            color: #ff0044 !important;
+        }
+        .btn-back-dashboard:hover {
+            background: #ff0044 !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 15px rgba(255, 0, 68, 0.5);
+        }
+
+        /* Ejecutar Nivel (Amarillo Neón) */
+        .btn-cyber-yellow {
+            background: transparent;
+            border: 1px solid #ffd700;
+            color: #ffd700;
+        }
+        .btn-cyber-yellow:hover {
+            background: #ffd700;
+            color: #000 !important;
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+        }
     </style>
 </head>
 <body class="py-4">
 
 <div class="container-fluid px-4">
-    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary border-opacity-10 pb-3">
+
+    <!-- ENCABEZADO DE CONTROL -->
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-4 border-bottom border-secondary border-opacity-10 pb-3 gap-3">
         <div>
-            <a th:href="@{/game/dashboard}" class="text-decoration-none small text-muted"><i class="bi bi-arrow-left"></i> ESCAPE_TO_DASHBOARD</a>
+            <div class="mb-2">
+                <a th:href="@{/game/dashboard}" class="btn btn-back-dashboard shadow">
+                    <i class="bi bi-arrow-left"></i> VOLVER_AL_DASHBOARD
+                </a>
+            </div>
             <h2 class="text-white fw-bold mb-0 tech-font"><i class="bi bi-cpu-fill text-neon-cyan"></i> CORE_EXECUTION_ROOM</h2>
         </div>
-        <div class="bg-dark p-2 rounded border border-secondary border-opacity-20">
+        <div class="bg-black bg-opacity-40 p-2.5 rounded border border-secondary border-opacity-30 align-self-start align-self-sm-center">
             <span class="small text-muted font-monospace">OPERATOR: </span>
-            <span class="text-warning fw-bold" th:text="${jugador?.username}">User</span>
+            <span class="text-warning fw-bold tech-font" th:text="${jugador?.username}">User</span>
         </div>
     </div>
 
     <div class="row g-4">
+
+        <!-- PANEL IZQUIERDO: SELECCIÓN DE ENTORNO/SECTOR -->
         <div class="col-12 col-lg-5">
             <div class="cyber-panel p-4 h-100">
-                <h4 class="text-white border-bottom border-secondary border-opacity-20 pb-2 mb-3 font-monospace">[// SELECCIÓN_DE_NIVEL]</h4>
-                <p class="text-muted small">Selecciona un sector del firmware para ejecutar las pruebas analíticas de Java. Debes responder correctamente para recolectar la EXP.</p>
+                <h4 class="text-white border-bottom border-secondary border-opacity-20 pb-2 mb-3 font-monospace small fw-bold text-uppercase">[// SELECCIÓN_DE_NIVEL]</h4>
+                <p class="text-muted small lh-base">Selecciona un sector del firmware para ejecutar las pruebas analíticas de Java. Debes responder correctamente para recolectar la EXP.</p>
 
-                <div th:if="${param.error}" class="alert alert-danger bg-danger bg-opacity-10 border-danger text-danger py-2 small">
-                    El sector seleccionado no contiene bases de datos de preguntas cargadas en este compilador.
+                <div th:if="${param.error}" class="alert alert-danger bg-danger bg-opacity-10 border-danger text-danger py-2 small font-monospace">
+                    [ERROR_SYS]: El sector seleccionado no contiene bases de datos de preguntas cargadas en este compilador.
                 </div>
 
+                <!-- Grilla de Sectores de Trivia -->
                 <div class="d-grid gap-3 mt-4">
-                    <div th:each="area : ${areas}" class="card level-btn p-3 d-flex flex-row justify-content-between align-items-center">
-                        <div>
-                            <span class="text-neon-cyan small d-block font-monospace" th:text="|SECTOR_ID: 0${area?.idArea}|">SECTOR_ID</span>
-                            <h5 class="text-white mb-1 fw-bold" th:text="${area?.nombre}">Nombre de Área</h5>
-                            <p class="text-muted small mb-0" th:text="${area?.descripcionTematica}">Descripción</p>
+                    <div th:each="area : ${areas}" class="card level-card p-3 d-flex flex-row justify-content-between align-items-center gap-3">
+                        <div class="flex-grow-1">
+                            <span class="text-neon-cyan small d-block font-monospace mb-1" th:text="|SECTOR_ID: 0${area?.idArea}|">SECTOR_ID</span>
+                            <h6 class="text-white mb-1 fw-bold tech-font fs-5" th:text="${area?.nombre}">Nombre de Área</h6>
+                            <p class="text-muted small mb-0 lh-sm" th:text="${area?.descripcionTematica}">Descripción</p>
                         </div>
-                        <a th:href="@{/game/play/trivia/{id}(id=${area?.idArea})}" class="btn btn-sm btn-outline-info font-monospace ms-2">
-                            RUN <i class="bi bi-play-fill"></i>
-                        </a>
+                        <div class="flex-shrink-0">
+                            <a th:href="@{/game/play/trivia/{id}(id=${area?.idArea})}" class="btn btn-cyber-yellow">
+                                RUN <i class="bi bi-play-fill ms-0.5"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- PANEL DERECHO: MANUAL DE AYUDA TÉCNICA -->
         <div class="col-12 col-lg-7">
             <div class="cyber-panel p-4 h-100">
-                <h4 class="text-white border-bottom border-secondary border-opacity-20 pb-2 mb-3 font-monospace">[// MANUAL_SINTAXIS_JAVA]</h4>
+                <h4 class="text-white border-bottom border-secondary border-opacity-20 pb-2 mb-3 font-monospace small fw-bold text-uppercase">[// MANUAL_SINTAXIS_JAVA]</h4>
 
-                <div class="row">
-                    <div class="col-md-4">
+                <div class="row g-3">
+                    <!-- Menú de Pestañas Lateral -->
+                    <div class="col-12 col-md-4">
                         <div class="nav flex-column nav-pills manual-nav" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                             <button class="nav-link active font-monospace" id="tab-variables" data-bs-toggle="pill" data-bs-target="#content-variables" type="button" role="tab">01. VARIABLES</button>
                             <button class="nav-link font-monospace" id="tab-control" data-bs-toggle="pill" data-bs-target="#content-control" type="button" role="tab">02. CONDICIONALES</button>
                             <button class="nav-link font-monospace" id="tab-bucles" data-bs-toggle="pill" data-bs-target="#content-bucles" type="button" role="tab">03. BUCLES_LOOPS</button>
                             <button class="nav-link font-monospace" id="tab-colecciones" data-bs-toggle="pill" data-bs-target="#content-colecciones" type="button" role="tab">04. COLECCIONES</button>
                             <button class="nav-link font-monospace" id="tab-metodos" data-bs-toggle="pill" data-bs-target="#content-metodos" type="button" role="tab">05. MÉTODOS</button>
-                            <button class="nav-link font-monospace" id="tab-poo" data-bs-toggle="pill" data-bs-target="#content-poo" type="button" role="tab">06. ORIENTACIÓN OBJETOS</button>
-                            <button class="nav-link font-monospace" id="tab-excepciones" data-bs-toggle="pill" data-bs-target="#content-excepciones" type="button" role="tab">07. EXCEPCIONES Error</button>
-                            <button class="nav-link font-monospace" id="tab-jdbc" data-bs-toggle="pill" data-bs-target="#content-jdbc" type="button" role="tab">08. PERSISTENCIA JDBC</button>
+                            <button class="nav-link font-monospace" id="tab-poo" data-bs-toggle="pill" data-bs-target="#content-poo" type="button" role="tab">06. ORIENTACIÓN_OBJETOS</button>
+                            <button class="nav-link font-monospace" id="tab-excepciones" data-bs-toggle="pill" data-bs-target="#content-excepciones" type="button" role="tab">07. EXCEPCIONES</button>
+                            <button class="nav-link font-monospace" id="tab-jdbc" data-bs-toggle="pill" data-bs-target="#content-jdbc" type="button" role="tab">08. PERSISTENCIA_JDBC</button>
                         </div>
                     </div>
-                    <div class="col-md-8 border-start border-secondary border-opacity-10 ps-3">
-                        <div class="tab-content bg-black bg-opacity-30 p-3 rounded border border-secondary border-opacity-10 text-justify" id="v-pills-tabContent" style="font-size: 0.9rem;">
+
+                    <!-- Visor de Contenido del Manual -->
+                    <div class="col-12 col-md-8 border-start border-secondary border-opacity-10 ps-md-3">
+                        <div class="tab-content bg-black bg-opacity-40 p-3 rounded border border-secondary border-opacity-20 text-justify lh-base" id="v-pills-tabContent" style="font-size: 0.9rem;">
 
                             <div class="tab-pane fade show active" id="content-variables" role="tabpanel">
-                                <h6 class="text-white font-monospace fw-bold mb-2 text-neon-cyan">> DATOS PRIMITIVOS Y CONSTANTES</h6>
+                                <h6 class="text-white font-monospace fw-bold mb-3 text-neon-cyan">> DATOS PRIMITIVOS Y CONSTANTES</h6>
                                 <p>En Java, las variables guardan valores puros en la memoria Stack (como <code>int</code> o <code>double</code>). El uso de la palabra clave <code>final</code> congela el valor convirtiéndolo en una constante inmutable del sistema.</p>
                             </div>
 
                             <div class="tab-pane fade" id="content-control" role="tabpanel">
-                                <h6 class="text-white font-monospace fw-bold mb-2 text-neon-cyan">> TOMA DE DECISIONES DE FLUJO</h6>
+                                <h6 class="text-white font-monospace fw-bold mb-3 text-neon-cyan">> TOMA DE DECISIONES DE FLUJO</h6>
                                 <p>El flujo básico se ramifica mediante la compuerta lógica condicional <code>if-else</code> o a través de bloques indexados de tipo <code>switch</code> para optimizar bytecode.</p>
                             </div>
 
                             <div class="tab-pane fade" id="content-bucles" role="tabpanel">
-                                <h6 class="text-white font-monospace fw-bold mb-2 text-neon-cyan">> ITERACIÓN Y REPETICIÓN</h6>
+                                <h6 class="text-white font-monospace fw-bold mb-3 text-neon-cyan">> ITERACIÓN Y REPETICIÓN</h6>
                                 <p>Bucle <code>for</code> (ciclos fijos con contador), <code>while</code> (evaluación al inicio) y el ciclo <code>do-while</code> (evalúa al final, asegurando <strong>al menos una ejecución obligatoria</strong>).</p>
                             </div>
 
                             <div class="tab-pane fade" id="content-colecciones" role="tabpanel">
-                                <h6 class="text-white font-monospace fw-bold mb-2 text-neon-cyan">> ESTRUCTURAS DINÁMICAS DE DATOS</h6>
+                                <h6 class="text-white font-monospace fw-bold mb-3 text-neon-cyan">> ESTRUCTURAS DINÁMICAS DE DATOS</h6>
                                 <p>Manejo de memoria dinámica: <code>ArrayList</code> ofrece redimensionamiento elástico automático. <code>HashMap</code> asocia llaves hashing únicas con sus respectivos objetos logrando búsquedas en complejidad óptima <code>O(1)</code>.</p>
                             </div>
 
                             <div class="tab-pane fade" id="content-metodos" role="tabpanel">
-                                <h6 class="text-white font-monospace fw-bold mb-2 text-neon-cyan">> MODULARIZACIÓN Y FIRMAS DE RETORNO</h6>
+                                <h6 class="text-white font-monospace fw-bold mb-3 text-neon-cyan">> MODULARIZACIÓN Y FIRMAS DE RETORNO</h6>
                                 <p>Bloques lógicos reutilizables. Requieren definir en su firma el tipo de dato explícito a regresar con la cláusula <code>return</code> o marcarse como <code>void</code> si son rutinas directas sin retorno.</p>
                             </div>
 
                             <div class="tab-pane fade" id="content-poo" role="tabpanel">
-                                <h6 class="text-white font-monospace fw-bold mb-2 text-neon-cyan">> PILARES POO: CLASES, HERENCIA Y ACCESOS</h6>
+                                <h6 class="text-white font-monospace fw-bold mb-3 text-neon-cyan">> PILARES POO: CLASES, HERENCIA Y ACCESOS</h6>
                                 <p>Los objetos nacen en la memoria Heap usando el operador <code>new</code>. Mediante <code>extends</code> una subclase hereda comportamientos del padre. Los modificadores (como <code>private</code>) protegen los datos internos (Encapsulamiento).</p>
                             </div>
 
                             <div class="tab-pane fade" id="content-excepciones" role="tabpanel">
-                                <h6 class="text-white font-monospace fw-bold mb-2 text-neon-cyan">> COMPUERTAS DE SEGURIDAD (TRY-CATCH-FINALLY)</h6>
+                                <h6 class="text-white font-monospace fw-bold mb-3 text-neon-cyan">> COMPUERTAS DE SEGURIDAD (TRY-CATCH-FINALLY)</h6>
                                 <p>Las excepciones controlan fallos en tiempo de ejecución. El código inestable se encierra en un <code>try</code>, el error se procesa en el <code>catch</code>, y los flujos abiertos de memoria se clausuran limpiamente dentro del bloque <code>finally</code>.</p>
                             </div>
 
                             <div class="tab-pane fade" id="content-jdbc" role="tabpanel">
-                                <h6 class="text-white font-monospace fw-bold mb-2 text-neon-cyan">> ACCESO A DATOS PERSISTENTES (JDBC)</h6>
+                                <h6 class="text-white font-monospace fw-bold mb-3 text-neon-cyan">> ACCESO A DATOS PERSISTENTES (JDBC)</h6>
                                 <p>Para transferir registros del software a la base de datos MySQL, se levantan conexiones a través de drivers JDBC. Las consultas parametrizadas se orquestan mediante objetos de tipo <code>PreparedStatement</code> para blindar la base de datos.</p>
                             </div>
-
-                        </div>
 
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 

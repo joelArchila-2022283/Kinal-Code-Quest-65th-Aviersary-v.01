@@ -251,25 +251,41 @@ body {
 
 /* Inputs Unificados Estilo Terminal */
 .cyber-input {
-    background: rgba(10, 15, 25, 0.8) !important;
-    border: 1px solid #1e293b !important;
-    color: var(--neon-blue) !important; /* El texto escrito brillará en cian */
-    padding: 12px 15px !important;
-    border-radius: 4px !important;
-    transition: all 0.3s ease !important;
+	background: rgba(10, 15, 25, 0.8) !important;
+	border: 1px solid #1e293b !important;
+	color: var(--neon-blue) !important; /* El texto escrito brillará en cian */
+	padding: 12px 15px !important;
+	border-radius: 4px !important;
+	transition: all 0.3s ease !important;
+}
+
+/* Placeholders altamente visibles */
+.cyber-input::placeholder {
+	color: #4b9eff !important;
+	opacity: 0.8 !important;
+}
+
+.cyber-input:focus::placeholder {
+	opacity: 0.5 !important;
 }
 
 .cyber-input:focus {
-    border-color: var(--neon-blue) !important;
-    background: rgba(10, 15, 25, 1) !important;
-    box-shadow: 0 0 10px rgba(0, 240, 255, 0.25) !important;
-    outline: none;
+	border-color: var(--neon-blue) !important;
+	background: rgba(10, 15, 25, 1) !important;
+	box-shadow: 0 0 10px rgba(0, 240, 255, 0.25) !important;
+	outline: none;
 }
 
 /* Ajuste de focus específico para pantallas con temática verde (Registro) */
 .register-theme .cyber-input:focus {
-    border-color: var(--neon-green) !important;
-    box-shadow: 0 0 10px rgba(57, 255, 20, 0.25) !important;
+	border-color: var(--neon-green) !important;
+	box-shadow: 0 0 10px rgba(57, 255, 20, 0.25) !important;
+}
+
+/* Placeholders específicos para Registro (Verde) */
+.register-theme .cyber-input::placeholder {
+	color: #5aff4a !important;
+	opacity: 0.8 !important;
 }
 
 /* Radio Buttons y Cards de Selección de Avatares */
@@ -354,3 +370,152 @@ input[type="radio"]:checked + .avatar-card {
     color: #ffffff !important;
     font-weight: bold;
 }
+
+/* Botón estándar para volver al dashboard */
+.btn-back-dashboard {
+	background: transparent;
+  color: var(--neon-pink);
+  border: 1px solid var(--neon-pink);
+	font-weight: bold;
+	text-transform: uppercase;
+	transition: all 0.3s ease;
+}
+
+.btn-back-dashboard:hover {
+	background-color: var(--neon-pink);
+	color: white;
+	box-shadow: var(--glow-strength) rgba(255, 0, 85, 0.4);
+}
+
+/* Enlaces de texto altamente visibles */
+.link-back-dashboard {
+	color: #00f0ff !important;
+	text-decoration: none;
+	font-weight: bold;
+	transition: all 0.2s ease;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.link-back-dashboard:hover {
+	color: #39ff14 !important;
+	text-shadow: 0 0 10px rgba(57, 255, 20, 0.5);
+}
+
+/* Mejora de contraste para textos secundarios */
+.text-muted {
+	color: #a8b8d8 !important; /* Más claro que el default */
+}
+
+.text-muted.small {
+	color: #b0c4e0 !important; /* Aún más claro para elementos pequeños */
+}
+
+/* Mejorar visibilidad de labels */
+.form-label {
+	color: #d4dce8 !important;
+	opacity: 0.95;
+}
+
+.form-label.text-muted {
+	color: #cbd5e1 !important;
+}
+
+/* Textos descriptivos en tarjetas */
+.card-desc,
+.description,
+.help-text {
+	color: #b0c4e0 !important;
+	opacity: 0.9;
+}
+
+/* Textos en navegación */
+nav .text-muted,
+.navbar .text-muted {
+	color: #9ca8c4 !important;
+}
+
+/* Badge y tags */
+.badge-cyber,
+.badge {
+	background-color: rgba(189, 0, 255, 0.2) !important;
+	color: #e0d5ff !important;
+}
+
+/* Elementos pequeños y hints */
+small {
+	color: #a0b0cc !important;
+}
+
+/* Inputs readonly */
+.cyber-input:disabled,
+.cyber-input[readonly] {
+	background: rgba(30, 41, 59, 0.5) !important;
+	color: #7a8aa0 !important;
+	cursor: not-allowed !important;
+}
+
+/* Visibilidad mejorada de descripciones en tarjetas de area */
+.area-card .card-desc {
+	color: #b0c4e0 !important;
+	font-size: 0.9rem !important;
+	opacity: 1 !important;
+}
+
+.area-card p {
+	color: #a0b5d8 !important;
+}
+
+/* Ajustes responsivos: reducir tamaño del botón volver en pantallas pequeñas */
+@media (max-width: 576px) {
+    .btn-back-dashboard {
+        padding: .35rem .6rem;
+        font-size: 0.78rem;
+        border-radius: 8px;
+    }
+    .btn-back-dashboard i {
+        font-size: 0.9rem;
+    }
+}
+
+/* Botón fijo en esquina (unificado y visible en todas las vistas) */
+.btn-back-dashboard.fixed-corner {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 2000;
+    padding: .6rem 1rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #ff4d4d 0%, #ff1a1a 100%);
+    color: #fff !important;
+    border-color: rgba(255, 26, 26, 0.85) !important;
+    box-shadow: 0 6px 20px rgba(255, 26, 26, 0.18), 0 0 12px rgba(255, 77, 77, 0.12);
+}
+.btn-back-dashboard.fixed-corner:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(255, 26, 26, 0.28), 0 0 22px rgba(255, 77, 77, 0.22);
+}
+
+
+/* Refuerzo del estilo cyberpunk para botones de compra (compra-btn) */
+.compra-btn {
+    background: linear-gradient(135deg, #00ff88 0%, #00cc6f 100%);
+    color: #000;
+    font-weight: bold;
+    border: none;
+    transition: all 0.3s;
+    box-shadow: 0 6px 18px rgba(0, 240, 255, 0.06), inset 0 0 6px rgba(57,255,20,0.04);
+    border-radius: 8px;
+}
+.compra-btn:hover {
+    background: linear-gradient(135deg, #00ff88 0%, #00dd7f 100%);
+    transform: scale(1.05);
+    box-shadow: 0 12px 30px rgba(0, 240, 255, 0.12), 0 0 24px rgba(57,255,20,0.08);
+}
+.compra-btn:disabled {
+    background: #666;
+    color: #ccc;
+    cursor: not-allowed;
+}
+

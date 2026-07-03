@@ -5,57 +5,177 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KinalCodeQuest - Asignación de Misiones</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <!-- ARQUITECTURA DE DISEÑO CORE (CYBERPUNK HARMONY) -->
+    <style>
+        body {
+            background-color: #060a13;
+            font-family: 'Share Tech Mono', monospace;
+            color: #d1d7e2;
+        }
+        .tech-font {
+            font-family: 'Share Tech Mono', monospace !important;
+        }
+
+        /* Contenedores de Red y Tarjetas */
+        .profile-card, .area-card {
+            background: linear-gradient(135deg, #090f1e 0%, #02050b 100%);
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+        }
+        .area-card {
+            transition: border-color 0.2s ease;
+        }
+        .area-card:hover {
+            border-color: rgba(0, 240, 255, 0.2) !important;
+        }
+
+        /* --- BOTONES Y BADGES DE ESTADO COMPACTOS --- */
+        .btn-cyber-success, .btn-cyber-yellow, .btn-success, .btn-back-dashboard {
+            font-size: 0.82rem !important;
+            padding: 0.45rem 1.2rem !important;
+            letter-spacing: 0.5px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: auto;
+            text-decoration: none;
+            pointer-events: auto;
+        }
+
+        /* Botón de Retorno (Rojo Terminal) */
+        .btn-back-dashboard {
+            background: transparent;
+            border: 1.5px solid #ff0044 !important;
+            color: #ff0044 !important;
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-back-dashboard:hover {
+            background: #ff0044 !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 15px rgba(255, 0, 68, 0.5);
+        }
+
+        /* Indicador Misión / Desafío Activo (Verde Cyber) */
+        .btn-cyber-success {
+            background: transparent;
+            border: 1px solid #39ff14;
+            color: #39ff14;
+            transition: all 0.2s ease;
+        }
+        .btn-cyber-success:hover {
+            background: #39ff14;
+            color: #000 !important;
+            box-shadow: 0 0 12px rgba(57, 255, 20, 0.4);
+        }
+
+        /* --- ESTADOS ESTÁTICOS DE EJERCICIOS (INDICADORES) --- */
+        .status-badge {
+            font-size: 0.82rem;
+            padding: 0.45rem 1.2rem;
+            letter-spacing: 0.5px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 110px; /* Ancho fijo para mantener simetría visual */
+        }
+
+        /* Estado: Pendiente (Amarillo Neón) */
+        .status-pending {
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+        }
+
+        /* Estado: Completado (Verde Sólido) */
+        .status-completed {
+            background: #198754;
+            border: 1px solid #198754;
+            color: #ffffff;
+        }
+
+        .badge-cyber {
+            background: rgba(0, 240, 255, 0.07);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            color: #00f0ff;
+        }
+    </style>
 </head>
-<body class="auth-body"> <nav class="navbar navbar-expand-lg navbar-dark navbar-kinal sticky-top py-3 mb-4">
-    <div class="container">
-        <a class="navbar-brand tech-font d-flex align-items-center fs-4" th:href="@{/game/dashboard}">
-            <i class="bi bi-terminal-fill text-info me-2"></i>
-            <span class="fw-bold text-white">KINAL</span>
-            <span class="text-info">HQ_MISIONES</span>
-        </a>
-        <a th:href="@{/game/dashboard}" class="btn btn-cyber-danger btn-sm tech-font px-3">
-            <i class="bi bi-arrow-left-square me-1"></i> DASHBOARD
-        </a>
+<body class="py-5">
+
+<div class="container" style="max-width: 950px;">
+
+    <!-- CABECERA UNIFICADA DE LA TERMINAL -->
+    <div class="mb-5 border-bottom border-secondary border-opacity-10 pb-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="d-flex justify-content-start mb-0">
+                <a th:href="@{/game/dashboard}" class="btn btn-back-dashboard shadow">
+                    <i class="bi bi-arrow-left-square fs-5"></i>
+                    <span>VOLVER_AL_DASHBOARD</span>
+                </a>
+            </div>
+        </div>
+
+        <h2 class="fw-bold text-white mt-4 mb-0 tech-font">
+            <i class="bi bi-terminal-fill text-info me-2"></i>KINAL <span class="text-info">HQ_MISIONES</span>
+        </h2>
     </div>
-</nav>
 
-<div class="container my-4" style="max-width: 900px;">
-
+    <!-- PANEL DE ENTORNO ACTIVO -->
     <div class="profile-card p-4 mb-4 text-start">
         <div class="d-flex align-items-center gap-3">
-            <div class="area-icon-box p-2.5 rounded-3 bg-opacity-10 bg-info">
+            <div class="area-icon-box p-2.5 rounded-3" style="background-color: rgba(0, 240, 255, 0.05);">
                 <i class="bi bi-journal-code text-info fs-3"></i>
             </div>
             <div>
-                <h2 class="text-white fw-bold tech-font mb-1"
-                    th:text="${area != null ? area.nombreArea : 'TODAS LAS MISIONES DISPONIBLES'}">ENTORNO_DATA</h2>
-                <p class="text-muted small mb-0 tech-font"
+                <h3 class="text-white fw-bold tech-font mb-1"
+                    th:text="${area != null ? area.nombreArea : 'TODAS LAS MISIONES DISPONIBLES'}">ENTORNO_DATA</h3>
+                <p class="text-muted small mb-0 font-monospace"
                    th:text="${area != null ? area.descripcion : '[FILTRO_GLOBAL_ACTIVO]'}">Descripción de la categoría actual.</p>
             </div>
         </div>
     </div>
 
-    <div th:if="${#lists.isEmpty(misiones)}" class="text-center p-5 profile-card">
-        <i class="bi bi-database-exclamation text-danger display-1 mb-3"></i>
-        <h4 class="text-white tech-font fw-bold">[NO_MISSIONS_FOUND]</h4>
-        <p class="text-muted small">No se han detectado protocolos de encriptación activos para este entorno en la base de datos.</p>
-        <a th:href="@{/game/dashboard}" class="btn btn-cyber-primary btn-sm tech-font mt-2">VOLVER_AL_NÚCLEO</a>
+    <!-- CONTENEDOR DE EXCEPCIÓN: BASE DE DATOS SIN MISIONES -->
+    <div th:if="${#lists.isEmpty(misiones)}" class="text-center p-5 profile-card mb-4">
+        <i class="bi bi-database-exclamation text-warning display-4 mb-3 d-block"></i>
+        <h5 class="text-white tech-font fw-bold mb-2">[NO_MISSIONS_FOUND]</h5>
+        <p class="text-muted small mb-0">No se detectan registros de misiones narrativas activas en el núcleo de la base de datos.</p>
     </div>
 
-    <div class="row g-3" th:if="${!#lists.isEmpty(misiones)}">
-        <div class="col-12" th:each="mision : ${misiones}">
-            <div class="card area-card p-4 h-100 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3"
-                 style="border-left: 3px solid var(--neon-blue);">
+    <!-- SECCIÓN PRINCIPAL: MISIONES NARRATIVAS -->
+    <div class="row g-3 mb-5" th:if="${!#lists.isEmpty(misiones)}">
+        <div class="col-12">
+            <h5 class="text-white tech-font mb-3 text-uppercase font-monospace text-muted" style="font-size: 0.9rem;">// Misiones de Operación Principal</h5>
+        </div>
 
-                <div style="max-width: 75%;">
-                    <div class="d-flex align-items-center gap-2 mb-2">
-                        <span class="badge badge-cyber text-info tech-font">MID_0[[${mision.idMision}]]</span>
-                        <h4 class="fw-bold text-white mb-0 tech-font" th:text="${mision.titulo}">TITULO_MISION</h4>
+        <div class="col-12" th:each="mision : ${misiones}">
+            <div class="card area-card p-4 mb-2 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3"
+                 th:styleappend="${misionesCompletadas != null and misionesCompletadas.get(mision.idMision)} ? 'border-left: 3px solid #198754;' : 'border-left: 3px solid #00f0ff;'">
+
+                <div style="max-width: 78%;">
+                    <div class="d-flex align-items-center flex-wrap gap-2 mb-2">
+                        <span class="badge badge-cyber tech-font">MID_0[[${mision.idMision}]]</span>
+                        <h5 class="fw-bold text-white mb-0 tech-font fs-5" th:text="${mision.titulo}">TITULO_MISION</h5>
+
+                        <span th:if="${misionesCompletadas != null and misionesCompletadas.get(mision.idMision)}" class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 ms-2 font-monospace" style="font-size: 11px;">
+                            <i class="bi bi-check-circle me-1"></i>REALIZADA
+                        </span>
+                        <span th:if="${misionesCompletadas == null or !misionesCompletadas.get(mision.idMision)}" class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 ms-2 font-monospace" style="font-size: 11px;">
+                            <i class="bi bi-clock me-1"></i>POR_HACER
+                        </span>
                     </div>
-                    <p class="card-desc text-muted small lh-base mb-2" th:text="${mision.descripcionNarrativa}">Narrativa técnica.</p>
+                    <p class="card-desc text-muted small lh-base mb-3" th:text="${mision.descripcionNarrativa}">Narrativa técnica.</p>
 
                     <div class="d-flex gap-3 small tech-font">
                         <span class="text-warning"><i class="bi bi-lightning-fill me-1"></i>[[${mision.expRecompensa}]] EXP</span>
@@ -64,10 +184,50 @@
                     </div>
                 </div>
 
-                <div class="text-end min-w-md-150">
-                    <a th:href="@{/game/mision/{id}(id=${mision.idMision})}" class="btn btn-cyber-success w-100 py-2.5 tech-font small text-nowrap">
-                        INICIAR_DECODIFICACIÓN <i class="bi bi-chevron-right ms-1"></i>
+                <div class="text-end flex-shrink-0">
+                    <a th:href="@{/game/mision/{id}(id=${mision.idMision})}"
+                       th:classappend="${misionesCompletadas != null and misionesCompletadas.get(mision.idMision)} ? 'btn-success' : 'btn-cyber-success'"
+                       class="btn py-2.5 tech-font small text-nowrap shadow-sm">
+                        <span th:text="${misionesCompletadas != null and misionesCompletadas.get(mision.idMision)} ? 'REINTENTAR ⟳' : 'INICIAR_DECODIFICACIÓN'">INICIAR_DECODIFICACIÓN</span>
+                        <i class="bi bi-chevron-right ms-1"></i>
                     </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECCIÓN CRÍTICA: EJERCICIOS PARA PRINCIPIANTES -->
+    <div class="mt-4" th:if="${listaEjercicios != null}">
+        <h5 class="text-white tech-font text-uppercase font-monospace text-muted mb-1" style="font-size: 0.9rem;">// Entornos de Compilación Básica</h5>
+        <h4 class="text-white tech-font fw-bold mb-2">EJERCICIOS PARA PRINCIPIANTES</h4>
+        <p class="text-muted small mb-4">Módulos lógicos automatizados. Otorga un factor de recompensa fijo de (+10) puntos de laboriosidad al ser validados por el sistema.</p>
+
+        <div class="row g-3">
+            <div class="col-12 col-md-6" th:each="e : ${listaEjercicios}">
+                <div class="card area-card p-4 h-100 d-flex flex-column justify-content-between gap-3">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                            <h6 class="fw-bold text-white tech-font fs-5 mb-0" th:text="${e.titulo}">Título</h6>
+                            <span class="badge badge-cyber font-monospace text-nowrap" style="font-size: 11px;" th:text="|+${e.puntosRecompensa} PTOS|">+10 PTOS</span>
+                        </div>
+                        <p class="text-muted small mb-2 lh-base" th:text="${e.descripcion}">Descripción corta.</p>
+                        <div class="p-2.5 rounded bg-black bg-opacity-40 border border-secondary border-opacity-10 text-muted font-monospace" style="font-size: 12px;" th:text="${e.enunciado}">Enunciado sintáctico.</div>
+                    </div>
+
+                    <!-- Contenedor de Estado (Garantiza que no existan botones accionables de completado manual) -->
+                    <div class="d-flex justify-content-end align-items-center mt-2 border-top border-secondary border-opacity-10 pt-3">
+                        <!-- Caso 1: Ejercicio ya resuelto (Indicador Verde Seguro) -->
+                        <span th:if="${ejerciciosCompletados != null and #lists.contains(ejerciciosCompletados, e.idEjercicio)}"
+                              class="status-badge status-completed font-monospace">
+                            <i class="bi bi-check-lg me-1.5"></i>COMPLETADO
+                        </span>
+
+                        <!-- Caso 2: Ejercicio no resuelto / Pendiente (Indicador Amarillo Neón Estático) -->
+                        <span th:if="${ejerciciosCompletados == null or !#lists.contains(ejerciciosCompletados, e.idEjercicio)}"
+                              class="status-badge status-pending font-monospace">
+                            <i class="bi bi-exclamation-triangle me-1.5"></i>PENDIENTE
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>

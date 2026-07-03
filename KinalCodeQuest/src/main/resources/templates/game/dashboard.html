@@ -8,10 +8,115 @@
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <style>
+        body {
+            background-color: #060a13;
+            font-family: 'Share Tech Mono', monospace;
+            color: #d1d7e2;
+        }
+        .tech-font {
+            font-family: 'Share Tech Mono', monospace !important;
+        }
+        .text-muted {
+            color: #94a3b8 !important;
+        }
+
+        .profile-card, .area-card {
+            background: linear-gradient(135deg, #090f1e 0%, #02050b 100%);
+            border: 1px solid #1e293b;
+            border-radius: 6px;
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+        .area-card:hover {
+            border-color: rgba(0, 240, 255, 0.25) !important;
+        }
+
+        .stat-row {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(30, 41, 59, 0.8);
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        .stat-row:hover {
+            border-color: rgba(0, 240, 255, 0.3);
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        .btn-cyber-primary, .btn-cyber-success, .btn-cyber-orange, .btn-cyber-yellow, .btn-back-dashboard {
+            font-size: 0.85rem !important;
+            padding: 0.45rem 1.2rem !important;
+            letter-spacing: 0.5px;
+            border-radius: 5px;
+            transition: all 0.2s ease-in-out;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: bold;
+            width: auto;
+        }
+
+        .btn-back-dashboard {
+            background: transparent;
+            border: 1.5px solid #ff0044 !important;
+            color: #ff0044 !important;
+        }
+        .btn-back-dashboard:hover {
+            background: #ff0044 !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 15px rgba(255, 0, 68, 0.5);
+        }
+
+        .btn-cyber-primary {
+            background: transparent;
+            border: 1px solid #00f0ff;
+            color: #00f0ff;
+        }
+        .btn-cyber-primary:hover {
+            background: #00f0ff;
+            color: #000 !important;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
+        }
+
+        .btn-cyber-success {
+            background: transparent;
+            border: 1px solid #39ff14;
+            color: #39ff14;
+        }
+        .btn-cyber-success:hover {
+            background: #39ff14;
+            color: #000 !important;
+            box-shadow: 0 0 12px rgba(57, 255, 20, 0.4);
+        }
+
+        .btn-cyber-orange {
+            background: transparent;
+            border: 1px solid #ff7900;
+            color: #ff7900;
+        }
+        .btn-cyber-orange:hover {
+            background: #ff7900;
+            color: #000 !important;
+            box-shadow: 0 0 12px rgba(255, 121, 0, 0.4);
+        }
+
+        .btn-cyber-yellow {
+            background: transparent;
+            border: 1px solid #ffd700;
+            color: #ffd700;
+        }
+        .btn-cyber-yellow:hover {
+            background: #ffd700;
+            color: #000 !important;
+            box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
+        }
+    </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark navbar-kinal sticky-top py-3">
+<nav class="navbar navbar-expand-lg navbar-dark navbar-kinal sticky-top py-2.5">
     <div class="container">
         <a class="navbar-brand tech-font d-flex align-items-center fs-4" href="#">
             <i class="bi bi-terminal-fill text-info me-2"></i>
@@ -23,8 +128,8 @@
                 <span class="spinner-grow spinner-grow-sm system-status" role="status"></span>
                 <span>CORE_SYS: ACTIVE</span>
             </div>
-            <a th:href="@{/auth/logout}" class="btn btn-cyber-danger btn-sm tech-font px-3">
-                <i class="bi bi-box-arrow-right me-1"></i> LOGOUT
+            <a th:href="@{/auth/logout}" class="btn btn-back-dashboard shadow">
+                <i class="bi bi-box-arrow-right fs-6"></i> <span>LOGOUT</span>
             </a>
         </div>
     </div>
@@ -33,13 +138,12 @@
 <div class="container my-4 my-md-5">
     <div class="row g-4">
 
+        <!-- PANEL IZQUIERDO: PERFIL DEL OPERADOR Y PROMEDIOS -->
         <div class="col-12 col-lg-4">
             <div class="profile-card p-4 text-center">
-
                 <div class="d-flex justify-content-center my-3">
                     <div class="avatar-container d-flex align-items-center justify-content-center" style="position: relative; width: 120px; height: 120px;">
                         <div class="avatar-frame rounded-circle w-100 h-100 position-absolute" style="top: 0; left: 0; z-index: 1;"></div>
-
                         <span th:if="${jugador?.nombreAvatar == 'Cyborg_Inft'}" class="fs-1 m-0 lh-1" style="position: relative; z-index: 5;">🤖</span>
                         <span th:if="${jugador?.nombreAvatar == 'Tesla_Volt'}" class="fs-1 m-0 lh-1" style="position: relative; z-index: 5;">⚡</span>
                         <span th:if="${jugador?.nombreAvatar == 'Gear_Mech'}" class="fs-1 m-0 lh-1" style="position: relative; z-index: 5;">⚙️</span>
@@ -52,38 +156,41 @@
 
                 <hr class="border-secondary opacity-20 my-4">
 
-                <div class="text-start">
+                <!-- PROCESAMIENTO LOGICO DE PROMEDIO DE EXPERIENCIA -->
+                <div class="text-start" th:with="
+                    lab=${jugador?.ptosLaboriosidad != null ? jugador.ptosLaboriosidad : 0},
+                    resp=${jugador?.ptosResponsabilidad != null ? jugador.ptosResponsabilidad : 0},
+                    promedio=${(lab + resp) / 2.0}">
+
                     <h6 class="text-uppercase text-info tech-font fw-bold small mb-3">DATA_KERNEL STATISTICS</h6>
 
+                    <!-- Fila de Experiencia General basada en el Promedio -->
                     <div class="stat-row p-3 mb-3">
                         <div class="d-flex justify-content-between mb-2">
-                            <span class="text-muted small"><i class="bi bi-lightning-fill text-warning me-1"></i> Experiencia General</span>
-                            <span class="text-white tech-font fw-bold" th:text="|${jugador?.experiencia != null ? jugador.experiencia : 0} EXP|">0 EXP</span>
+                            <span class="text-muted small"><i class="bi bi-lightning-fill text-warning me-1"></i> Experiencia General (Promedio)</span>
+                            <span class="text-white tech-font fw-bold" th:text="|${#numbers.formatDecimal(promedio, 1, 0)} EXP|">0 EXP</span>
                         </div>
                         <div class="progress bg-dark border border-secondary border-opacity-50" style="height: 6px;">
+                            <!-- La barra se llena proporcionalmente al promedio (Límite visual del 100%) -->
                             <div class="progress-bar bg-warning shadow" role="progressbar"
-                                 th:style="|width: ${jugador?.experiencia != null ? ((jugador.experiencia % 200) / 2.0) : 0}%|"></div>
+                                 th:style="|width: ${promedio > 100 ? 100 : promedio}%|"></div>
                         </div>
                     </div>
 
-                    <div class="stat-row d-flex justify-content-between align-items-center p-2 px-3 mb-2">
+                    <div class="stat-row d-flex justify-content-between align-items-center p-2.5 px-3 mb-2">
                         <span class="small text-muted"><i class="bi bi-cpu text-success me-2"></i>LABORIOSIDAD:</span>
-                        <span class="tech-font fw-bold text-success fs-5" th:text="${jugador?.ptosLaboriosidad != null ? jugador.ptosLaboriosidad : 0}">0</span>
+                        <span class="tech-font fw-bold text-success fs-5" th:text="${lab}">0</span>
                     </div>
 
-                    <div class="stat-row d-flex justify-content-between align-items-center p-2 px-3 mb-2">
+                    <div class="stat-row d-flex justify-content-between align-items-center p-2.5 px-3 mb-0">
                         <span class="small text-muted"><i class="bi bi-shield-check text-primary me-2"></i>RESPONSABILIDAD:</span>
-                        <span class="tech-font fw-bold text-primary fs-5" th:text="${jugador?.ptosResponsabilidad != null ? jugador.ptosResponsabilidad : 0}">0</span>
-                    </div>
-
-                    <div class="stat-row d-flex justify-content-between align-items-center p-2 px-3 mb-2">
-                        <span class="small text-muted"><i class="bi bi-heart-fill text-danger me-2"></i>SOLIDARIDAD:</span>
-                        <span class="tech-font fw-bold text-danger fs-5" th:text="${jugador?.ptosSolidaridad != null ? jugador.ptosSolidaridad : 0}">0</span>
+                        <span class="tech-font fw-bold text-primary fs-5" th:text="${resp}">0</span>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- PANEL DERECHO: CONSOLA DE OPERACIONES -->
         <div class="col-12 col-lg-8">
 
             <div class="d-flex align-items-center mb-4 ps-2">
@@ -92,85 +199,88 @@
             </div>
 
             <div class="row g-4 mb-5">
-
+                <!-- Consola -->
                 <div class="col-12 col-md-6">
-                    <div class="card area-card p-3 h-100 d-flex flex-row align-items-center justify-content-between gap-3" style="border-left: 2px solid var(--neon-blue); border-top: none;">
+                    <div class="card area-card p-3 h-100 d-flex flex-column justify-content-between gap-3" style="border-left: 3px solid #ff7900; border-top: none;">
                         <div class="d-flex align-items-start gap-3">
-                            <div class="area-icon-box p-2.5 rounded-3 flex-shrink-0">
-                                <i class="bi bi-terminal fs-4 icon-consola"></i>
+                            <div class="area-icon-box p-2.5 rounded-3 flex-shrink-0" style="background-color: rgba(255, 121, 0, 0.05);">
+                                <i class="bi bi-terminal fs-4" style="color: #ff7900;"></i>
                             </div>
                             <div>
                                 <h5 class="fw-bold text-white mb-1 tech-font">CONSOLA</h5>
-                                <p class="card-desc text-muted small lh-sm mb-0">Monitorea logs, comandos del sistema y parámetros en tiempo real.</p>
+                                <p class="card-desc text-muted small lh-base mb-0">Monitorea logs, comandos del sistema y parámetros en tiempo real.</p>
                             </div>
                         </div>
-                        <div class="flex-shrink-0" style="min-width: 120px;">
-                            <a th:href="@{/game/consola}" class="btn btn-cyber-primary w-100 py-2 tech-font small">
+                        <div class="d-flex justify-content-end mt-auto">
+                            <a th:href="@{/game/consola}" class="btn btn-cyber-orange">
                                 ABRIR <i class="bi bi-chevron-right ms-1"></i>
                             </a>
                         </div>
                     </div>
                 </div>
 
+                <!-- Modo Historia -->
                 <div class="col-12 col-md-6">
-                    <div class="card area-card p-3 h-100 d-flex flex-row align-items-center justify-content-between gap-3" style="border-left: 2px solid var(--neon-green); border-top: none;">
+                    <div class="card area-card p-3 h-100 d-flex flex-column justify-content-between gap-3" style="border-left: 3px solid #39ff14; border-top: none;">
                         <div class="d-flex align-items-start gap-3">
                             <div class="area-icon-box p-2.5 rounded-3 flex-shrink-0" style="background-color: rgba(57, 255, 20, 0.05);">
-                                <i class="bi bi-book-half fs-4 icon-game" style="color: var(--neon-green);"></i>
+                                <i class="bi bi-book-half fs-4" style="color: #39ff14;"></i>
                             </div>
                             <div>
                                 <h5 class="fw-bold text-white mb-1 tech-font">MODO_HISTORIA</h5>
-                                <p class="card-desc text-muted small lh-sm mb-0">Desbloquea registros históricos de Kinal a medida que completas misiones.</p>
+                                <p class="card-desc text-muted small lh-base mb-0">Desbloquea registros históricos de Kinal a medida que completas misiones.</p>
                             </div>
                         </div>
-                        <div class="flex-shrink-0" style="min-width: 120px;">
-                            <a th:href="@{/game/historia}" class="btn btn-cyber-success w-100 py-2 tech-font small">
+                        <div class="d-flex justify-content-end mt-auto">
+                            <a th:href="@{/game/historia}" class="btn btn-cyber-success">
                                 VER <i class="bi bi-book ms-1"></i>
                             </a>
                         </div>
                     </div>
                 </div>
 
+                <!-- HQ Misiones -->
                 <div class="col-12 col-md-6">
-                    <div class="card area-card p-3 h-100 d-flex flex-row align-items-center justify-content-between gap-3" style="border-left: 2px solid var(--neon-purple); border-top: none;">
+                    <div class="card area-card p-3 h-100 d-flex flex-column justify-content-between gap-3" style="border-left: 3px solid #bd00ff; border-top: none;">
                         <div class="d-flex align-items-start gap-3">
                             <div class="area-icon-box p-2.5 rounded-3 flex-shrink-0" style="background-color: rgba(189, 0, 255, 0.05);">
-                                <i class="bi bi-journal-code fs-4 icon-misiones"></i>
+                                <i class="bi bi-journal-code fs-4" style="color: #bd00ff;"></i>
                             </div>
                             <div>
                                 <h5 class="fw-bold text-white mb-1 tech-font">HQ_MISIONES</h5>
-                                <p class="card-desc text-muted small lh-sm mb-0">Objetivos activos y bitácoras de asignaciones para ganar experiencia extra.</p>
+                                <p class="card-desc text-muted small lh-base mb-0">Objetivos activos y bitácoras de asignaciones para ganar experiencia extra.</p>
                             </div>
                         </div>
-                        <div class="flex-shrink-0" style="min-width: 120px;">
-                            <a th:href="@{/game/misiones}" class="btn btn-cyber-primary w-100 py-2 tech-font small badge-cyber">
+                        <div class="d-flex justify-content-end mt-auto">
+                            <a th:href="@{/game/misiones}" class="btn btn-cyber-primary">
                                 MISIONES <i class="bi bi-list-task ms-1"></i>
                             </a>
                         </div>
                     </div>
                 </div>
 
+                <!-- Iniciar Juego -->
                 <div class="col-12 col-md-6">
-                    <div class="card area-card p-3 h-100 d-flex flex-row align-items-center justify-content-between gap-3" style="border-left: 2px solid var(--neon-blue); border-top: none;">
+                    <div class="card area-card p-3 h-100 d-flex flex-column justify-content-between gap-3" style="border-left: 3px solid #ffd700; border-top: none;">
                         <div class="d-flex align-items-start gap-3">
-                            <div class="area-icon-box p-2.5 rounded-3 flex-shrink-0" style="background-color: rgba(0, 240, 255, 0.05);">
-                                <i class="bi bi-play-btn fs-4 icon-game" style="color: var(--neon-blue);"></i>
+                            <div class="area-icon-box p-2.5 rounded-3 flex-shrink-0" style="background-color: rgba(255, 215, 0, 0.05);">
+                                <i class="bi bi-play-btn fs-4" style="color: #ffd700;"></i>
                             </div>
                             <div>
                                 <h5 class="fw-bold text-white mb-1 tech-font">INICIAR_JUEGO</h5>
-                                <p class="card-desc text-muted small lh-sm mb-0">Accede a la terminal interactiva de trivia de Java y aprueba los sectores.</p>
+                                <p class="card-desc text-muted small lh-base mb-0">Accede a la terminal interactiva de trivia de Java y aprueba los sectores.</p>
                             </div>
                         </div>
-                        <div class="flex-shrink-0" style="min-width: 120px;">
-                            <a th:href="@{/game/play}" class="btn btn-cyber-primary w-100 py-2 tech-font small">
+                        <div class="d-flex justify-content-end mt-auto">
+                            <a th:href="@{/game/play}" class="btn btn-cyber-yellow">
                                 EJECUTAR <i class="bi bi-cpu ms-1"></i>
                             </a>
                         </div>
                     </div>
                 </div>
-
             </div>
 
+            <!-- SECCIÓN: ENTORNOS DE DESAFÍO (URL PROTOTIPO TOTALMENTE CORREGIDA) -->
             <div class="d-flex align-items-center mb-4 ps-2">
                 <i class="bi bi-grid-3x3-gap-fill text-info fs-4 me-2"></i>
                 <h4 class="fw-bold text-white mb-0 tech-font">ENTORNOS_DE_DESAFÍO_DISPONIBLES</h4>
@@ -186,72 +296,72 @@
                                 </div>
                                 <h5 class="fw-bold text-white mb-0 tech-font" th:text="${area.nombre}">AREA_NAME</h5>
                             </div>
-                            <p class="text-muted small lh-base" th:text="${area.descripcionTematica}">Descripción técnica de los desafíos.</p>
+                            <p class="text-muted small lh-base" th:text="${area.descripcionTematica}">Descripción técnica.</p>
                         </div>
-
                         <div class="mt-4 pt-3 border-top border-secondary border-opacity-10">
-                            <a th:href="@{/game/area/{id}(id=${area.idArea})}" class="btn btn-cyber-primary w-100 py-2.5 tech-font small">
-                                CONECTAR_ENTORNO <i class="bi bi-chevron-right ms-1"></i>
+                            <!-- SOLUCIÓN DEL ERROR 404: Se removió el host y el duplicado /game/ para mapear exactamente a /game/play/trivia/{id} -->
+                            <a th:href="@{/game/play/trivia/{id}(id=${area.idArea})}" class="btn btn-cyber-primary w-100">
+                                IR A TRIVIA <i class="bi bi-chevron-right ms-1"></i>
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- SECCIÓN: DIAGNÓSTICO -->
             <div class="d-flex align-items-center mb-4 ps-2">
                 <i class="bi bi-activity text-info fs-4 me-2"></i>
                 <h4 class="fw-bold text-white mb-0 tech-font">DIAGNÓSTICO_Y_TELEMETRÍA_DE_COMPILACIÓN</h4>
             </div>
 
-            <div class="row g-4 mb-4">
+            <div class="row g-4 mb-5">
                 <div class="col-12 col-md-4">
-                    <div class="profile-card p-3 text-start bg-black bg-opacity-30 h-100" style="border: 1px solid rgba(255, 51, 51, 0.2)">
+                    <div class="profile-card p-3 text-start bg-black bg-opacity-30 h-100" style="border: 1px solid rgba(255, 51, 51, 0.25)">
                         <span class="text-muted small d-block tech-font">[ERR_COMPILATION_LOGS]</span>
                         <h3 class="text-danger fw-bold tech-font mb-0 mt-1">
                             <i class="bi bi-bug-fill me-1"></i> <span th:text="${erroresTotales}">0</span>
                         </h3>
-                        <span class="text-muted font-monospace bg-dark px-1 rounded" style="font-size: 11px;">Fallas lógicas</span>
+                        <span class="text-muted font-monospace bg-dark px-2 py-0.5 rounded" style="font-size: 11px;">Fallas lógicas</span>
                     </div>
                 </div>
 
                 <div class="col-12 col-md-4">
-                    <div class="profile-card p-3 text-start bg-black bg-opacity-30 h-100" style="border: 1px solid rgba(0, 255, 65, 0.2)">
+                    <div class="profile-card p-3 text-start bg-black bg-opacity-30 h-100" style="border: 1px solid rgba(0, 255, 65, 0.25)">
                         <span class="text-muted small d-block tech-font">[TOTAL_EXECUTIONS]</span>
                         <h3 class="text-success fw-bold tech-font mb-0 mt-1">
                             <i class="bi bi-play-terminal me-1"></i> <span th:text="${intentosTotales}">0</span>
                         </h3>
-                        <span class="text-muted font-monospace bg-dark px-1 rounded" style="font-size: 11px;">Peticiones Javac</span>
+                        <span class="text-muted font-monospace bg-dark px-2 py-0.5 rounded" style="font-size: 11px;">Peticiones Javac</span>
                     </div>
                 </div>
 
                 <div class="col-12 col-md-4">
-                    <div class="profile-card p-3 text-start bg-black bg-opacity-30 h-100" style="border: 1px solid rgba(255, 193, 7, 0.2)">
+                    <div class="profile-card p-3 text-start bg-black bg-opacity-30 h-100" style="border: 1px solid rgba(255, 193, 7, 0.25)">
                         <span class="text-muted small d-block tech-font">[LOGIC_ACCURACY]</span>
                         <h3 class="text-warning fw-bold tech-font mb-0 mt-1">
                             <i class="bi bi-pie-chart-fill me-1"></i>
                             <span th:text="${intentosTotales > 0 ? #numbers.formatPercent((intentosTotales - erroresTotales) * 1.0 / intentosTotales, 1, 0) : '100%'}">100%</span>
                         </h3>
-                        <span class="text-muted font-monospace bg-dark px-1 rounded" style="font-size: 11px;">Efectividad estructural</span>
+                        <span class="text-muted font-monospace bg-dark px-2 py-0.5 rounded" style="font-size: 11px;">Efectividad estructural</span>
                     </div>
                 </div>
             </div>
 
+            <!-- TABLAS DE HISTORIAL -->
             <div class="card area-card p-4 mb-4">
                 <h6 class="text-uppercase text-white tech-font fw-bold small mb-3">
-                    <i class="bi bi-bar-chart-steps text-info me-1"></i> HISTORIAL_DE_COMPLEJIDAD_ALGORÍTMICA (MAYOR A MENOR)
+                    <i class="bi bi-bar-chart-steps text-info me-1"></i> HISTORIAL_DE_COMPLEJIDAD_ALGORÍTMICA
                 </h6>
-
                 <div th:if="${#lists.isEmpty(misionesDificiles)}" class="text-center text-muted font-monospace small py-3">
-                    [SISTEMA_LIMPIO: NO SE DETECTAN LOGS DE EJECUCIÓN EN LA MATRIZ]
+                    [SISTEMA_LIMPIO: NO SE DETECTAN LOGS]
                 </div>
-
                 <div class="table-responsive" th:if="${!#lists.isEmpty(misionesDificiles)}">
                     <table class="table table-dark table-borderless align-middle font-monospace mb-0" style="font-size: 13px;">
                         <thead>
                         <tr class="text-muted border-bottom border-secondary border-opacity-25 tech-font">
                             <th>ID_PROTOCOLO</th>
                             <th>RETO_SISTEMA</th>
-                            <th class="text-center">INTENTOS_LOGUEADOS</th>
+                            <th class="text-center">INTENTOS</th>
                             <th class="text-end">FECHA_CIERRE</th>
                         </tr>
                         </thead>
@@ -261,8 +371,7 @@
                             <td class="text-white" th:text="${prog.mision.titulo}">Título del reto</td>
                             <td class="text-center fw-bold text-warning fs-6" th:text="${prog.intentos}">0</td>
                             <td class="text-end text-muted">
-                                <span th:if="${prog.fechaCompletado != null}"
-                                      th:text="${#temporals.format(prog.fechaCompletado, 'dd/MM/yyyy HH:mm')}">--/--/--</span>
+                                <span th:if="${prog.fechaCompletado != null}" th:text="${#temporals.format(prog.fechaCompletado, 'dd/MM/yyyy HH:mm')}">--/--</span>
                                 <span th:if="${prog.fechaCompletado == null}" class="text-danger fw-bold">[PENDIENTE]</span>
                             </td>
                         </tr>
@@ -271,6 +380,39 @@
                 </div>
             </div>
 
-        </div> </div> </div> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <div class="card area-card p-4 mb-4">
+                <h6 class="text-uppercase text-white tech-font fw-bold small mb-3">
+                    <i class="bi bi-list-ol text-info me-1"></i> HISTORIAL_DE_INTENTOS_POR_EJERCICIO
+                </h6>
+                <div th:if="${#lists.isEmpty(progresoEjercicios)}" class="text-center text-muted font-monospace small py-3">
+                    [SIN_REGISTROS_DE_EJERCICIOS]
+                </div>
+                <div class="table-responsive" th:if="${!#lists.isEmpty(progresoEjercicios)}">
+                    <table class="table table-dark table-borderless align-middle font-monospace mb-0" style="font-size: 13px;">
+                        <thead>
+                        <tr class="text-muted border-bottom border-secondary border-opacity-25 tech-font">
+                            <th>ID</th>
+                            <th>EJERCICIO</th>
+                            <th class="text-center">INTENTOS</th>
+                            <th class="text-end">ULTIMO_ENVÍO</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="pe : ${progresoEjercicios}" class="border-bottom border-secondary border-opacity-10">
+                            <td class="text-info fw-bold" th:text="|EJ_${pe.id}|">EJ_0</td>
+                            <td class="text-white" th:text="${pe.ejercicio != null ? pe.ejercicio.titulo : '[N/D]'}">Título</td>
+                            <td class="text-center fw-bold text-warning fs-6" th:text="${pe.intentos}">0</td>
+                            <td class="text-end text-muted" th:text="${pe.ultimoCodigoEnviado != null ? pe.ultimoCodigoEnviado.substring(0, T(java.lang.Math).min(40, pe.ultimoCodigoEnviado.length())) + '...' : '[-]'}">-</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
