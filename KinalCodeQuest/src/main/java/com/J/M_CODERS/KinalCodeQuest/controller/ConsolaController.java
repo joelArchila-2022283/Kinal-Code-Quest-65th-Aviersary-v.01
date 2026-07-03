@@ -1,8 +1,7 @@
 package com.J.M_CODERS.KinalCodeQuest.controller;
 
 import com.J.M_CODERS.KinalCodeQuest.model.entity.*;
-import com.J.M_CODERS.KinalCodeQuest.service.evaluator.MisionService;
-import com.J.M_CODERS.KinalCodeQuest.service.evaluator.ProgresoJugadorService;
+import com.J.M_CODERS.KinalCodeQuest.service.evaluator.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /* Este controller se encarga exclusivamente de renderizar la consola */
 @Controller
@@ -26,6 +23,15 @@ public class ConsolaController {
 
     @Autowired
     private ProgresoJugadorService progresoService;
+
+    @Autowired
+    private JavaCodeExecutorService javaExecutorService;
+
+    @Autowired
+    private JugadorService jugadorService;
+
+    @Autowired
+    private EjercicioGuiaService ejercicioGuiaService;
 
     /* Abre la consola directamente usando la primera misión disponible o una simulación segura */
     @GetMapping("/consola")
@@ -40,9 +46,6 @@ public class ConsolaController {
 
         try {
             listaMisiones = misionesService.listarTodas();
-            if (listaMisiones != null && !listaMisiones.isEmpty()) {
-                m = listaMisiones.get(0);
-            }
         } catch (Exception e) {
             // Ignorar fallos de consulta
         }
@@ -66,9 +69,20 @@ public class ConsolaController {
         model.addAttribute("mision", m);
         model.addAttribute("progreso", progreso);
         model.addAttribute("jugador", jugador);
-
-        // ¡NUEVO!: Pasamos la lista completa de misiones a la vista para el panel lateral
         model.addAttribute("listaMisiones", listaMisiones);
+
+        try {
+            var ejercicios = ejercicioGuiaService.listarTodosActivos();
+            if (ejercicios == null || ejercicios.isEmpty()) {
+                ejercicios = obtenerEjerciciosPorDefecto();
+            }
+            model.addAttribute("listaEjercicios", ejercicios);
+
+            List<Integer> completados = ejercicioGuiaService.ejerciciosCompletadosIds(jugador);
+            model.addAttribute("ejerciciosCompletados", completados);
+        } catch (Exception e) {
+            model.addAttribute("listaEjercicios", obtenerEjerciciosPorDefecto());
+        }
 
         return "game/consola";
     }
@@ -98,7 +112,6 @@ public class ConsolaController {
             progreso.setIntentos(0);
         }
 
-        // Obtenemos todas las misiones para que el panel lateral siempre las muestre
         List<Mision> listaMisiones = null;
         try {
             listaMisiones = misionesService.listarTodas();
@@ -109,9 +122,21 @@ public class ConsolaController {
         model.addAttribute("mision", mision);
         model.addAttribute("progreso", progreso);
         model.addAttribute("jugador", jugador);
-
-        // ¡NUEVO!: Pasamos la lista completa
         model.addAttribute("listaMisiones", listaMisiones);
+
+        // CORREGIDO: Se rearmó el flujo try-catch y se inyectaron los IDs completados que faltaban aquí
+        try {
+            var ejercicios = ejercicioGuiaService.listarTodosActivos();
+            if (ejercicios == null || ejercicios.isEmpty()) {
+                ejercicios = obtenerEjerciciosPorDefecto();
+            }
+            model.addAttribute("listaEjercicios", ejercicios);
+
+            List<Integer> completados = ejercicioGuiaService.ejerciciosCompletadosIds(jugador);
+            model.addAttribute("ejerciciosCompletados", completados);
+        } catch (Exception e) {
+            model.addAttribute("listaEjercicios", obtenerEjerciciosPorDefecto());
+        }
 
         return "game/consola";
     }
@@ -142,43 +167,16 @@ public class ConsolaController {
             progreso.setIntentos(1);
         }
 
+        JavaCodeExecutorService.ExecutionResult executionResult = javaExecutorService.ejecutarCodigo(codigoEnviado);
         String regexCriterio = mision.getCriterioEvaluacion();
         boolean esCorrecto = false;
-        StringBuilder consolaOutput = new StringBuilder();
 
-        consolaOutput.append("C:\\KinalCodeQuest\\compiler> javac KinalCodeQuestApplication.java\n");
-
-        try {
-            String codigoNormalizado = codigoEnviado.replaceAll("\\s+", " ");
-            esCorrecto = Pattern.compile(regexCriterio, Pattern.CASE_INSENSITIVE).matcher(codigoNormalizado).matches();
-
-            consolaOutput.append("C:\\KinalCodeQuest\\compiler> java com.J.M_CODERS.KinalCodeQuest.KinalCodeQuestApplication\n");
-            consolaOutput.append("[INFO] Java Virtual Machine inicializada de manera exitosa.\n");
-            consolaOutput.append("--------------------------------------------------\n");
-
-            if (esCorrecto) {
-                // CAPTURA DINÁMICA: Busca todos los System.out.println("...") del código enviado y extrae su contenido para mostrarlo en la terminal
-                Pattern p = Pattern.compile("System\\.out\\.println\\s*\\(\\s*\"([^\"]*)\"\\s*\\)\\s*;");
-                Matcher m = p.matcher(codigoEnviado);
-                boolean encontroImpresiones = false;
-
-                while (m.find()) {
-                    consolaOutput.append(m.group(1)).append("\n");
-                    encontroImpresiones = true;
-                }
-
-                if (!encontroImpresiones) {
-                    consolaOutput.append("[SUCCESS] Código ejecutado (Sin salidas de texto impresas).\n");
-                }
-
-                consolaOutput.append("--------------------------------------------------\n");
-                consolaOutput.append("\n[SUCCESS] Compilación aprobada. Objetivos lógicos completados con éxito.\n");
+        if (executionResult.success) {
+            if (regexCriterio != null && !regexCriterio.isEmpty() && !regexCriterio.equals(".*")) {
+                esCorrecto = javaExecutorService.validarConCriterio(codigoEnviado, regexCriterio);
             } else {
-                consolaOutput.append("[ERROR] Compilation failed: La estructura lógica no coincide con los requerimientos técnicos de la misión.\n");
-                consolaOutput.append("[HINT] Revisa la sintaxis de tus salidas de consola, nombres de variables o el orden de tus llaves.\n");
+                esCorrecto = true;
             }
-        } catch (Exception e) {
-            consolaOutput.append("[CRITICAL ERROR]: Falla imprevista en el motor de parsing interno de validación.\n");
         }
 
         try {
@@ -187,12 +185,100 @@ public class ConsolaController {
             // Ignorar fallos de persistencia
         }
 
+        // Otorgar puntos de laboriosidad si la misión se completa correctamente
+        if (esCorrecto && (progreso == null || !progreso.getCompletada())) {
+            try {
+                jugador.setPtosLaboriosidad((jugador.getPtosLaboriosidad() != null ? jugador.getPtosLaboriosidad() : 0) + 25);
+                jugador.setSaldoLaboriosidad((jugador.getSaldoLaboriosidad() != null ? jugador.getSaldoLaboriosidad() : 0) + 25);
+                jugadorService.guardar(jugador);
+                session.setAttribute("usuarioLogueado", jugador);
+            } catch (Exception e) {
+                // Ignorar si hay problemas al guardar
+            }
+        }
+
         Map<String, Object> response = new HashMap<>();
         response.put("success", esCorrecto);
-        response.put("consolaResult", consolaOutput.toString());
+        response.put("executionSuccess", executionResult.success);
+        response.put("consolaResult", executionResult.consolaOutput);
+        response.put("error", executionResult.error);
+        response.put("tiempoEjecucion", executionResult.tiempoEjecucion);
         response.put("intentos", (progreso != null && progreso.getIntentos() != null) ? progreso.getIntentos() : 1);
-        response.put("statusText", esCorrecto ? "PROCESS_FINISHED_OK" : "PROCESS_FAILED");
+        response.put("statusText", esCorrecto ? "PROCESS_FINISHED_OK" : (executionResult.success ? "EXECUTION_OK_CRITERIA_FAILED" : "PROCESS_FAILED"));
 
         return ResponseEntity.ok(response);
+    }
+
+    /* Endpoint para marcar un ejercicio guía como completado y otorgar puntos de laboriosidad */
+    @PostMapping("/ejercicio/{idEjercicio}/completar")
+    @ResponseBody
+    public ResponseEntity<?> completarEjercicio(@PathVariable Integer idEjercicio, @RequestBody(required = false) Map<String, String> body, HttpSession session) {
+        Jugador jugador = (Jugador) session.getAttribute("usuarioLogueado");
+        if (jugador == null) {
+            return ResponseEntity.status(401).body(Map.of("awarded", false, "mensaje", "Sesión inválida."));
+        }
+        var opt = ejercicioGuiaService.buscarPorId(idEjercicio);
+        if (opt.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("awarded", false, "mensaje", "Ejercicio no encontrado"));
+        }
+
+        EjercicioGuia ejercicio = opt.get();
+        String codigoEnviado = null;
+        if (body != null) codigoEnviado = body.get("codigo");
+        if (codigoEnviado == null) codigoEnviado = "";
+
+        // Validar similitud con el criterio del ejercicio
+        boolean similar = false;
+        try {
+            String criterio = ejercicio.getCriterioEvaluacion();
+            if (criterio != null && !criterio.isEmpty() && !".*".equals(criterio)) {
+                similar = javaExecutorService.validarConCriterio(codigoEnviado, criterio);
+            } else {
+                similar = javaExecutorService.compararCodigo(codigoEnviado, ejercicio.getCodigoTemplate());
+            }
+        } catch (Exception ex) {
+            similar = javaExecutorService.compararCodigo(codigoEnviado, ejercicio.getCodigoTemplate());
+        }
+
+        if (!similar) {
+            // Registrar intento fallido para telemetría
+            try {
+                ejercicioGuiaService.registrarIntento(jugador, ejercicio, codigoEnviado);
+            } catch (Exception ex) {
+                // Ignorar errores de persistencia de telemetría
+            }
+            return ResponseEntity.ok(Map.of("awarded", false, "mensaje", "el ejercicio no es similar, intenta de nuevo"));
+        }
+
+        // Delegar la lógica y fallback al servicio para asegurar consistencia transaccional
+        boolean otorgado = ejercicioGuiaService.completarEjercicio(jugador, ejercicio);
+
+        // Recargar jugador desde BD para asegurar valores actualizados
+        Jugador jugadorActualizado = jugadorService.buscarPorId(jugador.getIdJugador());
+        session.setAttribute("usuarioLogueado", jugadorActualizado);
+
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("awarded", otorgado);
+        resp.put("nuevosPuntosLaboriosidad", jugadorActualizado != null ? jugadorActualizado.getPtosLaboriosidad() : null);
+        resp.put("mensaje", otorgado ? "Ejercicio validado y puntos otorgados" : "Ejercicio ya completado o no fue posible asignar puntos");
+        return ResponseEntity.ok(resp);
+    }
+
+    // Ejercicios por defecto en caso de que la base de datos esté vacía (no persisten)
+    private List<EjercicioGuia> obtenerEjerciciosPorDefecto() {
+        List<EjercicioGuia> list = new java.util.ArrayList<>();
+
+        list.add(EjercicioGuia.builder().idEjercicio(1).orden(1).titulo("Hello World").descripcion("Imprime en consola el texto: HOLA KINAL").codigoTemplate("public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"HOLA KINAL\");\n    }\n}").puntosRecompensa(10).activo(true).build());
+        list.add(EjercicioGuia.builder().idEjercicio(2).orden(2).titulo("Suma básica").descripcion("Suma dos números y muestra el resultado").codigoTemplate("public class Calculator {\n    public static void main(String[] args) {\n        int num1 = 15;\n        int num2 = 7;\n        System.out.println(\"Suma: \" + (num1 + num2));\n        System.out.println(\"Resta: \" + (num1 - num2));\n        System.out.println(\"Multiplicación: \" + (num1 * num2));\n        System.out.println(\"División: \" + (num1 / num2));\n    }\n}").puntosRecompensa(10).activo(true).build());
+        list.add(EjercicioGuia.builder().idEjercicio(3).orden(3).titulo("Bucle For").descripcion("Imprime números del 1 al 5 usando un for").codigoTemplate("public class ForLoop {\n    public static void main(String[] args) {\n        for (int i = 1; i <= 5; i++) {\n            System.out.println(i);\n        }\n    }\n}").puntosRecompensa(10).activo(true).build());
+        list.add(EjercicioGuia.builder().idEjercicio(4).orden(4).titulo("If-Else").descripcion("Verifica si un número es par o impar").codigoTemplate("public class Conditional {\n    public static void main(String[] args) {\n        int n = 4;\n        if (n % 2 == 0) {\n            System.out.println(\"Par\");\n        } else {\n            System.out.println(\"Impar\");\n        }\n    }\n}").puntosRecompensa(10).activo(true).build());
+        list.add(EjercicioGuia.builder().idEjercicio(5).orden(5).titulo("Array básico").descripcion("Crea un array de 3 elementos y muéstralos").codigoTemplate("public class ArrayExample {\n    public static void main(String[] args) {\n        int[] numeros = {10,20,30};\n        for (int num : numeros) System.out.println(num);\n    }\n}").puntosRecompensa(10).activo(true).build());
+        list.add(EjercicioGuia.builder().idEjercicio(6).orden(6).titulo("Método simple").descripcion("Crea un método que sume dos números y lo llame desde main").codigoTemplate("public class Methods {\n    static int sumar(int a, int b) { return a + b; }\n    public static void main(String[] args) {\n        System.out.println(sumar(5,3));\n    }\n}").puntosRecompensa(10).activo(true).build());
+        list.add(EjercicioGuia.builder().idEjercicio(7).orden(7).titulo("ArrayList básico").descripcion("Usa ArrayList para almacenar y mostrar elementos").codigoTemplate("import java.util.ArrayList;\npublic class ListExample {\n    public static void main(String[] args) {\n        ArrayList<String> frutas = new ArrayList<>();\n        frutas.add(\"Manzana\");\n        frutas.add(\"Banana\");\n        System.out.println(frutas);\n    }\n}").puntosRecompensa(10).activo(true).build());
+        list.add(EjercicioGuia.builder().idEjercicio(8).orden(8).titulo("While Loop").descripcion("Usa while para counting hasta 3").codigoTemplate("public class WhileLoop {\n    public static void main(String[] args) {\n        int i = 0;\n        while (i <= 3) {\n            System.out.println(i); i++;\n        }\n    }\n}").puntosRecompensa(10).activo(true).build());
+        list.add(EjercicioGuia.builder().idEjercicio(9).orden(9).titulo("Try-Catch básico").descripcion("Captura una excepción de conversión de String a int").codigoTemplate("public class ErrorHandling {\n    public static void main(String[] args) {\n        try { Integer.parseInt(\"abc\"); } catch (NumberFormatException e) { System.out.println(\"Error de conversión\"); }\n    }\n}").puntosRecompensa(10).activo(true).build());
+        list.add(EjercicioGuia.builder().idEjercicio(10).orden(10).titulo("Recursión (factorial)").descripcion("Calcula el factorial de un número usando recursión").codigoTemplate("public class Recursion {\n    static int factorial(int n) { if (n <= 1) return 1; return n * factorial(n-1); }\n    public static void main(String[] args) { System.out.println(factorial(5)); }\n}").puntosRecompensa(10).activo(true).build());
+
+        return list;
     }
 }
