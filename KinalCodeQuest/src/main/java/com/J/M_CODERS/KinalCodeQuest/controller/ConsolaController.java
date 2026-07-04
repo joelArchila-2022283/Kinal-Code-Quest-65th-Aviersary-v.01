@@ -36,10 +36,14 @@ public class ConsolaController {
     /* Abre la consola directamente usando la primera misión disponible o una simulación segura */
     @GetMapping("/consola")
     public String abrirConsolaDirecta(HttpSession session, Model model) {
-        Jugador jugador = (Jugador) session.getAttribute("usuarioLogueado");
-        if (jugador == null) {
+        Jugador jugadorSesion = (Jugador) session.getAttribute("usuarioLogueado");
+        if (jugadorSesion == null) {
             return "redirect:/auth/login";
         }
+
+        // REFRESCO DE DATOS: Forzar lectura al Kernel de la Base de Datos para evitar EXP en 0
+        Jugador jugador = jugadorService.buscarPorId(jugadorSesion.getIdJugador());
+        session.setAttribute("usuarioLogueado", jugador);
 
         Mision m = null;
         List<Mision> listaMisiones = null;
@@ -90,10 +94,14 @@ public class ConsolaController {
     /* Carga la interfaz de la consola de compilación para una misión específica */
     @GetMapping("/mision/{idMision}")
     public String interactuarMision(@PathVariable Integer idMision, HttpSession session, Model model) {
-        Jugador jugador = (Jugador) session.getAttribute("usuarioLogueado");
-        if (jugador == null) {
+        Jugador jugadorSesion = (Jugador) session.getAttribute("usuarioLogueado");
+        if (jugadorSesion == null) {
             return "redirect:/auth/login";
         }
+
+        // REFRESCO DE DATOS: Sincronizar el estado del jugador con la base de datos
+        Jugador jugador = jugadorService.buscarPorId(jugadorSesion.getIdJugador());
+        session.setAttribute("usuarioLogueado", jugador);
 
         Mision mision = misionesService.buscarPorId(idMision);
         if (mision == null) {
@@ -124,7 +132,6 @@ public class ConsolaController {
         model.addAttribute("jugador", jugador);
         model.addAttribute("listaMisiones", listaMisiones);
 
-        // CORREGIDO: Se rearmó el flujo try-catch y se inyectaron los IDs completados que faltaban aquí
         try {
             var ejercicios = ejercicioGuiaService.listarTodosActivos();
             if (ejercicios == null || ejercicios.isEmpty()) {
@@ -180,21 +187,18 @@ public class ConsolaController {
         }
 
         try {
+            // El servicio procesa internamente la asignación de puntos únicos o de consolación
             progreso = progresoService.registrarIntento(progreso, codigoEnviado, esCorrecto);
         } catch (Exception e) {
             // Ignorar fallos de persistencia
         }
 
-        // Otorgar puntos de laboriosidad si la misión se completa correctamente
-        if (esCorrecto && (progreso == null || !progreso.getCompletada())) {
-            try {
-                jugador.setPtosLaboriosidad((jugador.getPtosLaboriosidad() != null ? jugador.getPtosLaboriosidad() : 0) + 25);
-                jugador.setSaldoLaboriosidad((jugador.getSaldoLaboriosidad() != null ? jugador.getSaldoLaboriosidad() : 0) + 25);
-                jugadorService.guardar(jugador);
-                session.setAttribute("usuarioLogueado", jugador);
-            } catch (Exception e) {
-                // Ignorar si hay problemas al guardar
-            }
+        // OPTIMIZADO: Se eliminó la asignación duplicada de puntos fijos y se recarga el jugador actualizado por el servicio
+        try {
+            Jugador jugadorActualizado = jugadorService.buscarPorId(jugador.getIdJugador());
+            session.setAttribute("usuarioLogueado", jugadorActualizado);
+        } catch (Exception e) {
+            // Ignorar si hay problemas al actualizar la sesión
         }
 
         Map<String, Object> response = new HashMap<>();
