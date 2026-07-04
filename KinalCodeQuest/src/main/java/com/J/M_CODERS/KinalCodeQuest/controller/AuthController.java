@@ -53,9 +53,22 @@ public class AuthController {
         jugador.setPassword(registroDTO.getPassword());
         jugador.setNombreAvatar(registroDTO.getNombreAvatar());
 
-        Jugador nuevo = jugadorService.registrarJugador(jugador);
-        session.setAttribute("usuarioLogueado", nuevo);
-        return "redirect:/game/dashboard";
+        try {
+            // Intenta registrar al jugador aplicando la validación de duplicados
+            Jugador nuevo = jugadorService.registrarJugador(jugador);
+            session.setAttribute("usuarioLogueado", nuevo);
+            return "redirect:/game/dashboard";
+
+        } catch (IllegalArgumentException e) {
+            // Captura el duplicado controlado en el servicio y envía el mensaje a la vista
+            if ("DUPLICATE_USERNAME".equals(e.getMessage())) {
+                model.addAttribute("error", "El identificador '" + registroDTO.getUsername() + "' ya está asignado a otro operador en el Mainframe.");
+                return "player/registro";
+            }
+
+            model.addAttribute("error", "Error inesperado en el núcleo de autenticación.");
+            return "player/registro";
+        }
     }
 
     @GetMapping("/logout")
