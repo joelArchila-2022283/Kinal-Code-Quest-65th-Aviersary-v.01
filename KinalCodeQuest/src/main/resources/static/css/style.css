@@ -18,11 +18,24 @@
 
 /* Base Configuration & Responsiveness */
 body {
-    background-color: var(--bg-main);
+    background-color: #000000; /* Fondo negro puro base para que resalten las letras de Matrix */
     color: var(--text-main);
     font-family: 'Ubuntu', sans-serif;
     min-height: 100vh;
     overflow-x: hidden;
+    position: relative;
+}
+
+/* Capa del Canvas Matrix */
+#matrix-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; /* Se mantiene detrás de todos tus componentes y tarjetas */
+    pointer-events: none; /* No interfiere con los clics en tus botones */
+    opacity: 0.35; /* Ajustado para que sea sutil y no canse la vista al leer código */
 }
 
 .tech-font {
@@ -211,22 +224,36 @@ body {
    FORMULARIOS DE AUTENTICACIÓN (LOGIN & REGISTRO)
    ========================================================================== */
 
+/* Asegura que el body de autenticación sea el contenedor relativo base */
 .auth-body {
-    background-color: var(--bg-main);
+    background-color: #000000 !important; /* Negro profundo para que resalten los caracteres */
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 20px;
+    position: relative;
+    overflow-x: hidden;
 }
 
+/* Capa del Canvas Matrix exclusiva para el fondo */
+#matrix-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0; /* Detrás del contenedor de la tarjeta */
+    pointer-events: none;
+    opacity: 0.30; /* Un brillo del 30% para que no opaque tus inputs */
+}
+
+/* Forzar que las tarjetas floten por encima del canvas */
 .auth-card {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
     position: relative;
-    overflow: hidden;
+    z-index: 10; /* Mayor que el canvas */
+    background-color: rgba(16, 22, 34, 0.92) !important; /* Un toque de transparencia sutil */
+    backdrop-filter: blur(4px); /* Efecto cristal esmerilado espectacular */
 }
 
 /* Forzar que los labels del Login y Registro se vean claros */
