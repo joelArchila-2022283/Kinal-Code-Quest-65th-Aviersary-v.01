@@ -112,6 +112,14 @@
             color: #000 !important;
             box-shadow: 0 0 12px rgba(255, 215, 0, 0.4);
         }
+
+        /* Control de animación para el indicador del colapso */
+        [data-bs-toggle="collapse"] .collapse-icon {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        [data-bs-toggle="collapse"].collapsed .collapse-icon {
+            transform: rotate(-90deg);
+        }
     </style>
 </head>
 <body>
@@ -280,29 +288,37 @@
                 </div>
             </div>
 
-            <!-- SECCIÓN: ENTORNOS DE DESAFÍO (URL PROTOTIPO TOTALMENTE CORREGIDA) -->
-            <div class="d-flex align-items-center mb-4 ps-2">
+            <!-- SECCIÓN: ENTORNOS DE DESAFÍO (CON LOGICA DE DESPLIEGUE INTEGRADA) -->
+            <div class="d-flex align-items-center mb-4 ps-2"
+                 data-bs-toggle="collapse"
+                 data-bs-target="#panelEntornosCollapse"
+                 aria-expanded="true"
+                 aria-controls="panelEntornosCollapse"
+                 style="cursor: pointer; user-select: none;">
                 <i class="bi bi-grid-3x3-gap-fill text-info fs-4 me-2"></i>
                 <h4 class="fw-bold text-white mb-0 tech-font">ENTORNOS_DE_DESAFÍO_DISPONIBLES</h4>
+                <i class="bi bi-chevron-down text-info ms-3 fs-5 collapse-icon"></i>
             </div>
 
-            <div class="row g-4 mb-5">
-                <div class="col-12 col-md-6" th:each="area : ${areas}">
-                    <div class="area-card h-100 p-4 d-flex flex-column justify-content-between">
-                        <div>
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="area-icon-box p-3 rounded-3 me-3">
-                                    <i class="bi bi-database-fill-gear fs-3"></i>
+            <!-- Bloque Colapsable del Sistema -->
+            <div class="collapse show" id="panelEntornosCollapse">
+                <div class="row g-4 mb-5">
+                    <div class="col-12 col-md-6" th:each="area : ${areas}">
+                        <div class="area-card h-100 p-4 d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="area-icon-box p-3 rounded-3 me-3">
+                                        <i class="bi bi-database-fill-gear fs-3"></i>
+                                    </div>
+                                    <h5 class="fw-bold text-white mb-0 tech-font" th:text="${area.nombre}">AREA_NAME</h5>
                                 </div>
-                                <h5 class="fw-bold text-white mb-0 tech-font" th:text="${area.nombre}">AREA_NAME</h5>
+                                <p class="text-muted small lh-base" th:text="${area.descripcionTematica}">Descripción técnica.</p>
                             </div>
-                            <p class="text-muted small lh-base" th:text="${area.descripcionTematica}">Descripción técnica.</p>
-                        </div>
-                        <div class="mt-4 pt-3 border-top border-secondary border-opacity-10">
-                            <!-- SOLUCIÓN DEL ERROR 404: Se removió el host y el duplicado /game/ para mapear exactamente a /game/play/trivia/{id} -->
-                            <a th:href="@{/game/play/trivia/{id}(id=${area.idArea})}" class="btn btn-cyber-primary w-100">
-                                IR A TRIVIA <i class="bi bi-chevron-right ms-1"></i>
-                            </a>
+                            <div class="mt-4 pt-3 border-top border-secondary border-opacity-10">
+                                <a th:href="@{/game/play/trivia/{id}(id=${area.idArea})}" class="btn btn-cyber-primary w-100">
+                                    IR A TRIVIA <i class="bi bi-chevron-right ms-1"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
