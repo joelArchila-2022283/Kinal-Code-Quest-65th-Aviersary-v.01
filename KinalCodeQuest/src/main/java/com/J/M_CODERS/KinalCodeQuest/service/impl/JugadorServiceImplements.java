@@ -14,6 +14,11 @@ public class JugadorServiceImplements implements JugadorService {
 
     @Override
     public Jugador registrarJugador(Jugador jugador) {
+
+        if (jugadorRepository.findByUsername(jugador.getUsername()).isPresent()) {
+            throw new IllegalArgumentException("DUPLICATE_USERNAME");
+        }
+
         return jugadorRepository.save(jugador);
     }
 
