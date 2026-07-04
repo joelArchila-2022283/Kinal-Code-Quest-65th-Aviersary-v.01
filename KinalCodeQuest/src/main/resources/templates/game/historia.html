@@ -90,8 +90,8 @@
             transition: all 0.2s ease-in-out;
         }
         .btn-back-dashboard:hover {
-            background: #ff0044 !important; /* Se pone rojo completo */
-            color: #ffffff !important;      /* Letras e iconos pasan a blanco */
+            background: #ff0044 !important;
+            color: #ffffff !important;
             box-shadow: 0 0 20px rgba(255, 0, 68, 0.6);
         }
 
@@ -117,7 +117,6 @@
     <div class="mb-5 border-bottom border-secondary border-opacity-10 pb-4">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
 
-            <!-- Estructura exacta con el efecto de hover corregido -->
             <div class="d-flex justify-content-start mb-0">
                 <a th:href="@{/game/dashboard}" class="btn btn-back-dashboard w-auto px-4 py-2.5 tech-font fw-bold d-inline-flex align-items-center justify-content-center gap-2 shadow">
                     <i class="bi bi-arrow-left-square fs-5"></i>
@@ -167,24 +166,35 @@
                             th:text="${cap.titulo}">EL ORIGEN</h4>
                     </div>
                     <div class="text-end">
-                        <span class="badge border border-info border-opacity-30 text-neon-cyan font-monospace small d-block mb-1" style="font-size: 0.75rem;" th:text="|REQ_TEXTO: ${cap.costoCantidad} EXP|">REQ_TEXTO: 0 EXP</span>
-                        <span class="badge border border-success border-opacity-30 text-neon-green font-monospace small" style="font-size: 0.75rem;" th:text="|REQ_IMG: ${cap.costoLaboriosidad} LAB|">REQ_IMG: 10 LAB</span>
+                        <!-- Corregidos dinámicamente para alinearse con tus columnas y tipos de moneda del INSERT SQL -->
+                        <span class="badge border border-info border-opacity-30 text-neon-cyan font-monospace small d-block mb-1" style="font-size: 0.75rem;"
+                              th:text="|REQ: ${cap.costoCantidad} ${cap.tipoMoneda}|">REQ: 0 EXP</span>
                     </div>
                 </div>
 
-                <!-- ==================== LOGICA DE LA IMAGEN ==================== -->
-                <div class="mb-4">
-                    <div th:if="${cap.imagenDesbloqueada and cap.rutaImagen != null and !cap.rutaImagen.isEmpty()}" class="text-center">
-                        <img th:src="@{${cap.rutaImagen}}" class="img-fluid rounded border border-success border-opacity-30 mb-1" alt="Visual Log Archive" style="max-height: 280px; width: 100%; object-fit: cover;">
-                        <div class="text-start"><small class="font-monospace text-neon-green" style="font-size: 0.75rem;"><i class="bi bi-unlock-fill"></i> VISUAL_STREAM_DECRYPTED // ACCESS_GRANTED</small></div>
+                <!-- ==================== LÓGICA DE LA IMAGEN (OPTIMIZADA) ==================== -->
+                <!-- Solo renderiza si el capítulo tiene asignada una ruta en la base de datos -->
+                <div class="mb-4" th:if="${cap.rutaImagen != null and !cap.rutaImagen.isEmpty()}">
+
+                    <div th:if="${cap.imagenDesbloqueada}" class="text-center bg-black bg-opacity-40 p-2 rounded border border-success border-opacity-10">
+                        <!-- object-fit: contain mantiene la proporción exacta de las fotos antiguas sin recortes forzados -->
+                        <img th:src="@{${cap.rutaImagen}}"
+                             class="img-fluid rounded mx-auto d-block"
+                             alt="Visual Log Archive"
+                             style="max-height: 450px; width: auto; object-fit: contain; image-rendering: -webkit-optimize-contrast;">
+                        <div class="text-start mt-2">
+                            <small class="font-monospace text-neon-green" style="font-size: 0.75rem;">
+                                <i class="bi bi-unlock-fill"></i> VISUAL_STREAM_DECRYPTED // ACCESS_GRANTED
+                            </small>
+                        </div>
                     </div>
 
                     <div th:unless="${cap.imagenDesbloqueada}" class="p-3 rounded border border-secondary border-opacity-20 bg-black bg-opacity-40 text-center font-monospace">
                         <i class="bi bi-eye-slash-fill text-neon-cyan d-block mb-1" style="font-size: 1.2rem;"></i>
                         <span class="text-high-contrast-warning small d-block mb-1">[ARCHIVO_VISUAL_ENCRIPTADO]</span>
                         <span class="text-neon-cyan small" style="font-size: 0.8rem;"
-                              th:text="|Requiere: ${cap.costoLaboriosidad} Pts. de Laboriosidad (Tienes: ${jugador.saldoLaboriosidad != null ? jugador.saldoLaboriosidad : 0})|">
-                            Requiere: 20 Pts
+                              th:text="|Requiere desbloquear el nodo con ${cap.costoCantidad} ${cap.tipoMoneda}|">
+                            Requiere puntos
                         </span>
                     </div>
                 </div>
