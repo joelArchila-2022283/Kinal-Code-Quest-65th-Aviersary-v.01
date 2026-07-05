@@ -35,12 +35,13 @@
 
             <div class="mb-3">
                 <label class="form-label text-muted small fw-bold tech-font">CONTRASEÑA_DE_SEGURIDAD</label>
-                <input type="password" th:field="*{password}" class="form-control cyber-input" required placeholder="Mín. 6 caracteres">
+
+                <input type="password" th:field="*{password}" class="form-control cyber-input" minlength="6" required placeholder="Mín. 6 caracteres">
             </div>
 
             <div class="mb-3">
                 <label class="form-label text-muted small fw-bold tech-font">CONFIRMAR_CONTRASEÑA</label>
-                <input type="password" th:field="*{confirmarPassword}" class="form-control cyber-input" required placeholder="Repite tu contraseña">
+                <input type="password" th:field="*{confirmarPassword}" class="form-control cyber-input" minlength="6" required placeholder="Repite tu contraseña">
             </div>
 
             <div class="mb-4">
