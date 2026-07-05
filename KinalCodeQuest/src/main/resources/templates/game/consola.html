@@ -334,26 +334,10 @@
 
                         <form th:action="@{/game/mision/{id}/compilar(id=${mision != null ? mision.idMision : 1})}" method="post" id="compilerForm">
                             <textarea id="editorCodigo" name="codigoEnviado" th:if="${progreso?.ultimoCodigoEnviado != null}" th:text="${progreso.ultimoCodigoEnviado}"></textarea>
-                            <textarea id="editorCodigo" name="codigoEnviado" th:unless="${progreso?.ultimoCodigoEnviado != null}">package com.J.M_CODERS.KinalCodeQuest;
+                            <textarea id="editorCodigo" name="codigoEnviado" th:unless="${progreso?.ultimoCodigoEnviado != null}">
 
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-@SpringBootApplication
-public class KinalCodeQuestApplication implements CommandLineRunner {
-
-    public static void main(String[] args) {
-       SpringApplication.run(KinalCodeQuestApplication.class, args);
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-       System.out.println("----------------------------------------");
-       System.out.println(" KINAL CODE QUEST - SYSTEM ONLINE ");
-       System.out.println("----------------------------------------");
-    }
-}</textarea>
+// Aqui se realizaran los ejercicios de su lado izquierdo
+</textarea>
                             <div class="p-2 bg-black rounded-bottom-3 border-top border-secondary border-opacity-25">
                                 <button type="submit" id="btnEjecutar" class="btn btn-cyber-primary w-100 fw-bold tech-font py-3 neon-glow d-flex align-items-center justify-content-center gap-2">
                                     <span>EJECUTAR_KINAL_COMPILER</span> <i class="bi bi-play-fill fs-5"></i>
