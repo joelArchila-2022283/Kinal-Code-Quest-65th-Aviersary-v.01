@@ -253,43 +253,43 @@ public class GameController {
         // Estructura: crearCapitulo(id, titulo, epoca, expReq, textoNarrativo, expActual, rutaImg, labReq, labActual, bonusRecompensa)
         capitulos.add(crearCapitulo(1, "El Cimiento del Núcleo", "1961", 0,
                 "El Centro Educativo Técnico Laboral Kinal nació en 1961 en Guatemala. Su meta fundamental desde su origen ha sido brindar oportunidades de superación técnica y humana a la clase trabajadora.",
-                expActual, "/img/historia/logo-Kinal.jpg", 10, laboriosidadActual, null));
+                expActual, "/img/historia/logo-Kinal.jpg", 0, laboriosidadActual, null)); // Reducido a 0
 
         capitulos.add(crearCapitulo(2, "Archivo Visual: Los Primeros Pasos", "1965", 10,
                 "Fichero recuperado de los archivos confidenciales. Las primeras clases de dibujo técnico y electricidad se estructuraron con recursos limitados pero con un alto estándar de excelencia.",
-                expActual, "/img/aniversarios/61-aniversario.jpg", 20, laboriosidadActual, "[+10 Ptos Prestigio Logrado]"));
+                expActual, "/img/aniversarios/61-aniversario.jpg", 10, laboriosidadActual, "[+10 Ptos Prestigio Logrado]")); // Reducido a 10
 
         capitulos.add(crearCapitulo(3, "La Consolidación del Servidor", "1989", 20,
                 "En 1989 se concreta el traslado definitivo a la sede actual en la Zona 7 de la Ciudad de Guatemala, expandiendo radicalmente la infraestructura de los laboratorios y talleres tecnológicos.",
-                expActual, "/img/historia/Construccion-sede-1989.jpg", 30, laboriosidadActual, null));
+                expActual, "/img/historia/Construccion-sede-1989.jpg", 20, laboriosidadActual, null)); // Reducido a 20
 
         capitulos.add(crearCapitulo(4, "Código de Honor: Laboriosidad", "1975", 30,
                 "Protocolo ético: El trabajo diario no es solo una carga, sino un medio para alcanzar la excelencia humana, santificar el entorno y desarrollar la infraestructura de Guatemala.",
-                expActual, "/img/historia/Construccion-basicos-2005.jpg", 40, laboriosidadActual, "[Análisis de Integridad Completado]"));
+                expActual, "/img/historia/Construccion-basicos-2005.jpg", 30, laboriosidadActual, "[Análisis de Integridad Completado]")); // Reducido a 30
 
         capitulos.add(crearCapitulo(5, "Planos de Infraestructura: Edificio C", "1992", 40,
                 "Planos estructurales recuperados de los servidores centrales. Captura histórica que documenta las fases de cimentación y levantamiento del icónico Edificio C.",
-                expActual, "/img/historia/Construccion-edificio-C-1992.jpg", 50, laboriosidadActual, "[Módulo de Hardware Desbloqueado]"));
+                expActual, "/img/historia/Construccion-edificio-C-1992.jpg", 40, laboriosidadActual, "[Módulo de Hardware Desbloqueado]")); // Reducido a 40
 
         capitulos.add(crearCapitulo(6, "Registro de Campo: Bloque de Básicos", "2005", 50,
-                "Compilación de capturas del área de educación básica técnica del año 2005, mostrando la evolución de los entornos académicos interactivos.",
-                expActual, "/img/historia/Construccion-basicos-2-2005.jpg", 60, laboriosidadActual, "[+5 Ptos Cooperación Colectiva]"));
+                "Compilación de capturas del área de educación básica técnica del año 2005, showing la evolución de los entornos académicos interactivos.",
+                expActual, "/img/historia/Construccion-basicos-2-2005.jpg", 50, laboriosidadActual, "[+5 Ptos Cooperación Colectiva]")); // Reducido a 50
 
         capitulos.add(crearCapitulo(7, "La Era Moderna del Core", "2026", 60,
                 "Kinal se transforma en un referente de innovación digital y tecnológica en la región, integrando desarrollo de software de vanguardia y metodologías ágiles avanzadas.",
-                expActual, "/img/historia/Entrada-Kinal-actual.jpg", 70, laboriosidadActual, "[+20 Ptos Sistema de Vanguardia]"));
+                expActual, "/img/historia/Entrada-Kinal-actual.jpg", 60, laboriosidadActual, "[+20 Ptos Sistema de Vanguardia]")); // Reducido a 60
 
         capitulos.add(crearCapitulo(8, "Arquitectura Orientada a Objetos", "POO", 70,
                 "El software moderno demanda abstracción. Kinal adoptó metodologías avanzadas de desarrollo, enseñando que cada entidad del mundo real puede ser modelada como un objeto con responsabilidades específicas.",
-                expActual, "/img/historia/Construccion-basicos-3-2005.jpg", 80, laboriosidadActual, "[Compilador POO Activado]"));
+                expActual, "/img/historia/Construccion-basicos-3-2005.jpg", 70, laboriosidadActual, "[Compilador POO Activado]")); // Reducido a 70
 
         capitulos.add(crearCapitulo(9, "Tolerancia a Fallos", "EXCEPCIONES", 80,
                 "Los sistemas reales fallan, pero un ingeniero de Kinal escribe software preparado para mitigar el caos. El control estructurado de excepciones captura los imprevistos de ejecución y previene el colapso total de la infraestructura.",
-                expActual, "/img/aniversarios/63-aniversario.jpg", 90, laboriosidadActual, "[Manejo de Excepciones Ok]"));
+                expActual, "/img/aniversarios/63-aniversario.jpg", 80, laboriosidadActual, "[Manejo de Excepciones Ok]")); // Reducido a 80
 
         capitulos.add(crearCapitulo(10, "Persistencia del Núcleo", "JDBC", 90,
                 "Los archivos pasan, pero las conexiones estables a base de datos (JDBC) trascienden las sesiones activas de memoria. De igual manera, el impacto formativo y social de Kinal queda grabado de forma persistente en la historia.",
-                expActual, "/img/aniversarios/65-aniversario.jpg", 100, laboriosidadActual, "[Persistencia de Datos Completa]"));
+                expActual, "/img/aniversarios/65-aniversario.jpg", 90, laboriosidadActual, "[Persistencia de Datos Completa]")); // Reducido a 90
 
         model.addAttribute("jugador", jugador);
         model.addAttribute("capitulos", capitulos);
@@ -297,6 +297,7 @@ public class GameController {
         return "game/historia";
     }
 
+    /* Función de soporte mapeada con soporte para bonus estéticos de recompensa */
     /* Función de soporte mapeada con soporte para bonus estéticos de recompensa */
     private CapituloHistoria crearCapitulo(int id, String titulo, String epoca, int exp, String contenido, int expActual, String rutaImagen, int costoLaboriosidad, int laboriosidadActual, String bonusRecompensa) {
         CapituloHistoria cap = new CapituloHistoria();
