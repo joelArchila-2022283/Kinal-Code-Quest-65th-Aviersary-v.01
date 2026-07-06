@@ -1,11 +1,11 @@
-DROP DATABASE IF EXISTS kinal_code_quest;
-CREATE DATABASE IF NOT EXISTS kinal_code_quest;
-USE kinal_code_quest;
-
+DROP DATABASE IF EXISTS kinal_code_in5cm;
+CREATE DATABASE IF NOT EXISTS kinal_code_in5cm;
+USE kinal_code_in5cm;
+ 
 -- =========================================================================
 -- ESTRUCTURA DE ENTIDADES
 -- =========================================================================
-
+ 
 -- 1. Tabla de Jugadores 
 CREATE TABLE jugador (
     id_jugador INT AUTO_INCREMENT PRIMARY KEY,
@@ -22,14 +22,14 @@ CREATE TABLE jugador (
     saldo_laboriosidad INT DEFAULT 0,
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
+ 
 -- 2. Tabla de Áreas del Campus
 CREATE TABLE area_tecnica (
     id_area INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,              -- Ej: "Mecánica", "Informática"
     descripcion_tematica TEXT                 -- Ej: "Taller de motores de combustión interna"
 );
-
+ 
 -- 3. Tabla de Misiones (El núcleo del juego)
 CREATE TABLE mision (
     id_mision INT AUTO_INCREMENT PRIMARY KEY,
@@ -41,7 +41,7 @@ CREATE TABLE mision (
     exp_recompensa INT NOT NULL DEFAULT 100,  -- Cuánta XP da completar esta misión
     FOREIGN KEY (id_area) REFERENCES area_tecnica(id_area)
 );
-
+ 
 -- 4. Tabla de Progreso de Misiones
 CREATE TABLE progreso_jugador (
     id_progreso INT AUTO_INCREMENT PRIMARY KEY,
@@ -55,7 +55,7 @@ CREATE TABLE progreso_jugador (
     FOREIGN KEY (id_mision) REFERENCES mision(id_mision) ON DELETE CASCADE,
     UNIQUE(id_jugador, id_mision)             -- Evita duplicados
 );
-
+ 
 -- 5. Tabla de Capítulos de Historia
 CREATE TABLE capitulo_historia (
     id_capitulo INT AUTO_INCREMENT PRIMARY KEY,
@@ -70,7 +70,7 @@ CREATE TABLE capitulo_historia (
     bonus_recompensa VARCHAR(100) NULL,
     FOREIGN KEY (id_capitulo_padre) REFERENCES capitulo_historia(id_capitulo) ON DELETE CASCADE
 );
-
+ 
 -- 6. Tabla Maestra de Ejercicios Guía
 CREATE TABLE ejercicio_guia (
     id_ejercicio INT AUTO_INCREMENT PRIMARY KEY,
@@ -85,7 +85,7 @@ CREATE TABLE ejercicio_guia (
     activo BOOLEAN NOT NULL DEFAULT TRUE,
     pistas TEXT
 );
-
+ 
 -- 7. Tabla de Progreso de Ejercicios Guía
 CREATE TABLE progreso_ejercicio (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -99,7 +99,7 @@ CREATE TABLE progreso_ejercicio (
     FOREIGN KEY (id_ejercicio) REFERENCES ejercicio_guia(id_ejercicio) ON DELETE CASCADE,
     UNIQUE(id_jugador, id_ejercicio)
 );
-
+ 
 -- 8. Tabla de Compras de Historia
 CREATE TABLE compra_historia (
     id_compra INT AUTO_INCREMENT PRIMARY KEY,
@@ -109,12 +109,12 @@ CREATE TABLE compra_historia (
     FOREIGN KEY (id_jugador) REFERENCES jugador(id_jugador) ON DELETE CASCADE,
     FOREIGN KEY (id_capitulo) REFERENCES capitulo_historia(id_capitulo) ON DELETE CASCADE
 );
-
-
+ 
+ 
 -- =========================================================================
 -- INSERCIÓN DE DATOS INICIALES
 -- =========================================================================
-
+ 
 -- Áreas Técnicas (Niveles del 1 al 10)
 INSERT INTO area_tecnica (id_area, nombre, descripcion_tematica) VALUES
 (1, 'Sintaxis y Variables Básicas', 'Fundamentos del compilador y manejo de memoria en Stack.'),
@@ -128,12 +128,12 @@ INSERT INTO area_tecnica (id_area, nombre, descripcion_tematica) VALUES
 (9, 'Manejo de Archivos e I/O', 'Lectura y escritura de flujos de datos y archivos de texto plano con BufferedReader y PrintWriter.'),
 (10, 'Introducción a JDBC y Persistencia', 'Conexión del ecosistema Java hacia bases de datos relacionales mediante controladores JDBC.')
 ON DUPLICATE KEY UPDATE nombre = VALUES(nombre), descripcion_tematica = VALUES(descripcion_tematica);
-
+ 
 -- Misión Inicial por Defecto (Evita el crash del compilador standalone)
 INSERT INTO mision (id_mision, id_area, titulo, descripcion_narrativa, codigo_base, criterio_evaluacion, exp_recompensa) VALUES
 (1, 1, 'Consola Standalone Activa', 'Consola de compilación general lista para pruebas.', '// Escribe tu código aquí', '.*', 0)
 ON DUPLICATE KEY UPDATE titulo=VALUES(titulo);
-
+ 
 -- Fusión Cronológica de Capítulos de Historia (Ordenados y con IDs únicos)
 INSERT INTO capitulo_historia (id_capitulo, id_capitulo_padre, titulo, epoca, tipo_contenido, contenido_narrativo, ruta_imagen, costo_cantidad, tipo_moneda, bonus_recompensa) VALUES 
 (1, NULL, 'El Cimiento del Núcleo', '1961', 'PRINCIPAL', 'El Centro Educativo Técnico Laboral Kinal nació en 1961 en Guatemala, gracias a la iniciativa de profesionales motivados por las enseñanzas de San Josemaría Escrivá de Balaguer. Su meta fundamental desde su origen ha sido brindar oportunidades de superación técnica y humana a la clase trabajadora.', '/img/historia/Construccion-sede-1989.jpg', 0, 'EXP', NULL),
@@ -144,7 +144,7 @@ INSERT INTO capitulo_historia (id_capitulo, id_capitulo_padre, titulo, epoca, ti
 (6, 5, 'Planos de Infraestructura: Edificio C', '1992', 'FOTO_ANTIGUA', 'Planos estructurales recuperados de los servidores centrales. Captura histórica que documenta las fases de cimentación y levantamiento del icónico Edificio C.', '/img/historia/Construccion-edificio-C-1992.jpg', 40, 'LABORIOSIDAD', '[Módulo de Hardware Desbloqueado]'),
 (7, 5, 'Registro de Campo: Bloque de Básicos', '2005', 'FOTO_ANTIGUA', 'Compilación de capturas del área de educación básica técnica del año 2005, mostrando la evolución de los entornos académicos interactivos.', '/img/historia/Construccion-basicos-2005.jpg', 30, 'SOLIDARIDAD', '[+5 Ptos Cooperación Colectiva]'),
 (8, NULL, 'La Era Moderna del Core', '2026', 'PRINCIPAL', 'Kinal se transforma en un referente de innovación digital y tecnológica en la región, integrando desarrollo de software de vanguardia y metodologías ágiles avanzadas.', '/img/historia/Entrada-Kinal-actual.jpg', 250, 'EXP', NULL);
-
+ 
 -- Ejercicios Guía de Java
 INSERT INTO ejercicio_guia (id_ejercicio, orden, titulo, descripcion, enunciado, codigo_template, criterio_evaluacion, dificultad, puntos_recompensa, activo, pistas) VALUES
 (1, 1, 'Hello World', 'Imprime en consola', 'Imprime el texto HOLA KINAL', 'public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"HOLA KINAL\");\n    }\n}', 'HOLA KINAL', 'FACIL', 10, TRUE, 'Usa System.out.println'),
@@ -157,14 +157,14 @@ INSERT INTO ejercicio_guia (id_ejercicio, orden, titulo, descripcion, enunciado,
 (8, 8, 'While Loop', 'Ciclos condicionales', 'Cuenta hasta 3 con while', 'public class WhileLoop {\n    public static void main(String[] args) {\n        int i = 0;\n        while (i <= 3) {\n            System.out.println(i); i++;\n        }\n    }\n}', '0.*1.*2.*3', 'FACIL', 10, TRUE, 'Asegúrate de incrementar la variable de control'),
 (9, 9, 'Try-Catch básico', 'Manejo de excepciones', 'Captura un error de formato', 'public class ErrorHandling {\n    public static void main(String[] args) {\n        try { Integer.parseInt(\"abc\"); } catch (NumberFormatException e) { System.out.println(\"Error de conversión\"); }\n    }\n}', 'Error de conversión', 'INTERMEDIO', 10, TRUE, 'El bloque catch atrapa errores en tiempo de ejecución'),
 (10, 10, 'Recursión (factorial)', 'Algoritmia avanzada', 'Calcula el factorial de 5', 'public class Recursion {\n    static int factorial(int n) { if (n <= 1) return 1; return n * factorial(n-1); }\n    public static void main(String[] args) { System.out.println(factorial(5)); }\n}', '120', 'INTERMEDIO', 10, TRUE, 'La recursión requiere un caso base estructural');
-
+ 
 -- Ajustes de Criterios de Evaluación Específicos
 UPDATE ejercicio_guia SET criterio_evaluacion = 'Suma:' WHERE id_ejercicio = 2;
 UPDATE ejercicio_guia SET criterio_evaluacion = 'for' WHERE id_ejercicio = 3;
 UPDATE ejercicio_guia SET criterio_evaluacion = 'sumar' WHERE id_ejercicio = 6;
 UPDATE ejercicio_guia SET criterio_evaluacion = 'while' WHERE id_ejercicio = 8;
 UPDATE ejercicio_guia SET criterio_evaluacion = 'factorial' WHERE id_ejercicio = 10;
-
+ 
 -- cuenta administrador:
 INSERT INTO jugador (
     username, 
