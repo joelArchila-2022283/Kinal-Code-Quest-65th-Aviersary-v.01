@@ -218,7 +218,6 @@ public class GameController {
             // Soporte para los saldos específicos de las primeras áreas en caso de existir en el modelo
             switch (idArea) {
                 case 1: jugador.setSaldoResponsabilidad((jugador.getSaldoResponsabilidad() == null ? 0 : jugador.getSaldoResponsabilidad()) + 20); break;
-                case 2: jugador.setSaldoSolidaridad((jugador.getSaldoSolidaridad() == null ? 0 : jugador.getSaldoSolidaridad()) + 20); break;
                 case 3: jugador.setSaldoLaboriosidad((jugador.getSaldoLaboriosidad() == null ? 0 : jugador.getSaldoLaboriosidad()) + 20); break;
             }
 

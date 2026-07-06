@@ -87,12 +87,6 @@ public class HistoriaServiceImplements implements HistoriaService {
                     fondosSuficientes = true;
                 }
                 break;
-            case "SOLIDARIDAD":
-                if (jugador.getSaldoSolidaridad() >= costo) {
-                    jugador.setSaldoSolidaridad(jugador.getSaldoSolidaridad() - costo);
-                    fondosSuficientes = true;
-                }
-                break;
         }
 
         if (!fondosSuficientes) {
