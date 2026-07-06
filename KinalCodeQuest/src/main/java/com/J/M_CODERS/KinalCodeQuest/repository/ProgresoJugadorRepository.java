@@ -15,8 +15,6 @@ public interface ProgresoJugadorRepository extends JpaRepository<ProgresoJugador
     Optional<ProgresoJugador> findByJugadorAndMision(Jugador jugador, Mision mision);
     List<ProgresoJugador> findByJugador(Jugador jugador);
 
-    //    MÉTRICAS DE TELEMETRÍA Y ANALÍTICA
-
     // 1. Cuenta la cantidad total de errores lógicos / fallas de compilación
     @Query("SELECT COALESCE(SUM(p.intentos), 0) - COUNT(CASE WHEN p.completada = true THEN 1 END) FROM ProgresoJugador p WHERE p.jugador.idJugador = :idJugador")
     long countErroresByJugador(@Param("idJugador") Integer idJugador);

@@ -7,6 +7,7 @@ import lombok.*;
  * Entidad que representa los ejercicios guía para principiantes
  * Son ejercicios sencillos que ayudan a aprender Java
  */
+
 @Entity
 @Table(name = "ejercicio_guia")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder

@@ -25,15 +25,12 @@ public class Jugador {
     @Column(nullable = false, length = 30)
     private String rol;
 
-    // --- ESTADÍSTICAS HISTÓRICAS ---
+    // --- ESTADÍSTICAS ---
     @Column(name = "experiencia")
     private Integer experiencia;
 
     @Column(name = "ptos_responsabilidad")
     private Integer ptosResponsabilidad;
-
-    @Column(name = "ptos_solidaridad")
-    private Integer ptosSolidaridad;
 
     @Column(name = "ptos_laboriosidad")
     private Integer ptosLaboriosidad;
@@ -41,9 +38,6 @@ public class Jugador {
     // --- BILLETERA ACTIVA ---
     @Column(name = "saldo_responsabilidad")
     private Integer saldoResponsabilidad;
-
-    @Column(name = "saldo_solidaridad")
-    private Integer saldoSolidaridad;
 
     @Column(name = "saldo_laboriosidad")
     private Integer saldoLaboriosidad;
@@ -59,11 +53,9 @@ public class Jugador {
 
         // Inicialización segura para evitar nulos
         ptosResponsabilidad = (ptosResponsabilidad == null) ? 0 : ptosResponsabilidad;
-        ptosSolidaridad = (ptosSolidaridad == null) ? 0 : ptosSolidaridad;
         ptosLaboriosidad = (ptosLaboriosidad == null) ? 0 : ptosLaboriosidad;
 
         saldoResponsabilidad = (saldoResponsabilidad == null) ? 0 : saldoResponsabilidad;
-        saldoSolidaridad = (saldoSolidaridad == null) ? 0 : saldoSolidaridad;
         saldoLaboriosidad = (saldoLaboriosidad == null) ? 0 : saldoLaboriosidad;
     }
 }
